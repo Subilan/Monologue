@@ -1,0 +1,66 @@
+.mono-main {
+    .logue {
+
+        .meta {
+            display: flex;
+            align-items: center;
+
+            .status-icon {
+                .mdi {
+                    margin-right: 16px;
+
+                    &::before {
+                        font-size: 24px;
+                        line-height: 1;            
+                    }
+                }
+
+                &.blue {
+                    color: #2196f3;
+                }
+    
+                &.red {
+                    color: #F44336;
+                }
+    
+                &.green {
+                    color: #4CAF50;
+                }
+            }
+
+            .date {
+                font-weight: 500;
+            }   
+        }
+
+        .content {
+            padding-left: 40px;
+            position: relative;
+
+            &::before {
+                border-left: 1px solid rgba(0, 0, 0, .15);
+                content: " ";
+                display: block;
+                height: 100%;
+                position: absolute;
+                left: 11.5px;
+            }
+
+            .logue-content {
+                padding-top: 16px;
+                padding-bottom: 16px;
+                h1 {
+                    margin: 0;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+
+                p {
+                    margin: 0;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+            }
+        }
+    }
+}
