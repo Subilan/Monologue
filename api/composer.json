@@ -1,0 +1,22 @@
+{
+    "name": "sotap/monologue",
+    "description": "The Monologue backend system.",
+    "type": "project",
+    "require": {
+        "erusev/parsedown": "^1.7",
+        "erusev/parsedown-extra": "^0.8.1",
+        "lcobucci/jwt": "^3.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Subilan",
+            "email": "suyuanliang1995@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "api\\": "./"
+        }
+    }
+}
