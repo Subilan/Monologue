@@ -1,0 +1,7 @@
+{
+    "python.autoComplete.extraPaths": [
+        "C:\\Users\\18439\\Desktop\\Code\\Monologue\\backend\\mono-back\\Lib\\site-packages"
+    ],
+    "python.pythonPath": "C:\\Users\\18439\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
+    "python.formatting.provider": "yapf"
+}
