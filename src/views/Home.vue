@@ -7,6 +7,9 @@
     </md-speed-dial>
     <div class="mono-main">
       <div class="datepicker-container">
+      <md-button class="md-primary md-raised md-icon-button" @click="openDatePicker()">
+        <md-icon class="mdi mdi-calendar"/>
+      </md-button>
         <md-datepicker
           ref="picker"
           class="datepicker"
@@ -60,7 +63,7 @@ Vue.use(MdButton)
   .use(MdDatepicker)
   .use(MdContent)
   .use(MdSpeedDial)
-  .use(MdIcon);
+  .use(MdIcon)
 
 interface Logue {
   date: string;
@@ -338,8 +341,6 @@ export default Vue.extend({
 }
 
 .datepicker {
-  @media screen and (max-width: 1024px) {
     display: none;
-  }
 }
 </style>
