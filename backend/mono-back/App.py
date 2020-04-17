@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, make_response
 from flask_restful import Api, Resource, request
 from flask_cors import CORS
-from werkzeug.exceptions import HTTPException, abort
+from werkzeug.exceptions import abort
 from Database import DBController
 
 app = Flask(__name__)
