@@ -4,8 +4,8 @@ CREATE TABLE `Logue` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
     `title` varchar(50) NOT NULL,
     `contents` text NOT NULL,
-    `date` varchar(15) NOT NULL,
-    `extdate` varchar(45) NOT NULL,
+    `type` varchar(10) NOT NULL,
+    `date` varchar(20) NOT NULL,
     PRIMARY KEY (`id`)
 ) CHARSET=utf8mb4;
 CREATE TABLE `User` (
