@@ -22,9 +22,10 @@ class LogueController:
         db = DBController()
         cur = db.cursor(True)
         date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        sql = ("INSERT INTO Logue (title, contents, type, date) VALUES ('{t}', '{c}', '{tt}', '{d}')").format(t = title, c = contents, tt = typ, d = date)
+        args = (title, contents, typ, date)
+        sql = ("INSERT INTO Logue (title, contents, type, date) VALUES ('%s', '%s', '%s', '%s')");
         try:
-            cur.execute(sql)
+            cur.execute(sql, args)
             db.commit()
         except Exception:
             print(Exception)
