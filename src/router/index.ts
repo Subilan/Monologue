@@ -15,7 +15,7 @@ const routes = [
 		component: () => import("@/views/Admin.vue"),
 		children: [
 			{
-				path: "new",
+				path: "panel",
 				name: "admin-panel",
 				component: () => import("@/views/AdminPanel.vue")
 			},
