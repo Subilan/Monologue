@@ -33,7 +33,7 @@
 
 ## 贡献
 
-贡献时，前端仅需 `npm install` 即可安装所需依赖开始开发。但是需要注意的是，由于用到了 TypeScript，vue-material 的所有组件均无法正常使用，需要手动在每一个 `import` 前面加上 `// ts-ignore` 来忽略。对于各种内置的接口目前并没有文档。
+贡献时，前端仅需 `npm install` 即可安装所需依赖开始开发。但是需要注意的是，由于用到了 TypeScript，vue-material 的所有组件均无法正常使用，需要手动在每一个 `import` 前面加上 `// @ts-ignore` 来忽略。对于各种内置的接口目前并没有文档。
 
 后端需要手动部署数据库。查看 `backend/mono-back/database.sql` 中的语句，复制到 MySQL 中执行。执行之后，需要使用位于 `backend/mono-back` 中的 `python.bat` 执行 `Test.py` 来完成基本账户的创建，因为目前还并没有写出注册功能。
 
