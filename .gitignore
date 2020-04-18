@@ -21,3 +21,4 @@ yarn-error.log*
 *.sw?
 
 pyvenv.cfg
+__pycache__
