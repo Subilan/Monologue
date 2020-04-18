@@ -65,7 +65,7 @@ export default Vue.extend({
       r => {
         if (r.data) {
           this.$router.push({
-            name: "admin-new"
+            name: "admin-panel"
           });
         }
       }
