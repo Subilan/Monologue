@@ -16,8 +16,8 @@ const routes = [
 		children: [
 			{
 				path: "new",
-				name: "admin-new",
-				component: () => import("@/views/AdminNew.vue")
+				name: "admin-panel",
+				component: () => import("@/views/AdminPanel.vue")
 			},
 			{
 				path: "auth",
