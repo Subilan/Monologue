@@ -18,7 +18,7 @@
 - 内部代码过于杂乱，且没有使用 Typescript；
 - PHP 在某些方面门槛过高，或者遭遇难以解决的瓶颈。
 
-而又因为有「将日志发布出来记录」的需求，Monologue 诞生了。起初 Monologue 只是被设计用来记录日志：
+停止开发。而后，又因为有「将日志发布出来记录」的需求，Monologue 诞生了。起初 Monologue 只是被设计用来记录日志：
 
 ![](https://i.loli.net/2020/04/19/Z6lO7pRDrw8t9Mj.png)
 
