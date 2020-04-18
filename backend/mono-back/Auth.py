@@ -4,12 +4,11 @@ from Database import DBController
 class AuthManager:
     def __init__(self, username):
         ins = DBController()
-        db = ins.getInstance()
-        cur = db.cursor()
+        cur = ins.cursor()
         sql = ("SELECT password FROM User WHERE username='{u}'").format(u = username)
         cur.execute(sql)
         self._password = cur.fetchone()[0]
-        db.close()
+        ins.close()
         super().__init__()
 
     @property
