@@ -18,6 +18,11 @@ const routes = [
 				path: "new",
 				name: "admin-new",
 				component: () => import("@/views/AdminNew.vue")
+			},
+			{
+				path: "auth",
+				name: "admin-auth",
+				component: () => import("@/views/AdminAuth.vue")
 			}
 		]
 	}
