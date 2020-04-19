@@ -14,7 +14,6 @@
           ref="picker"
           class="datepicker"
           v-model="targetDate"
-          :md-disabled-dates="disabledDates"
           :md-immediately="true"
         />
       </div>
@@ -65,91 +64,19 @@ Vue.use(MdButton)
   .use(MdSpeedDial)
   .use(MdIcon);
 
-interface LogueArray {
-  date: string;
-  time: string;
-  logue: Array<Logue>;
-}
-
-interface Logue {
-  title: string;
-  type: string;
-  contents: string;
-}
-
-interface StringMatch {
-  [key: string]: string;
-}
-
-interface Match {
-  [key: string]: StringMatch;
-}
-
 export default Vue.extend({
   data() {
     return {
-      monologue: [
-        {
-          date: "2020/04/12 15:03:04",
-          type: "info",
-          title: "服务器自今日开始 XXXX",
-          contents:
-            "测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容"
-        },
-        {
-          date: "2020/04/12 15:02:01",
-          type: "info",
-          time: "15:04",
-          title: "服务器自今日开始 XXXX",
-          contents:
-            "测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容"
-        },
-        {
-          date: "2020/04/03 13:01:00",
-          type: "info",
-          title: "测试 2",
-          contents: "测试 3"
-        },
-        {
-          date: "2020/04/15 13:01:00",
-          type: "warning",
-          title: "测试 3",
-          contents: "测试 2"
-        },
-        {
-          date: "2020/04/01 13:01:00",
-          type: "solved",
-          title: "测试 4",
-          contents: "测试 31"
-        },
-        {
-          date: "2020/03/21 13:01:00",
-          type: "solved",
-          title: "测试 4",
-          contents: "测试 31"
-        },
-        {
-          date: "2020/03/02 13:01:00",
-          type: "solved",
-          title: "测试 4",
-          contents: "测试 31"
-        },
-        {
-          date: "2020/05/24 13:01:00",
-          type: "solved",
-          title: "测试 4",
-          contents: "测试 31"
-        }
-      ],
+      monologue: [],
       f_monologue: [],
       datePickDialog: false,
       targetDate: new Date()
     };
   },
   methods: {
-    getArray(): Array<LogueArray> {
-      let arr: Array<LogueArray> = [];
-      this.monologue.forEach((k, i) => {
+    getArray(): Array<LogueArrayItem> {
+      let arr: Array<LogueArrayItem> = [];
+      (this.monologue as Array<LogueOrigin>).forEach((k, i) => {
         let ix = -1;
         let d = k.date.split(" ");
         let date = d[0];
@@ -160,7 +87,7 @@ export default Vue.extend({
             return true;
           }
           return false;
-        })
+        });
         if (!sameDay) {
           arr.push({
             date: date,
@@ -172,18 +99,18 @@ export default Vue.extend({
                 contents: k.contents
               }
             ]
-          })
+          });
         } else {
           arr[ix].logue.push({
             title: k.title,
             type: k.type,
             contents: k.contents
-          })
+          });
         }
-      })
+      });
       arr = arr.slice().sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
-      })
+      });
       return arr;
     },
     getIconByType(type: string): string {
@@ -193,7 +120,7 @@ export default Vue.extend({
       return this.getClassByType(type, "color");
     },
     getClassByType(type: string, getType: string): string {
-      let match: Match = {
+      let match: MatchObject = {
         iconMatch: {
           info: "information",
           warning: "alert",
@@ -228,21 +155,21 @@ export default Vue.extend({
       let year = date.getFullYear();
       return `${day} ${month}, ${year}`;
     },
+    /* need fix
     disabledDates(date: Date) {
-      let dates = [];
+      let dates: Array<number> = [];
       for (let i = 0; i < this.f_monologue.length; i++) {
-        // @ts-ignore
-        dates.push(new Date(this.f_monologue[i].date).getTime());
+        dates.push(new Date((this.f_monologue[i] as LogueArrayItem).date).getTime());
       }
       // @ts-ignore
       return !dates.includes(date.getTime());
-    },
+    },*/
     gotoDate() {
       let date = this.targetDate;
       let date_str = this.getDate(new Date(this.targetDate));
       location.hash = date_str;
     },
-    getDate(date: Date, delimiter: string = "/"): string {
+    getDate(date: Date, delimiter: string = "-"): string {
       let year = date.getFullYear().toString();
       let month: string | number = date.getMonth() + 1;
       month = month <= 9 ? "0" + month.toString() : month.toString();
@@ -293,10 +220,15 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.$server.get("/api/logue?limit=0,10", r => {
+      if (Array.isArray(r.data)) {
+        this.monologue = r.data;
+        (this.f_monologue as Array<LogueArrayItem>) = this.getArray();
+      }
+    });
     this.configMaterial();
     (this.targetDate as Date | string) = this.getDate(new Date());
     window.addEventListener("keydown", this.hotkey);
-    (this.f_monologue as Array<LogueArray>) = this.getArray();
   }
 });
 </script>
