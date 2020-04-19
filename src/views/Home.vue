@@ -1,40 +1,46 @@
 <template>
   <div class="home">
-    <md-speed-dial class="speeddial md-bottom-right">
-      <md-speed-dial-target @click="openDatePicker()" class="md-primary">
-        <md-icon class="mdi mdi-calendar" />
-      </md-speed-dial-target>
-    </md-speed-dial>
     <div class="mono-main">
-      <div class="datepicker-container">
-        <md-button class="md-primary md-raised md-icon-button" @click="openDatePicker()">
-          <md-icon class="mdi mdi-calendar" />
-        </md-button>
-        <md-datepicker
-          ref="picker"
-          class="datepicker"
-          v-model="targetDate"
-          :md-immediately="true"
-        />
-      </div>
-      <div v-for="(i, k) in f_monologue" :key="k" class="logue">
-        <div class="meta">
-          <span class="date-info">
-            <span class="mdi calendar" />
-            <a
-              :href="'#' + i.date"
-              :id="i.date"
-              :name="i.date"
-              class="date"
-            >{{ getDateString(i.date) }}</a>
-          </span>
+      <md-empty-state v-if="empty">
+        <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
+        <span class="md-empty-state-label">空页面</span>
+        <span class="md-empty-state-description">此页面目前没有任何内容</span>
+      </md-empty-state>
+      <div v-if="!empty">
+        <md-speed-dial class="speeddial md-bottom-right">
+          <md-speed-dial-target @click="openDatePicker()" class="md-primary">
+            <md-icon class="mdi mdi-calendar" />
+          </md-speed-dial-target>
+        </md-speed-dial>
+        <div class="datepicker-container">
+          <md-button class="md-primary md-raised md-icon-button" @click="openDatePicker()">
+            <md-icon class="mdi mdi-calendar" />
+          </md-button>
+          <md-datepicker
+            ref="picker"
+            class="datepicker"
+            v-model="targetDate"
+            :md-immediately="true"
+          />
         </div>
-        <div class="content" v-for="(a, b) in i.logue" :key="b">
-          <span class="status-info" :class="getColorByType(a.type)">
-            <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
-          </span>
-          <div class="logue-content">
-            <p>{{ a.contents }}</p>
+        <div v-for="(i, k) in f_monologue" :key="k" class="logue">
+          <div class="meta">
+            <span class="date-info">
+              <span class="mdi calendar" />
+              <a
+                :href="'#' + i.date"
+                :id="i.date"
+                :name="i.date"
+                class="date"
+              >{{ getDateString(i.date) }}</a>
+            </span>
+          </div>
+          <div class="content" v-for="(a, b) in i.logue" :key="b">
+            <span class="status-info" :class="getColorByType(a.type)">
+              <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
+            </span>
+            <div class="logue-content" v-html="a.contents">
+            </div>
           </div>
         </div>
       </div>
@@ -56,13 +62,16 @@ import MdContent from "vue-material/dist/components/MdContent";
 import MdSpeedDial from "vue-material/dist/components/MdSpeedDial";
 // @ts-ignore
 import MdIcon from "vue-material/dist/components/MdIcon";
+// @ts-ignore
+import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 
 Vue.use(MdButton)
   .use(MdDialog)
   .use(MdDatepicker)
   .use(MdContent)
   .use(MdSpeedDial)
-  .use(MdIcon);
+  .use(MdIcon)
+  .use(MdEmptyState);
 
 export default Vue.extend({
   data() {
@@ -70,7 +79,8 @@ export default Vue.extend({
       monologue: [],
       f_monologue: [],
       datePickDialog: false,
-      targetDate: new Date()
+      targetDate: new Date(),
+      empty: false
     };
   },
   methods: {
@@ -221,9 +231,11 @@ export default Vue.extend({
   },
   mounted() {
     this.$server.get("/api/logue?limit=0,10", r => {
-      if (Array.isArray(r.data)) {
+      if (Array.isArray(r.data) && r.data.length > 0) {
         this.monologue = r.data;
         (this.f_monologue as Array<LogueArrayItem>) = this.getArray();
+      } else {
+        this.empty = true;
       }
     });
     this.configMaterial();
@@ -281,5 +293,10 @@ export default Vue.extend({
       background-color: transparent;
     }
   }
+}
+
+.home {
+  height: 100%;
+  position: relative;
 }
 </style>
