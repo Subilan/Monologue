@@ -27,9 +27,13 @@
           <md-option value="solved">已解决</md-option>
         </md-select>
       </md-field>
-      <md-button @click="submit()" class="submit-btn md-primary md-raised">
-          提交
-      </md-button>
+      <md-button @click="submit()" class="submit-btn md-primary md-raised">提交</md-button>
+      <md-snackbar
+        :md-active.sync="snackbar"
+        md-position="center"
+        :md-duration="3000"
+        md-persistent
+      >{{ snackbarMessage }}</md-snackbar>
     </div>
   </div>
 </template>
@@ -46,12 +50,15 @@ import MdButton from "vue-material/dist/components/MdButton";
 import MdMenu from "vue-material/dist/components/MdMenu";
 // @ts-ignore
 import MdList from "vue-material/dist/components/MdList";
+// @ts-ignore
+import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 
 Vue.use(MdField)
   .use(MdIcon)
   .use(MdButton)
   .use(MdMenu)
-  .use(MdList);
+  .use(MdList)
+  .use(MdSnackbar);
 
 export default Vue.extend({
   data() {
@@ -60,7 +67,10 @@ export default Vue.extend({
       content: "",
       type: "info",
       titleInvalid: "",
-      contentInvalid: ""
+      contentInvalid: "",
+      snackbar: false,
+      snackbarMessage: "",
+      disableSubmit: false
     };
   },
   watch: {
@@ -89,13 +99,32 @@ export default Vue.extend({
       return match[this.type];
     },
     submit() {
-        this.$server.post("/api/logue", {
-            title: this.title,
-            contents: this.content,
-            type: this.type,
-        }, r => {
-            console.log(r);
-        })
+      if (this.disableSubmit) {
+        return false;
+      }
+      this.$server.post(
+        "/api/logue",
+        {
+          title: this.title,
+          contents: this.content,
+          type: this.type
+        },
+        r => {
+          if (r.data) {
+            this.disableSubmit = true;
+            this.snackbarMessage = "成功发布新的事件，即将为您跳转";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push({
+                name: "admin-panel"
+              });
+            }, 3000);
+          } else {
+            this.snackbarMessage = "发送失败，请检查控制台";
+            this.snackbar = true;
+          }
+        }
+      );
     }
   }
 });
@@ -118,9 +147,9 @@ export default Vue.extend({
   }
 
   .submit-btn {
-      margin-top: 56px !important;
-      display: block;
-      margin: auto;
+    margin-top: 56px !important;
+    display: block;
+    margin: auto;
   }
 }
 </style>
