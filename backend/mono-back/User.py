@@ -7,13 +7,6 @@ class UserManager:
         db = DBController()
         cur = db.cursor()
         args = (username, generate_password_hash(password))
-        sql = ("INSERT INTO User (username, password) VALUES ('%s', '%s')")
-        try:
-            cur.execute(sql, args)
-            db.commit()
-        except Exception:
-            db.rollback()
-            return False
-        finally:
-            db.close()
-        return True
+        sql = ("INSERT INTO User (username, password) VALUES (%s, %s)")
+        cur.execute(sql, args)
+        return db.commit(True)
