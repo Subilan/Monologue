@@ -1,3 +1,3 @@
 backend/mono-back/Lib/site-packages/* linguist-vendored
-src/css/default.css -linguist-vendored
-src/css/fonts/inter/inter.css -linguist-vendored
+src/css/*.css linguist-vendored
+src/css/fonts/inter/*.css linguist-vendored
