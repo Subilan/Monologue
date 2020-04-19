@@ -32,9 +32,30 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .admin {
   position: relative;
   height: 100%;
+}
+
+.admin-container {
+  @media screen and (max-width: 1024px) {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  margin-top: 56px;
+  height: 100%;
+  position: relative;
+}
+
+.hero {
+  h1 {
+    font-size: 48px;
+  }
+
+  p {
+    color: #aaa;
+    font-size: 24px;
+  }
 }
 </style>
