@@ -27,5 +27,6 @@
     "typescript": "~3.7.5",
     "vue-material": "^1.0.0-beta-11",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "typings": "src/**/*.d.ts"
 }
