@@ -71,21 +71,21 @@
 
 			&.blue {
                 color: #2196f3;
-                &+.logue-content p::selection, & .status::selection {
+                &+.logue-content *::selection, & .status::selection {
                     background-color: #bbdefb;
                 }
 			}
 
 			&.red {
                 color: #f44336;
-                &+.logue-content p::selection, & .status::selection {
+                &+.logue-content *::selection, & .status::selection {
                     background-color: #ffcdd2;
                 }
 			}
 
 			&.green {
                 color: #4caf50;
-                &+.logue-content p::selection, & .status::selection {
+                &+.logue-content *::selection, & .status::selection {
                     background-color: #c8e6c9;
                 }
 			}
@@ -118,8 +118,6 @@
 
 				p {
 					margin: 0;
-					padding-top: 12px;
-					padding-bottom: 12px;
 					font-size: 16px;
 					line-height: 1.5;
 				}
