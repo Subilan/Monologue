@@ -28,6 +28,13 @@ a.date {
     }
 }
 
-.md-input + .md-helper-text {
-    margin-left: 36px;
+.md-icon ~  .md-input {
+    & ~ .md-helper-text,
+    & ~ .md-error {
+        margin-left: 36px;
+    }
+}
+
+.md-field .md-select {
+    margin-left: 16px;
 }
