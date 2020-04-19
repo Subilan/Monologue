@@ -1,5 +1,5 @@
 <template>
-  <div v-if="auth" class="admin-panel">
+  <div v-if="auth" class="admin-panel admin-container">
     <div class="hero">
       <h1>控制中心</h1>
       <p>选择您要进行的操作</p>
@@ -16,7 +16,7 @@
         </md-button>
     </div>
     <div class="function-group">
-      <div class="function">
+      <div @click="goto('admin-new-event')" class="function">
         <h1>添加新事件</h1>
         <p>添加新的事件以展示在首页的时间线内，可以是公告、已解决或者问题。</p>
         <span class="icon mdi mdi-alert-decagram" />
@@ -114,33 +114,17 @@ export default Vue.extend({
                   console.error("程序异常，无法登出。");
               }
           })
+      },
+      goto(name: string) {
+        this.$router.push({
+          name
+        })
       }
   }
 });
 </script>
 
 <style lang="less" scoped>
-.admin-panel {
-  @media screen and (max-width: 1024px) {
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-  margin-top: 56px;
-  height: 100%;
-  position: relative;
-}
-
-.hero {
-  h1 {
-    font-size: 48px;
-  }
-
-  p {
-    color: #aaa;
-    font-size: 24px;
-  }
-}
-
 .function-group {
   @media screen and (min-width: 1024px) {
     display: flex;
@@ -211,7 +195,7 @@ export default Vue.extend({
       &::before {
         font-size: 72px;
       }
-      bottom: 16px;
+      bottom:  0;
       right: 16px;
       z-index: 1;
     }
