@@ -2,7 +2,7 @@
 
 # 💬 Monologue
 
-![](https://img.shields.io/badge/coverage-20%25-red?style=flat)
+![](https://img.shields.io/badge/coverage-25%25-red?style=flat)
 ![](https://img.shields.io/badge/front-Vue.js-brightgreen?style=flat&logo=vue.js)
 ![](https://img.shields.io/badge/back-python-blue?style=flat&logo=python)
 
