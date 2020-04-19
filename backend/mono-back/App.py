@@ -6,6 +6,7 @@ from datetime import timedelta
 from Database import DBController
 from Auth import AuthManager
 from Logue import LogueController
+import markdown
 
 app = Flask(__name__)
 api = Api(app)
@@ -23,7 +24,7 @@ class LogueAPI(Resource):
     def post(self):
         json = request.get_json(force = True)
         logue = LogueController()
-        result = logue.write(json["title"], json["contents"], json["type"])
+        result = logue.write(json["title"], markdown.markdown(json["contents"]), json["type"])
         return result;
 
 class AuthAPI(Resource):
