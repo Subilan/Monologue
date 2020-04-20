@@ -16,9 +16,14 @@ app.permanent_session_lifetime = timedelta(days = 7)
 class LogueAPI(Resource):
     def get(self):
         method = request.args.get("method")
+        markdown = request.args.get("markdown")
+        if not markdown or markdown == 'true':
+            markdown = True
+        else:
+            markdown = False
         arg = request.args.get(method)
         logue = LogueController()
-        result = logue.get(arg, method)
+        result = logue.get(arg, method, markdown)
         return result
 
     def post(self):

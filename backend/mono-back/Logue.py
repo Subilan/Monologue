@@ -3,12 +3,13 @@ import time
 import markdown
 
 class LogueController:
-    def get(self, arg, typ):
+    def get(self, arg, typ, markdown):
         funcs = {
             "id": self.getByID,
             "limit": self.getByLimit
         }
         self.arg = arg
+        self.markdown = markdown
         func = funcs[typ]
         return func()
 
@@ -20,8 +21,9 @@ class LogueController:
         cur.execute(sql)
         if (db.commit(True)):
             data = cur.fetchall()
-            for i in range(len(data)):
-                data[i]["contents"] = markdown.markdown(data[i]["contents"])
+            if (self.markdown):
+                for i in range(len(data)):
+                    data[i]["contents"] = markdown.markdown(data[i]["contents"])
             return data
         return False
     
@@ -33,7 +35,8 @@ class LogueController:
         cur.execute(sql, (arg))
         if (db.commit(True)):
             data = cur.fetchone()
-            data["contents"] = markdown.markdown(data["contents"])
+            if (self.markdown):
+                data["contents"] = markdown.markdown(data["contents"])
             return data
         return False
 
