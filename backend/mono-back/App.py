@@ -16,16 +16,33 @@ app.permanent_session_lifetime = timedelta(days = 7)
 
 class LogueAPI(Resource):
     def get(self):
-        arg = request.args.get("limit")
+        method = request.args.get("method")
+        arg = request.args.get(method)
         logue = LogueController()
-        result = logue.get(arg)
+        result = logue.get(arg, method)
         return result
 
     def post(self):
         json = request.get_json(force = True)
+        self.json = json
+        funcs = {
+            "submit": self.submit,
+            "alter": self.alter
+        }
+        func = funcs[json["method"]]
+        return func()
+
+    def submit(self):
+        json = self.json
         logue = LogueController()
         result = logue.write(json["title"], markdown.markdown(json["contents"]), json["type"])
-        return result;
+        return result
+
+    def alter(self):
+        json = self.json
+        logue = LogueController()
+        result = logue.alter(json["id"], json["title"], markdown.markdown(json["contents"]), json["type"])
+        return result
 
 class AuthAPI(Resource):
     def login(self):
