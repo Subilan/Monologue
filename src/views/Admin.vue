@@ -16,14 +16,10 @@ export default Vue.extend({
           method: "auth"
         },
         r => {
-          if (r.data) {
-            this.$router.push({
-              name: "admin-panel"
-            });
-          } else {
+          if (r.data === false) {
             this.$router.push({
               name: "admin-auth"
-            });
+            })
           }
         }
       );
