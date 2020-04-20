@@ -20,6 +20,10 @@ export default Vue.extend({
             this.$router.push({
               name: "admin-auth"
             })
+          } else {
+            this.$router.push({
+              name: "admin-panel"
+            })
           }
         }
       );
