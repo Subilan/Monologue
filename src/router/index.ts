@@ -30,7 +30,7 @@ const routes = [
 				component: () => import("@/views/AdminNewEvent.vue")
 			},
 			{
-				path: "edit-event/:id",
+				path: "edit-event/:id?",
 				name: "admin-edit-event",
 				component: () => import("@/views/AdminNewEvent.vue")
 			}
