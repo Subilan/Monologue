@@ -28,6 +28,11 @@ const routes = [
 				path: "new-event",
 				name: "admin-new-event",
 				component: () => import("@/views/AdminNewEvent.vue")
+			},
+			{
+				path: "edit-event/:id",
+				name: "admin-edit-event",
+				component: () => import("@/views/AdminNewEvent.vue")
 			}
 		]
 	}
