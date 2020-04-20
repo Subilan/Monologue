@@ -20,4 +20,5 @@ interface Logue {
 
 interface LogueOrigin extends Logue {
 	date: string;
+	id: number;
 }
