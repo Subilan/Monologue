@@ -230,7 +230,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$server.get("/api/logue?limit=0,10", r => {
+    this.$server.get("/api/logue?method=limit&limit=0,10", r => {
       if (Array.isArray(r.data) && r.data.length > 0) {
         this.monologue = r.data;
         (this.f_monologue as Array<LogueArrayItem>) = this.getArray();
