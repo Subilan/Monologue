@@ -52,7 +52,7 @@ class LogueController:
     def alter(self, id, title, contents, typ):
         db = DBController()
         cur = db.cursor()
-        args = (title, contents, typ)
-        sql = ("UPDATE Logue SET title=%s, contents=%s, type=%s")
+        args = (title, contents, typ, id)
+        sql = ("UPDATE Logue SET title=%s, contents=%s, type=%s WHERE id=%s")
         cur.execute(sql, args)
         return db.commit(True)
