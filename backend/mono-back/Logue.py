@@ -1,5 +1,6 @@
 from Database import DBController
 import time
+import markdown
 
 class LogueController:
     def get(self, arg, typ):
@@ -19,6 +20,8 @@ class LogueController:
         cur.execute(sql)
         if (db.commit(True)):
             data = cur.fetchall()
+            for i in range(len(data)):
+                data[i]["contents"] = markdown.markdown(data[i]["contents"])
             return data
         return False
     
@@ -29,7 +32,8 @@ class LogueController:
         sql = ("SELECT * FROM Logue WHERE id=%s")
         cur.execute(sql, (arg))
         if (db.commit(True)):
-            data = cur.fetchone()[0]
+            data = cur.fetchone()
+            data["contents"] = markdown.markdown(data["contents"])
             return data
         return False
 
