@@ -21,10 +21,11 @@ class LogueController:
         cur.execute(sql)
         if (db.commit(True)):
             data = cur.fetchall()
-            if (self.markdown):
-                for i in range(len(data)):
-                    data[i]["contents"] = markdown.markdown(data[i]["contents"])
-            return data
+            if (data != None):
+                if (self.markdown):
+                    for i in range(len(data)):
+                        data[i]["contents"] = markdown.markdown(data[i]["contents"])
+                return data
         return False
     
     def getByID(self):
@@ -35,9 +36,10 @@ class LogueController:
         cur.execute(sql, (arg))
         if (db.commit(True)):
             data = cur.fetchone()
-            if (self.markdown):
-                data["contents"] = markdown.markdown(data["contents"])
-            return data
+            if (data != None):
+                if (self.markdown):
+                    data["contents"] = markdown.markdown(data["contents"])
+                return data
         return False
 
     def write(self, title, contents, typ):

@@ -18,6 +18,8 @@ class LogueAPI(Resource):
     def get(self):
         method = request.args.get("method")
         markdown = request.args.get("markdown")
+        if not method:
+            abort(404)
         if not markdown or markdown == 'true':
             markdown = True
         else:
