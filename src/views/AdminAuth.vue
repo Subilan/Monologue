@@ -111,6 +111,8 @@ export default Vue.extend({
   display: flex;
 
   .auth-box {
+    min-width: 310px;
+
     &,
     .login-btn {
       display: block;
