@@ -8,8 +8,8 @@
     </md-empty-state>
     <div class="full-height" v-if="!isEdit() || !invalidID">
       <div class="hero">
-        <h1>添加新事件</h1>
-        <p>在时间线上添加新的事件以供外部参考。</p>
+        <h1>{{ isEdit() ? "编辑事件 #" + id : "添加新事件"}}</h1>
+        <p>{{ isEdit() ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
       </div>
       <div class="new-event-form full-height">
         <md-field :class="titleInvalid">
