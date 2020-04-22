@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 from datetime import timedelta
 from Database import DBController
 from Auth import AuthManager
+from User import UserManager
 from Logue import LogueController
 
 app = Flask(__name__)
@@ -51,11 +52,13 @@ class LogueAPI(Resource):
 class AuthAPI(Resource):
     def login(self):
         json = self.json
-        auth = AuthManager(json["username"])
-        if (auth.check(json["password"])):
-            session["username"] = json["username"]
-            session.permanent = True
-            return True
+        user = UserManager(json["username"])
+        if (user.exists()):
+            auth = AuthManager(json["username"])
+            if (auth.check(json["password"])):
+                session["username"] = json["username"]
+                session.permanent = True
+                return True
         return False
         
     def logout(self):
