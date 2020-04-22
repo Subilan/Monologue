@@ -7,12 +7,25 @@ from Database import DBController
 from Auth import AuthManager
 from User import UserManager
 from Logue import LogueController
+from Data import DataManager
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 app.secret_key = "jkshbfawugfagr78f3q4r7rq4tfg4g23o7yr39o563498fi387ty8ygr7tdwsacghjsdvbdxzvesfdiolhg;waprurq2;3p[u5r0piq82r90831-=8410184-32857[q2385-u20pfqyu-34t8q[urgfvq3-['ig3='rgiqre-'ugu='rug0wer8a0w78d8g9s7gu934yu930y5ihi3h4ihihegj'egisdahfhsiahfhhufewfwtr7wfgharege"
 app.permanent_session_lifetime = timedelta(days = 7)
+
+class DataAPI(Resource):
+    def get(self):
+        component = request.args.get("comp")
+        name = request.args.get("name")
+        if not component or not name:
+            abort(404)
+        data = DataManager()
+        result = data.get(component, name)
+        if not result:
+            abort(404)
+        return result
 
 class LogueAPI(Resource):
     def get(self):
@@ -108,6 +121,7 @@ def internalServerError(err):
 
 api.add_resource(LogueAPI, '/api/logue', endpoint = 'logue')
 api.add_resource(AuthAPI, '/api/auth', endpoint = 'auth')
+api.add_resource(DataAPI, '/api/data', endpoint = 'data')
 
 if __name__ == '__main__':
     app.run(debug = True);
