@@ -53,7 +53,7 @@ cd /backend/mono-back
 
 ## 关于
 
-![](https://i.loli.net/2020/04/19/bUE43Xe9FqftdHn.jpg)
+![](https://i.loli.net/2020/04/22/HVgw5caiYed3Lxk.jpg)
 
 这是制作过程中的一张照片。Monologue 的产生并不代表着一种新想法，而是为了节省时间做出的功能集合，通过某种概念让它们合理地组合在一起。
 
