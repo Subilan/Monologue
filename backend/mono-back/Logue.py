@@ -17,7 +17,7 @@ class LogueController:
         arg = self.arg
         db = DBController()
         cur = db.cursor(True)
-        sql = ("SELECT * FROM Logue LIMIT " + arg)
+        sql = ("SELECT * FROM Logue ORDER BY id DESC LIMIT %s" % arg)
         cur.execute(sql)
         if (db.commit(True)):
             data = cur.fetchall()
