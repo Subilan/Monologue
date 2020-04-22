@@ -23,7 +23,7 @@
             :md-immediately="true"
           />
         </div>
-        <div v-for="(i, k) in f_monologue" :key="k" class="logue">
+        <div v-for="(i, k) in monologue" :key="k" class="logue">
           <div class="meta">
             <span class="date-info">
               <span class="mdi calendar" />
@@ -38,11 +38,23 @@
           <div class="content" v-for="(a, b) in i.logue" :key="b">
             <span class="status-info" :class="getColorByType(a.type)">
               <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
+              <span
+                v-if="auth"
+                class="edit"
+                @click="$router.push({name: 'admin-edit-event', params: {id: a.id}})"
+              >编辑</span>
             </span>
-            <div class="logue-content" v-html="a.contents">
-            </div>
+            <div class="logue-content" v-html="a.contents"></div>
           </div>
         </div>
+      </div>
+      <div class="load-more">
+        <md-button
+          v-if="showLoadNextButton"
+          @click="loadNextTen()"
+          class="md-primary md-raised load-more-button"
+        >加载更多</md-button>
+        <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading" />
       </div>
     </div>
   </div>
@@ -64,6 +76,8 @@ import MdSpeedDial from "vue-material/dist/components/MdSpeedDial";
 import MdIcon from "vue-material/dist/components/MdIcon";
 // @ts-ignore
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
+// @ts-ignore
+import MdProgress from "vue-material/dist/components/MdProgress";
 
 Vue.use(MdButton)
   .use(MdDialog)
@@ -71,22 +85,27 @@ Vue.use(MdButton)
   .use(MdContent)
   .use(MdSpeedDial)
   .use(MdIcon)
-  .use(MdEmptyState);
+  .use(MdEmptyState)
+  .use(MdProgress);
 
 export default Vue.extend({
   data() {
     return {
       monologue: [],
-      f_monologue: [],
       datePickDialog: false,
       targetDate: new Date(),
-      empty: false
+      empty: false,
+      auth: false,
+      limitStart: 10,
+      showLoadNextButton: false,
+      showLoading: false,
+      total: 0
     };
   },
   methods: {
-    getArray(): Array<LogueArrayItem> {
+    getArray(array: Array<LogueOrigin>): Array<LogueArrayItem> {
       let arr: Array<LogueArrayItem> = [];
-      (this.monologue as Array<LogueOrigin>).forEach((k, i) => {
+      array.forEach((k, i) => {
         let ix = -1;
         let d = k.date.split(" ");
         let date = d[0];
@@ -101,20 +120,23 @@ export default Vue.extend({
         if (!sameDay) {
           arr.push({
             date: date,
-            time: time,
             logue: [
               {
+                id: k.id,
                 title: k.title,
                 type: k.type,
-                contents: k.contents
+                contents: k.contents,
+                time: time
               }
             ]
           });
         } else {
           arr[ix].logue.push({
+            id: k.id,
             title: k.title,
             type: k.type,
-            contents: k.contents
+            contents: k.contents,
+            time: time
           });
         }
       });
@@ -222,6 +244,43 @@ export default Vue.extend({
             this.openDatePicker();
         }
       }
+    },
+    loadNextTen() {
+      this.showLoadNextButton = false;
+      this.showLoading = true;
+      this.$server.get(
+        "/api/logue?method=limit&limit=" + this.limitStart + ",10",
+        r => {
+          if (Array.isArray(r.data) && r.data.length > 0) {
+            let data = r.data;
+            let arr: Array<LogueArrayItem> = this.monologue;
+            arr.forEach(k => {
+              data.forEach((e, i) => {
+                let logueItem = {
+                  id: e.id,
+                  title: e.title,
+                  contents: e.contents,
+                  type: e.type,
+                  time: e.date.split(" ")[1]
+                };
+                if (e.date.split(" ")[0] == k.date) {
+                  k.logue.push(logueItem);
+                } else {
+                  arr.push({
+                    date: e.date.split(" ")[0],
+                    logue: [logueItem]
+                  });
+                }
+              });
+            });
+            this.showLoadNextButton = r.data.length == 10;
+          } else {
+            this.showLoadNextButton = false;
+          }
+        }
+      );
+      this.showLoading = false;
+      this.limitStart += 10;
     }
   },
   watch: {
@@ -232,12 +291,28 @@ export default Vue.extend({
   mounted() {
     this.$server.get("/api/logue?method=limit&limit=0,10", r => {
       if (Array.isArray(r.data) && r.data.length > 0) {
-        this.monologue = r.data;
-        (this.f_monologue as Array<LogueArrayItem>) = this.getArray();
+        (this.monologue as Array<LogueArrayItem>) = this.getArray(r.data);
       } else {
         this.empty = true;
       }
     });
+    this.$server.get("/api/data?comp=logue&name=length", r => {
+      if (Number.isInteger(r.data)) {
+        this.total = r.data;
+        if (this.total > 10) {
+          this.showLoadNextButton = true;
+        }
+      }
+    });
+    this.$server.post(
+      "/api/auth",
+      {
+        method: "auth"
+      },
+      r => {
+        this.auth = r.data;
+      }
+    );
     this.configMaterial();
     (this.targetDate as Date | string) = this.getDate(new Date());
     window.addEventListener("keydown", this.hotkey);
@@ -298,5 +373,13 @@ export default Vue.extend({
 .home {
   height: 100%;
   position: relative;
+}
+
+.load-more-button,
+.loading {
+  display: block;
+  margin: auto;
+  margin-top: 56px;
+  margin-bottom: 72px;
 }
 </style>
