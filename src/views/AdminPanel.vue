@@ -49,7 +49,7 @@
         </md-dialog-content>
         <md-dialog-actions>
             <md-button class="md-primary" @click="logoutConfirmDialog = false">取消</md-button>
-            <md-button class="md-primary md-raised" @click="logout()">登出</md-button>
+            <md-button class="md-primary md-raised" @click="logout(); logoutConfirmDialog = false">登出</md-button>
         </md-dialog-actions>
     </md-dialog>
     <md-snackbar md-position="center" :md-duration="3000" :md-active.sync="snackbar">
