@@ -7,11 +7,12 @@
         <span class="md-empty-state-description">此页面目前没有任何内容</span>
       </md-empty-state>
       <div v-if="!empty">
-        <md-speed-dial class="speeddial md-bottom-right">
-          <md-speed-dial-target @click="openDatePicker()" class="md-primary">
-            <md-icon class="mdi mdi-calendar" />
-          </md-speed-dial-target>
-        </md-speed-dial>
+        <md-button :style="{opacity: backToTopButtonOpacity}" @click="toTop()" class="speeddial md-primary">
+          返回顶部
+        </md-button>
+        <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
+          <span class="md-icon mdi mdi-calendar" />
+        </md-button>
         <div class="datepicker-container">
           <md-button class="md-primary md-raised md-icon-button" @click="openDatePicker()">
             <md-icon class="mdi mdi-calendar" />
@@ -99,7 +100,8 @@ export default Vue.extend({
       limitStart: 10,
       showLoadNextButton: false,
       showLoading: false,
-      total: 0
+      total: 0,
+      backToTopButtonOpacity: 0,
     };
   },
   methods: {
@@ -274,6 +276,7 @@ export default Vue.extend({
               });
             });
             this.showLoadNextButton = r.data.length == 10;
+            this.backToTopButtonOpacity = 1;
           } else {
             this.showLoadNextButton = false;
           }
@@ -281,6 +284,9 @@ export default Vue.extend({
       );
       this.showLoading = false;
       this.limitStart += 10;
+    },
+    toTop() {
+      window.scrollTo(0, 0);
     }
   },
   watch: {
@@ -349,12 +355,23 @@ export default Vue.extend({
   box-sizing: content-box;
 }
 
-.speeddial {
-  position: fixed;
-  z-index: 100;
+.speeddial.calendar {
+  top: 32px;
+  right: 32px;
 
   @media screen and (min-width: 1024px) {
     display: none;
+  }
+}
+
+.speeddial {
+  position: fixed;
+  z-index: 100;
+  transition: opacity .5s ease;
+
+  @media screen and (min-width: 1024px) {
+    bottom: 32px;
+    right: 32px;
   }
 }
 
