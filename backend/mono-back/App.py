@@ -18,13 +18,15 @@ class LogueAPI(Resource):
     def get(self):
         method = request.args.get("method")
         markdown = request.args.get("markdown")
-        if not method:
+        if not method or method not in ["limit", "id"]:
             abort(404)
         if not markdown or markdown == 'true':
             markdown = True
         else:
             markdown = False
         arg = request.args.get(method)
+        if not arg:
+            abort(404)
         logue = LogueController()
         result = logue.get(arg, method, markdown)
         return result
