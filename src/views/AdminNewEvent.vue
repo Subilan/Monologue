@@ -1,7 +1,7 @@
 <template>
   <div class="admin-event admin-container">
     <md-empty-state v-if="invalidID">
-      <span class="md-empty-state-icon mdi mdi-help-circle-outline"/>
+      <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
       <span class="md-empty-state-label">无效的 ID</span>
       <span class="md-empty-state-description">您输入的 ID 有误或者不存在</span>
       <md-button @click="$router.go(-1)" class="md-primary md-raised">后退</md-button>
@@ -10,6 +10,11 @@
       <div class="hero">
         <h1>{{ isEdit() ? "编辑事件 #" + id : "添加新事件"}}</h1>
         <p>{{ isEdit() ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
+      </div>
+      <div v-if="isEdit()" class="functions">
+        <md-button @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
+          <md-icon class="mdi mdi-delete" />
+        </md-button>
       </div>
       <div class="new-event-form full-height">
         <md-field :class="titleInvalid">
@@ -38,9 +43,17 @@
         <md-snackbar
           :md-active.sync="snackbar"
           md-position="center"
-          :md-duration="3000"
+          :md-duration="1500"
           md-persistent
         >{{ snackbarMessage }}</md-snackbar>
+        <md-dialog :md-active.sync="deleteConfirmDialog">
+          <md-dialog-title>删除确认</md-dialog-title>
+          <md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
+          <md-dialog-actions>
+            <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+            <md-button @click="deleteEvent(); deleteConfirmDialog = false" class="md-primary">确认删除</md-button>
+          </md-dialog-actions>
+        </md-dialog>
       </div>
     </div>
   </div>
@@ -62,6 +75,8 @@ import MdList from "vue-material/dist/components/MdList";
 import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 // @ts-ignore
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
+// @ts-ignore
+import MdDialog from "vue-material/dist/components/MdDialog";
 
 Vue.use(MdField)
   .use(MdIcon)
@@ -69,7 +84,8 @@ Vue.use(MdField)
   .use(MdMenu)
   .use(MdList)
   .use(MdSnackbar)
-  .use(MdEmptyState);
+  .use(MdEmptyState)
+  .use(MdDialog);
 
 export default Vue.extend({
   data() {
@@ -84,6 +100,7 @@ export default Vue.extend({
       snackbarMessage: "",
       disableSubmit: false,
       invalidID: false,
+      deleteConfirmDialog: false
     };
   },
   watch: {
@@ -136,9 +153,32 @@ export default Vue.extend({
               this.$router.push({
                 name: "admin-panel"
               });
-            }, 3000);
+            }, 1500);
           } else {
             this.snackbarMessage = "发送失败，请检查控制台";
+            this.snackbar = true;
+          }
+        }
+      );
+    },
+    deleteEvent() {
+      this.$server.post(
+        "/api/logue",
+        {
+          method: "delete",
+          id: this.id
+        },
+        r => {
+          if (r.data) {
+            this.snackbarMessage = "成功删除此事件，即将返回首页";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push({
+                name: "home"
+              });
+            }, 1500);
+          } else {
+            this.snackbarMessage = "由于发生了内部错误，删除失败";
             this.snackbar = true;
           }
         }
@@ -149,12 +189,19 @@ export default Vue.extend({
     if (this.isEdit()) {
       this.id = Number(this.$route.params.id);
       if (this.id > 0 && Number.isInteger(this.id) && this.id !== NaN) {
-        this.$server.get("/api/logue?method=id&markdown=false&id=" + this.id, r => {
-          let data = r.data;
-          this.title = data.title;
-          this.content = data.contents;
-          this.type = data.type;
-        });
+        this.$server.get(
+          "/api/logue?method=id&markdown=false&id=" + this.id,
+          r => {
+            let data = r.data;
+            if (r.data) {
+              this.title = data.title;
+              this.content = data.contents;
+              this.type = data.type;
+            } else {
+              this.invalidID = true;
+            }
+          }
+        );
       } else {
         this.invalidID = true;
       }
@@ -181,5 +228,13 @@ export default Vue.extend({
     display: block;
     margin: auto;
   }
+}
+
+.functions {
+  position: absolute;
+  top: 32px;
+  right: 0;
+  display: flex;
+  align-items: center;
 }
 </style>
