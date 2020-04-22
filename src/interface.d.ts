@@ -8,17 +8,17 @@ interface MatchObject {
 
 interface LogueArrayItem {
 	date: string;
-	time: string;
 	logue: Array<Logue>;
 }
 
 interface Logue {
+	id: number;
 	title: string;
 	type: string;
 	contents: string;
+	time: string;
 }
 
 interface LogueOrigin extends Logue {
 	date: string;
-	id: number;
 }
