@@ -38,6 +38,9 @@
 		}
 
 		.status-info {
+			display: flex;
+			align-items: center;
+
 			.status {
                 display: flex;
                 align-items: center;
@@ -89,12 +92,35 @@
                     background-color: #c8e6c9;
                 }
 			}
+
+			.edit {
+				display: inline;
+				color: #bbb;
+				margin-left: 16px;
+				opacity: 0;
+				transition: opacity .2s ease;
+				cursor: pointer;
+
+				&:hover, &:focus, &:active {
+					opacity: .5;
+					transition: opacity .2s ease;
+				}
+			}
 		}
 
 		.content {
             padding-left: 56px;
             padding-top: 21px;
-            position: relative;
+			position: relative;
+			
+			&:hover, &:active, &:focus {
+				.status-info {
+					.edit {
+						transition: opacity .2s ease;
+						opacity: 1;
+					}
+				}
+			}
 
 			&::before {
 				border-left: 1px solid rgba(0, 0, 0, 0.15);
