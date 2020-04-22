@@ -71,8 +71,8 @@
         <md-dialog-title>删除确认</md-dialog-title>
         <md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
         <md-dialog-actions>
-          <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
           <md-button @click="deleteEvent(); deleteConfirmDialog = false" class="md-primary">确认删除</md-button>
+          <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
         </md-dialog-actions>
       </md-dialog>
       <md-snackbar
