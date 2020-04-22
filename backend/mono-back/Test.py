@@ -1,5 +1,10 @@
-from User import UserManager
+from Logue import LogueController
 
-u = UserManager()
+logue = LogueController()
 
-u.createUser("admin", "subilan1999")
+a = 0
+
+while a != 100:
+    a += 1
+    logue.write("title", "contents", "info")
+
