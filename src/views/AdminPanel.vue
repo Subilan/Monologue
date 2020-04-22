@@ -52,7 +52,7 @@
             <md-button class="md-primary md-raised" @click="logout(); logoutConfirmDialog = false">登出</md-button>
         </md-dialog-actions>
     </md-dialog>
-    <md-snackbar md-position="center" :md-duration="3000" :md-active.sync="snackbar">
+    <md-snackbar md-position="center" :md-duration="1500" :md-active.sync="snackbar">
         {{ snackbarMessage }}
     </md-snackbar>
   </div>
@@ -109,7 +109,7 @@ export default Vue.extend({
                       this.$router.push({
                           name: "home"
                       })
-                  }, 3000);
+                  }, 1500);
               } else {
                   console.error("程序异常，无法登出。");
               }
