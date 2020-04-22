@@ -7,9 +7,11 @@
         <span class="md-empty-state-description">此页面目前没有任何内容</span>
       </md-empty-state>
       <div v-if="!empty">
-        <md-button :style="{opacity: backToTopButtonOpacity}" @click="toTop()" class="speeddial md-primary">
-          返回顶部
-        </md-button>
+        <md-button
+          :style="{opacity: backToTopButtonOpacity}"
+          @click="toTop()"
+          class="speeddial md-primary"
+        >返回顶部</md-button>
         <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
           <span class="md-icon mdi mdi-calendar" />
         </md-button>
@@ -41,9 +43,17 @@
               <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
               <span
                 v-if="auth"
-                class="edit"
+                class="edit action-span"
                 @click="$router.push({name: 'admin-edit-event', params: {id: a.id}})"
               >编辑</span>
+              <span
+                v-if="auth"
+                class="delete action-span"
+                @click="targetID = a.id; deleteConfirmDialog = true"
+              >删除</span>
+              <span class="id action-span">
+                #{{a.id}}
+              </span>
             </span>
             <div class="logue-content" v-html="a.contents"></div>
           </div>
@@ -57,6 +67,20 @@
         >加载更多</md-button>
         <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading" />
       </div>
+      <md-dialog v-if="auth" :md-active.sync="deleteConfirmDialog">
+        <md-dialog-title>删除确认</md-dialog-title>
+        <md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
+        <md-dialog-actions>
+          <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+          <md-button @click="deleteEvent(); deleteConfirmDialog = false" class="md-primary">确认删除</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+      <md-snackbar
+        :md-active.sync="snackbar"
+        md-postion="center"
+        md-persistent
+        :md-duration="1500"
+      >{{ snackbarMessage }}</md-snackbar>
     </div>
   </div>
 </template>
@@ -79,6 +103,8 @@ import MdIcon from "vue-material/dist/components/MdIcon";
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 // @ts-ignore
 import MdProgress from "vue-material/dist/components/MdProgress";
+// @ts-ignore
+import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 
 Vue.use(MdButton)
   .use(MdDialog)
@@ -87,7 +113,8 @@ Vue.use(MdButton)
   .use(MdSpeedDial)
   .use(MdIcon)
   .use(MdEmptyState)
-  .use(MdProgress);
+  .use(MdProgress)
+  .use(MdSnackbar);
 
 export default Vue.extend({
   data() {
@@ -102,6 +129,10 @@ export default Vue.extend({
       showLoading: false,
       total: 0,
       backToTopButtonOpacity: 0,
+      targetID: -1,
+      deleteConfirmDialog: false,
+      snackbarMessage: "",
+      snackbar: false
     };
   },
   methods: {
@@ -287,6 +318,32 @@ export default Vue.extend({
     },
     toTop() {
       window.scrollTo(0, 0);
+    },
+    getSnackbar(message: string) {
+      this.snackbarMessage = message;
+      this.snackbar = !this.snackbar;
+    },
+    deleteEvent() {
+      this.$server.post(
+        "/api/logue",
+        {
+          method: "delete",
+          id: this.targetID
+        },
+        r => {
+          if (r.data) {
+            this.getSnackbar(
+              "成功删除 #" + this.targetID + " 事件，即将为您刷新。"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 1500);
+          } else {
+            this.getSnackbar("出错了！暂时无法删除此事件。");
+          }
+          this.targetID = -1;
+        }
+      );
     }
   },
   watch: {
@@ -367,7 +424,7 @@ export default Vue.extend({
 .speeddial {
   position: fixed;
   z-index: 100;
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
 
   @media screen and (min-width: 1024px) {
     bottom: 32px;
