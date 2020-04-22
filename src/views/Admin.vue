@@ -72,13 +72,13 @@ export default Vue.extend({
   }
 }
 
-.fade-enter {
+.fade-enter, .fade-leave-to {
   visibility: hidden;
   opacity: 0;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .4s ease;
+  transition: opacity .2s ease;
 }
 
 .fade-enter-to, .fade-leave {
