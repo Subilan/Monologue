@@ -111,6 +111,12 @@
 
 				&.id {
 					font-weight: bold;
+					&.unauthed {
+						&::before {
+							content: none;
+						}
+						margin-left: 16px;
+					}
 				}
 
 				&:not(.edit)::before {

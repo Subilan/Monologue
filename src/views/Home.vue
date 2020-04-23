@@ -51,7 +51,7 @@
                 class="delete action-span"
                 @click="targetID = a.id; deleteConfirmDialog = true"
               >删除</span>
-              <span class="id action-span">
+              <span :class="auth ? '' : 'unauthed'" class="id action-span">
                 #{{a.id}}
               </span>
             </span>
