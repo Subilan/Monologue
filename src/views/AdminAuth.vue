@@ -18,7 +18,7 @@
         <md-button @click="submit()" class="login-btn md-primary md-raised">登录</md-button>
         <md-snackbar
           md-position="center"
-          :md-duration="3000"
+          :md-duration="1500"
           :md-active.sync="snackbar"
           md-persistent
         >{{ snackbarMessage }}</md-snackbar>
@@ -88,7 +88,7 @@ export default Vue.extend({
                           this.$router.push({
                           name: "admin-panel"
                       })
-                      }, 3000);
+                      }, 1500);
                   } else {
                       this.snackbarMessage = "登录失败，请检查您填写的信息";
                       this.snackbar = true;

@@ -7,9 +7,11 @@
         <span class="md-empty-state-description">此页面目前没有任何内容</span>
       </md-empty-state>
       <div v-if="!empty">
-        <md-button :style="{opacity: backToTopButtonOpacity}" @click="toTop()" class="speeddial md-primary">
-          返回顶部
-        </md-button>
+        <md-button
+          :style="{opacity: backToTopButtonOpacity}"
+          @click="toTop()"
+          class="speeddial md-primary"
+        >返回顶部</md-button>
         <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
           <span class="md-icon mdi mdi-calendar" />
         </md-button>
@@ -41,9 +43,19 @@
               <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
               <span
                 v-if="auth"
-                class="edit"
+                class="edit action-span"
                 @click="$router.push({name: 'admin-edit-event', params: {id: a.id}})"
               >编辑</span>
+              <span
+                v-if="auth"
+                class="delete action-span"
+                @click="targetID = a.id; deleteConfirmDialog = true"
+              >删除</span>
+              <span
+                @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
+                :class="auth ? '' : 'unauthed'"
+                class="id action-span"
+              >#{{a.id}}</span>
             </span>
             <div class="logue-content" v-html="a.contents"></div>
           </div>
@@ -57,6 +69,37 @@
         >加载更多</md-button>
         <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading" />
       </div>
+      <md-dialog v-if="auth" :md-active.sync="deleteConfirmDialog">
+        <md-dialog-title>删除确认</md-dialog-title>
+        <md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
+        <md-dialog-actions>
+          <md-button @click="deleteEvent(); deleteConfirmDialog = false" class="md-primary">确认删除</md-button>
+          <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+      <md-dialog :md-active="logueDialog">
+        <md-dialog-content>
+          <div class="event-detail">
+            <div class="title">
+              <md-icon class="icon mdi" :class="getMdiIconByType(selectedType)" />
+              <h1>
+                {{ selectedTitle }}
+                <span class="id">#{{selectedID}}</span>
+              </h1>
+            </div>
+            <div v-html="selectedContents" class="contents"></div>
+          </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+          <md-button @click="logueDialog = false" class="md-primary">关闭</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+      <md-snackbar
+        :md-active.sync="snackbar"
+        md-postion="center"
+        md-persistent
+        :md-duration="1500"
+      >{{ snackbarMessage }}</md-snackbar>
     </div>
   </div>
 </template>
@@ -79,6 +122,8 @@ import MdIcon from "vue-material/dist/components/MdIcon";
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 // @ts-ignore
 import MdProgress from "vue-material/dist/components/MdProgress";
+// @ts-ignore
+import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 
 Vue.use(MdButton)
   .use(MdDialog)
@@ -87,7 +132,8 @@ Vue.use(MdButton)
   .use(MdSpeedDial)
   .use(MdIcon)
   .use(MdEmptyState)
-  .use(MdProgress);
+  .use(MdProgress)
+  .use(MdSnackbar);
 
 export default Vue.extend({
   data() {
@@ -102,6 +148,15 @@ export default Vue.extend({
       showLoading: false,
       total: 0,
       backToTopButtonOpacity: 0,
+      targetID: -1,
+      deleteConfirmDialog: false,
+      snackbarMessage: "",
+      snackbar: false,
+      selectedID: -1,
+      selectedTitle: "",
+      selectedContents: "",
+      selectedType: "",
+      logueDialog: false
     };
   },
   methods: {
@@ -287,6 +342,47 @@ export default Vue.extend({
     },
     toTop() {
       window.scrollTo(0, 0);
+    },
+    getSnackbar(message: string) {
+      this.snackbarMessage = message;
+      this.snackbar = !this.snackbar;
+    },
+    deleteEvent() {
+      this.$server.post(
+        "/api/logue",
+        {
+          method: "delete",
+          id: this.targetID
+        },
+        r => {
+          if (r.data) {
+            this.getSnackbar(
+              "成功删除 #" + this.targetID + " 事件，即将为您刷新。"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 1500);
+          } else {
+            this.getSnackbar("出错了！暂时无法删除此事件。");
+          }
+          this.targetID = -1;
+        }
+      );
+    },
+    getLogueDialog(id: number, title: string, contents: string, type: string) {
+      this.selectedID = id;
+      this.selectedTitle = title;
+      this.selectedContents = contents;
+      this.selectedType = type;
+      this.logueDialog = true;
+    },
+    getMdiIconByType(type: string) {
+      let match: StringMatch = {
+        info: "mdi-information-outline",
+        warning: "mdi-alert",
+        solved: "mdi-check"
+      };
+      return match[type];
     }
   },
   watch: {
@@ -367,7 +463,7 @@ export default Vue.extend({
 .speeddial {
   position: fixed;
   z-index: 100;
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
 
   @media screen and (min-width: 1024px) {
     bottom: 32px;
@@ -398,5 +494,40 @@ export default Vue.extend({
   margin: auto;
   margin-top: 56px;
   margin-bottom: 72px;
+}
+
+.event-detail {
+  .title {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      margin-left: 16px;
+      .id {
+        color: #bbb;
+        font-weight: normal;
+        font-size: 18px;
+      }
+    }
+
+    .icon {
+
+      &.mdi-check {
+        color: #4caf50;
+      }
+
+      &.mdi-information-outline {
+        color: #2196f3;
+      }
+
+      &.mdi-alert {
+        color: #f44336;
+      }
+
+      &::before {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>

@@ -58,3 +58,11 @@ class LogueController:
         sql = ("UPDATE Logue SET title=%s, contents=%s, type=%s WHERE id=%s")
         cur.execute(sql, args)
         return db.commit(True)
+
+    def delete(self, id):
+        if not id:
+            return False
+        db = DBController()
+        cur = db.cursor()
+        cur.execute("DELETE FROM Logue WHERE id=%s" % id)
+        return db.commit(True)

@@ -93,10 +93,9 @@
                 }
 			}
 
-			.edit {
+			.action-span {
 				display: inline;
 				color: #bbb;
-				margin-left: 16px;
 				opacity: 0;
 				transition: opacity .2s ease;
 				cursor: pointer;
@@ -104,6 +103,28 @@
 				&:hover, &:focus, &:active {
 					opacity: .5;
 					transition: opacity .2s ease;
+				}
+
+				&.edit {
+					margin-left: 16px;
+				}
+
+				&.id {
+					font-weight: bold;
+					&.unauthed {
+						&::before {
+							content: none;
+						}
+						margin-left: 16px;
+					}
+				}
+
+				&:not(.edit)::before {
+					content: "·";
+					color: #aaa;
+					display: inline-block;
+					margin-right: 8px;
+					margin-left: 8px;
 				}
 			}
 		}
@@ -115,7 +136,7 @@
 			
 			&:hover, &:active, &:focus {
 				.status-info {
-					.edit {
+					.action-span {
 						transition: opacity .2s ease;
 						opacity: 1;
 					}

@@ -1,12 +1,19 @@
 <template>
   <div class="admin">
-    <router-view />
+    <transition :name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
+  data(){
+    return {
+      fade: ''
+    }
+  },
   mounted() {
     // this page is not for visiting, just for routing!
     if (this.$route.name === "admin") {
@@ -27,6 +34,12 @@ export default Vue.extend({
           }
         }
       );
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // TODO: 针对不同方向跳转设置过渡
+      this.fade = 'fade'
     }
   }
 });
@@ -57,5 +70,19 @@ export default Vue.extend({
     color: #aaa;
     font-size: 24px;
   }
+}
+
+.fade-enter, .fade-leave-to {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s ease;
+}
+
+.fade-enter-to, .fade-leave {
+  opacity: 1;
+  visibility: visible;
 }
 </style>

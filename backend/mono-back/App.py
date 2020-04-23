@@ -45,26 +45,33 @@ class LogueAPI(Resource):
         return result
 
     def post(self):
-        json = request.get_json(force = True)
-        self.json = json
-        funcs = {
-            "submit": self.submit,
-            "alter": self.alter
-        }
-        func = funcs[json["method"]]
-        return func()
+        if ("username" in session):
+            json = request.get_json(force = True)
+            self.json = json
+            funcs = {
+                "submit": self.submit,
+                "alter": self.alter,
+                "delete": self.delete,
+            }
+            func = funcs[json["method"]]
+            return func()
+        else:
+            return False
 
     def submit(self):
         json = self.json
         logue = LogueController()
-        result = logue.write(json["title"], json["contents"], json["type"])
-        return result
+        return logue.write(json["title"], json["contents"], json["type"])
 
     def alter(self):
         json = self.json
         logue = LogueController()
-        result = logue.alter(json["id"], json["title"], json["contents"], json["type"])
-        return result
+        return logue.alter(json["id"], json["title"], json["contents"], json["type"])
+    
+    def delete(self):
+        json = self.json
+        logue = LogueController()
+        return logue.delete(json["id"])
 
 class AuthAPI(Resource):
     def login(self):
@@ -116,6 +123,15 @@ def internalServerError(err):
         jsonify({
             'error': 'INTERNAL_SERVER_ERROR',
             'code': 500
+        })
+    )
+
+@app.errorhandler(401)
+def unauthorizedError(err):
+    return make_response(
+        jsonify({
+            'error': 'UNAUTHORIZED',
+            'code': 401
         })
     )
 
