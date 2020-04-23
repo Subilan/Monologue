@@ -51,9 +51,11 @@
                 class="delete action-span"
                 @click="targetID = a.id; deleteConfirmDialog = true"
               >删除</span>
-              <span :class="auth ? '' : 'unauthed'" class="id action-span">
-                #{{a.id}}
-              </span>
+              <span
+                @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
+                :class="auth ? '' : 'unauthed'"
+                class="id action-span"
+              >#{{a.id}}</span>
             </span>
             <div class="logue-content" v-html="a.contents"></div>
           </div>
@@ -73,6 +75,23 @@
         <md-dialog-actions>
           <md-button @click="deleteEvent(); deleteConfirmDialog = false" class="md-primary">确认删除</md-button>
           <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+      <md-dialog :md-active="logueDialog">
+        <md-dialog-content>
+          <div class="event-detail">
+            <div class="title">
+              <md-icon class="icon mdi" :class="getMdiIconByType(selectedType)" />
+              <h1>
+                {{ selectedTitle }}
+                <span class="id">#{{selectedID}}</span>
+              </h1>
+            </div>
+            <div v-html="selectedContents" class="contents"></div>
+          </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+          <md-button @click="logueDialog = false" class="md-primary">关闭</md-button>
         </md-dialog-actions>
       </md-dialog>
       <md-snackbar
@@ -132,7 +151,12 @@ export default Vue.extend({
       targetID: -1,
       deleteConfirmDialog: false,
       snackbarMessage: "",
-      snackbar: false
+      snackbar: false,
+      selectedID: -1,
+      selectedTitle: "",
+      selectedContents: "",
+      selectedType: "",
+      logueDialog: false
     };
   },
   methods: {
@@ -344,6 +368,21 @@ export default Vue.extend({
           this.targetID = -1;
         }
       );
+    },
+    getLogueDialog(id: number, title: string, contents: string, type: string) {
+      this.selectedID = id;
+      this.selectedTitle = title;
+      this.selectedContents = contents;
+      this.selectedType = type;
+      this.logueDialog = true;
+    },
+    getMdiIconByType(type: string) {
+      let match: StringMatch = {
+        info: "mdi-information-outline",
+        warning: "mdi-alert",
+        solved: "mdi-check"
+      };
+      return match[type];
     }
   },
   watch: {
@@ -455,5 +494,40 @@ export default Vue.extend({
   margin: auto;
   margin-top: 56px;
   margin-bottom: 72px;
+}
+
+.event-detail {
+  .title {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      margin-left: 16px;
+      .id {
+        color: #bbb;
+        font-weight: normal;
+        font-size: 18px;
+      }
+    }
+
+    .icon {
+
+      &.mdi-check {
+        color: #4caf50;
+      }
+
+      &.mdi-information-outline {
+        color: #2196f3;
+      }
+
+      &.mdi-alert {
+        color: #f44336;
+      }
+
+      &::before {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>
