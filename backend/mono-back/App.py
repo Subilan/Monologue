@@ -45,15 +45,18 @@ class LogueAPI(Resource):
         return result
 
     def post(self):
-        json = request.get_json(force = True)
-        self.json = json
-        funcs = {
-            "submit": self.submit,
-            "alter": self.alter,
-            "delete": self.delete,
-        }
-        func = funcs[json["method"]]
-        return func()
+        if ("username" in session):
+            json = request.get_json(force = True)
+            self.json = json
+            funcs = {
+                "submit": self.submit,
+                "alter": self.alter,
+                "delete": self.delete,
+            }
+            func = funcs[json["method"]]
+            return func()
+        else:
+            return False
 
     def submit(self):
         json = self.json
@@ -120,6 +123,15 @@ def internalServerError(err):
         jsonify({
             'error': 'INTERNAL_SERVER_ERROR',
             'code': 500
+        })
+    )
+
+@app.errorhandler(401)
+def unauthorizedError(err):
+    return make_response(
+        jsonify({
+            'error': 'UNAUTHORIZED',
+            'code': 401
         })
     )
 
