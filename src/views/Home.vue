@@ -1,12 +1,15 @@
 <template>
   <div class="home">
     <div class="mono-main">
-      <md-empty-state v-if="empty">
+      <div v-if="!empty && loadingPage" class="loading">
+        <md-progress-spinner md-mode="indeterminate"/>
+      </div>
+      <md-empty-state v-if="empty && !loadingPage">
         <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
         <span class="md-empty-state-label">空页面</span>
         <span class="md-empty-state-description">此页面目前没有任何内容</span>
       </md-empty-state>
-      <div v-if="!empty">
+      <div v-if="!empty && !loadingPage">
         <md-button
           :style="{opacity: backToTopButtonOpacity}"
           @click="toTop()"
@@ -63,11 +66,11 @@
       </div>
       <div class="load-more">
         <md-button
-          v-if="showLoadNextButton"
+          v-if="showLoadNextButton && !loadingPage"
           @click="loadNextTen()"
           class="md-primary md-raised load-more-button"
         >加载更多</md-button>
-        <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading" />
+        <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading-block" />
       </div>
       <md-dialog v-if="auth" :md-active.sync="deleteConfirmDialog">
         <md-dialog-title>删除确认</md-dialog-title>
@@ -156,7 +159,8 @@ export default Vue.extend({
       selectedTitle: "",
       selectedContents: "",
       selectedType: "",
-      logueDialog: false
+      logueDialog: false,
+      loadingPage: true,
     };
   },
   methods: {
@@ -397,6 +401,7 @@ export default Vue.extend({
       } else {
         this.empty = true;
       }
+      this.loadingPage = false;
     });
     this.$server.get("/api/data?comp=logue&name=length", r => {
       if (Number.isInteger(r.data)) {
@@ -489,7 +494,7 @@ export default Vue.extend({
 }
 
 .load-more-button,
-.loading {
+.loading-block {
   display: block;
   margin: auto;
   margin-top: 56px;
