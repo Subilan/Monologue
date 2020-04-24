@@ -271,7 +271,7 @@ export default Vue.extend({
     },
     configMaterial() {
       let locale = (this as any).$material.locale;
-      locale.dateFormat = "yyyy/MM/dd";
+      locale.dateFormat = "yyyy-MM-dd";
       locale.days = [
         "星期天",
         "星期一",
