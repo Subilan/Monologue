@@ -153,21 +153,41 @@
                 bottom: 0;
 			}
 
+			.blue + .logue-content {
+				a {
+					color: #2196f3;
+
+					&::after {
+						background: #2196f3;
+					}
+				}
+			}
+
+			.green + .logue-content {
+				a {
+					color: #4caf50;
+
+					&::after {
+						background: #4caf50;
+					}
+				}
+			}
+
+			.red + .logue-content {
+				a {
+					color: #f44336;
+
+					&::after {
+						background: #f44336;
+					}
+				}
+			}
+
 			.logue-content {
 				padding-top: 16px;
 				padding-bottom: 16px;
-
-				h1 {
-					margin: 0;
-					padding-top: 12px;
-					padding-bottom: 12px;
-				}
-
-				p {
-					margin: 0;
-					font-size: 16px;
-					line-height: 1.5;
-				}
+				line-height: 1.8;
+				.typo;
 			}
 		}
 	}
