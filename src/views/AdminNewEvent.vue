@@ -214,7 +214,11 @@ export default Vue.extend({
 .new-event-form {
   .textarea {
     position: relative;
-    height: 50% !important;
+    height: 50%;
+
+    @media screen and (max-width: 1024px) {
+      height: 60%;
+    }
 
     textarea {
       position: relative;
@@ -236,5 +240,17 @@ export default Vue.extend({
   right: 0;
   display: flex;
   align-items: center;
+}
+
+.hero {
+  @media screen and (max-width: 1024px) {
+  h1 {
+    font-size: 38px;
+  }
+  p {
+    
+      font-size: 18px;
+    }
+  }
 }
 </style>
