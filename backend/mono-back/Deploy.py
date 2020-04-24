@@ -1,5 +1,5 @@
 from User import UserManager
 
-u = UserManager()
+u = UserManager("admin")
 
-u.createUser("admin", "")
+u.createUser("password")
