@@ -84,8 +84,7 @@
         <md-dialog-content>
           <div class="event-detail">
             <div class="title">
-              <md-icon class="icon mdi" :class="getMdiIconByType(selectedType)" />
-              <h1>
+              <h1 :class="getColorByType(selectedType)">
                 {{ selectedTitle }}
                 <span class="id">#{{selectedID}}</span>
               </h1>
@@ -380,14 +379,6 @@ export default Vue.extend({
       this.selectedType = type;
       this.logueDialog = true;
     },
-    getMdiIconByType(type: string) {
-      let match: StringMatch = {
-        info: "mdi-information-outline",
-        warning: "mdi-alert",
-        solved: "mdi-check"
-      };
-      return match[type];
-    }
   },
   watch: {
     targetDate(v) {
@@ -503,11 +494,21 @@ export default Vue.extend({
 
 .event-detail {
   .title {
-    display: flex;
-    align-items: center;
+    text-align: left;
+
+    .blue {
+      color: #2196f3;
+    }
+
+    .green {
+      color: #4caf50;
+    }
+
+    .red {
+      color: #f44336;
+    }
 
     h1 {
-      margin-left: 16px;
       .id {
         color: #bbb;
         font-weight: normal;
