@@ -5,15 +5,15 @@
       <p>选择您要进行的操作</p>
     </div>
     <div class="function-bar">
-        <md-button @click="$router.push({name: 'home'})" class="md-raised md-icon-button">
-            <md-icon class="mdi mdi-home"/>
-        </md-button>
-        <md-button @click="logoutConfirmDialog = true" class="md-raised md-icon-button">
-            <md-icon class="mdi mdi-logout"/>
-        </md-button>
-        <md-button class="md-raised md-icon-button">
-            <md-icon class="mdi mdi-help-circle"/>
-        </md-button>
+      <md-button @click="$router.push({name: 'home'})" class="md-raised md-icon-button">
+        <md-icon class="mdi mdi-home" />
+      </md-button>
+      <md-button @click="logoutConfirmDialog = true" class="md-raised md-icon-button">
+        <md-icon class="mdi mdi-logout" />
+      </md-button>
+      <md-button class="md-raised md-icon-button">
+        <md-icon class="mdi mdi-help-circle" />
+      </md-button>
     </div>
     <div class="function-group">
       <div @click="goto('admin-new-event')" class="function">
@@ -32,44 +32,49 @@
         <span class="icon mdi mdi-forum" />
       </div>
       <div class="function">
-          <h1>设置</h1>
-          <p>编辑用户信息，配置和管理 Monologue 本体的行为和数据处理方式。</p>
-          <span class="icon mdi mdi-cogs"/>
+        <h1>设置</h1>
+        <p>编辑用户信息，配置和管理 Monologue 本体的行为和数据处理方式。</p>
+        <span class="icon mdi mdi-cogs" />
       </div>
       <div class="function">
         <h1>关于 Monologue</h1>
         <p>查看 Monologue 的版本信息、更新日志和更多相关的技术层面内容。</p>
-        <span class="icon mdi mdi-information-variant"/>
+        <span class="icon mdi mdi-information-variant" />
       </div>
     </div>
     <md-dialog :md-active.sync="logoutConfirmDialog">
-        <md-dialog-title>是否确定？</md-dialog-title>
-        <md-dialog-content>
-            <p>您即将登出，届时需要重新登录才可继续管理 Monologue。是否继续？</p>
-        </md-dialog-content>
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="logoutConfirmDialog = false">取消</md-button>
-            <md-button class="md-primary md-raised" @click="logout(); logoutConfirmDialog = false">登出</md-button>
-        </md-dialog-actions>
+      <md-dialog-title>是否确定？</md-dialog-title>
+      <md-dialog-content>
+        <p>您即将登出，届时需要重新登录才可继续管理 Monologue。是否继续？</p>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="logoutConfirmDialog = false">取消</md-button>
+        <md-button class="md-primary md-raised" @click="logout(); logoutConfirmDialog = false">登出</md-button>
+      </md-dialog-actions>
     </md-dialog>
-    <md-snackbar md-position="center" :md-duration="1500" :md-active.sync="snackbar">
-        {{ snackbarMessage }}
-    </md-snackbar>
+    <md-snackbar
+      md-position="center"
+      :md-duration="1500"
+      :md-active.sync="snackbar"
+    >{{ snackbarMessage }}</md-snackbar>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 // @ts-ignore
-import MdButton from 'vue-material/dist/components/MdButton';
+import MdButton from "vue-material/dist/components/MdButton";
 // @ts-ignore
-import MdIcon from 'vue-material/dist/components/MdIcon';
+import MdIcon from "vue-material/dist/components/MdIcon";
 // @ts-ignore
-import MdDialog from 'vue-material/dist/components/MdDialog';
+import MdDialog from "vue-material/dist/components/MdDialog";
 // @ts-ignore
-import MdSnackbar from 'vue-material/dist/components/MdSnackbar';
+import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 
-Vue.use(MdButton).use(MdIcon).use(MdDialog).use(MdSnackbar);
+Vue.use(MdButton)
+  .use(MdIcon)
+  .use(MdDialog)
+  .use(MdSnackbar);
 
 export default Vue.extend({
   data() {
@@ -77,7 +82,7 @@ export default Vue.extend({
       auth: false,
       snackbar: false,
       snackbarMessage: "",
-      logoutConfirmDialog: false,
+      logoutConfirmDialog: false
     };
   },
   created() {
@@ -98,28 +103,32 @@ export default Vue.extend({
     );
   },
   methods: {
-      logout() {
-          this.$server.post("/api/auth", {
-              method: "logout"
-          }, r => {
-              if (r.data) {
-                  this.snackbarMessage = "您已登出，即将为您跳转到首页";
-                  this.snackbar = true;
-                  setTimeout(() => {
-                      this.$router.push({
-                          name: "home"
-                      })
-                  }, 1500);
-              } else {
-                  console.error("程序异常，无法登出。");
-              }
-          })
-      },
-      goto(name: string) {
-        this.$router.push({
-          name
-        })
-      }
+    logout() {
+      this.$server.post(
+        "/api/auth",
+        {
+          method: "logout"
+        },
+        r => {
+          if (r.data) {
+            this.snackbarMessage = "您已登出，即将为您跳转到首页";
+            this.snackbar = true;
+            setTimeout(() => {
+              this.$router.push({
+                name: "home"
+              });
+            }, 1500);
+          } else {
+            console.error("程序异常，无法登出。");
+          }
+        }
+      );
+    },
+    goto(name: string) {
+      this.$router.push({
+        name
+      });
+    }
   }
 });
 </script>
@@ -145,15 +154,15 @@ export default Vue.extend({
     @media screen and (min-width: 1024px) {
       margin-left: 8px;
       margin-right: 8px;
-      &:nth-child(3n+1) {
+      &:nth-child(3n + 1) {
         margin-left: 0;
       }
 
-      &:nth-child(3n+3) {
+      &:nth-child(3n + 3) {
         margin-right: 0;
       }
-      
-      &:nth-child(n+4) {
+
+      &:nth-child(n + 4) {
         margin-top: 16px;
       }
       width: calc(33.3% - 43px);
@@ -162,10 +171,10 @@ export default Vue.extend({
     @media screen and (max-width: 1024px) {
       margin-top: 8px;
       margin-bottom: 8px;
-      &:nth-child(3n+1) {
-        margin-top: 0;
+      &:nth-child(3n + 1) {
+        margin-top: 16px;
       }
-      &:nth-child(3n+3) {
+      &:nth-child(3n + 3) {
         margin-bottom: 0;
       }
     }
@@ -180,7 +189,7 @@ export default Vue.extend({
     box-sizing: content-box;
 
     h1 {
-        line-height: 1;
+      line-height: 1;
     }
 
     &:focus,
@@ -195,7 +204,7 @@ export default Vue.extend({
       &::before {
         font-size: 72px;
       }
-      bottom:  0;
+      bottom: 0;
       right: 16px;
       z-index: 1;
     }
@@ -203,8 +212,10 @@ export default Vue.extend({
 }
 
 .function-bar {
+  @media screen and (min-width: 1024px) {
     position: absolute;
     top: 16px;
     right: 16px;
+  }
 }
 </style>
