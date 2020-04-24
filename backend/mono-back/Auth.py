@@ -9,7 +9,7 @@ class AuthManager:
         cur.execute(sql)
         self._password = cur.fetchone()[0]
         ins.close()
-        super().__init__()
+        pass
 
     @property
     def password(self):

@@ -9,7 +9,7 @@ class DBController:
             database = "Monologue",
             charset = "utf8mb4"
         )
-        super().__init__()
+        pass
     
     def cursor(self, dict = False):
         if (dict):
