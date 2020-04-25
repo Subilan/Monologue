@@ -13,8 +13,13 @@
         <md-button
           :style="{opacity: backToTopButtonOpacity}"
           @click="toTop()"
-          class="speeddial md-primary"
+          class="speeddial desktop md-primary"
         >返回顶部</md-button>
+        <md-speed-dial class="speeddial mobile" :style="{opacity: backToTopButtonOpacity}">
+          <md-speed-dial-target class="md-primary" @click="toTop()">
+            <md-icon class="mdi mdi-chevron-up"/>
+          </md-speed-dial-target>
+        </md-speed-dial>
         <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
           <span class="md-icon mdi mdi-calendar" />
         </md-button>
@@ -89,7 +94,7 @@
                 <span class="id">#{{selectedID}}</span>
               </h1>
             </div>
-            <div v-html="selectedContents" class="contents"></div>
+            <div v-html="selectedContents" class="content typo" :class="getColorByType(selectedType)"></div>
           </div>
         </md-dialog-content>
         <md-dialog-actions>
@@ -460,10 +465,19 @@ export default Vue.extend({
   position: fixed;
   z-index: 100;
   transition: opacity 0.5s ease;
+  bottom: 32px;
+  right: 32px;
+
+  @media screen and (max-width: 1024px) {
+    &.desktop {
+      display: none;
+    }
+  }
 
   @media screen and (min-width: 1024px) {
-    bottom: 32px;
-    right: 32px;
+    &.mobile {
+      display: none;
+    }
   }
 }
 
