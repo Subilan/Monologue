@@ -482,7 +482,12 @@ export default Vue.extend({
 }
 
 .datepicker {
-  display: none;
+  /*display: none;*/
+  visibility: hidden;
+  top: -100px;
+  left: -100px;
+  min-width: 0px;
+  width: 0px;
 }
 
 .date-info {
