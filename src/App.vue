@@ -1,6 +1,8 @@
 <template>
   <div class="app container">
-    <router-view/>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -10,3 +12,19 @@ export default Vue.extend({
   
 })
 </script>
+
+<style lang="less" scoped>
+.fade-enter, .fade-leave-to {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s ease;
+}
+
+.fade-enter-to, .fade-leave {
+  opacity: 1;
+  visibility: visible;
+}
+</style>
