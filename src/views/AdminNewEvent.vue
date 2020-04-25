@@ -6,16 +6,20 @@
       <span class="md-empty-state-description">您输入的 ID 有误或者不存在</span>
       <md-button @click="$router.go(-1)" class="md-primary md-raised">后退</md-button>
     </md-empty-state>
+    <LoadingScreen v-if="loading"/>
     <div class="full-height" v-if="!isEdit() || !invalidID">
       <div class="hero">
         <h1>{{ isEdit() ? "编辑事件 #" + id : "添加新事件"}}</h1>
         <p>{{ isEdit() ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
       </div>
-      <div v-if="isEdit()" class="functions">
-        <md-button @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
+      <FunctionBar>
+        <md-button v-if="isEdit()" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
           <md-icon class="mdi mdi-delete" />
         </md-button>
-      </div>
+        <md-button @click="$router.push({name: 'admin-panel'})" class="md-icon-button md-raised">
+          <md-icon class="mdi mdi-cogs"/>
+        </md-button>
+      </FunctionBar>
       <div class="new-event-form full-height">
         <md-field :class="titleInvalid">
           <md-icon class="mdi mdi-format-title" />
@@ -85,6 +89,8 @@ import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 // @ts-ignore
 import MdDialog from "vue-material/dist/components/MdDialog";
+import LoadingScreen from '@/components/LoadingScreen.vue';
+import FunctionBar from '@/components/FunctionBar.vue';
 
 Vue.use(MdField)
   .use(MdIcon)
@@ -110,8 +116,13 @@ export default Vue.extend({
       invalidID: false,
       deleteConfirmDialog: false,
       routerConfirmDialog: false,
-      actioned: false
+      actioned: false,
+      loading: false,
     };
+  },
+  components: {
+    LoadingScreen,
+    FunctionBar
   },
   watch: {
     title(v) {
@@ -214,6 +225,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.isEdit()) {
+      this.loading = true;
       this.id = Number(this.$route.params.id);
       if (this.id > 0 && Number.isInteger(this.id) && this.id !== NaN) {
         this.$server.get(
@@ -227,6 +239,7 @@ export default Vue.extend({
             } else {
               this.invalidID = true;
             }
+            this.loading = false;
           }
         );
       } else {
@@ -279,14 +292,6 @@ export default Vue.extend({
     display: block;
     margin: auto;
   }
-}
-
-.functions {
-  position: absolute;
-  top: 32px;
-  right: 0;
-  display: flex;
-  align-items: center;
 }
 
 .hero {
