@@ -49,6 +49,12 @@ button.md-primary.md-raised {
 	}
 }
 
+.loading-screen {
+	height: 100%;
+	position: relative;
+	background-color: #fff;
+}
+
 .loading {
 	display: flex;
 	align-items: center;
@@ -63,7 +69,7 @@ button.md-primary.md-raised {
 .typo {
 	font-feature-settings: "calt";
 	line-height: 1.8;
-	
+
 	h1 {
 		margin: 0;
 		padding-top: 12px;
@@ -93,30 +99,30 @@ button.md-primary.md-raised {
 	}
 
 	code {
-		font-family: "Consolas", "Fira Code", "IBM Plex Mono", Courier, "Courier New", monospace;
-        font-size: 13px;
-        display: inline-block;
-        background-color: rgba(0, 0, 0, .035);
-        border-radius: 2px;
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-    
-    blockquote {
-        position: relative;
-        margin-left: 20px;
-
-        &::before {
-            content: " ";
-            display: block;
-            background: rgba(0, 0, 0, .1);
-            height: 100%;
-            width: 5px;
-            position: absolute;
-            left: -20px;
-        }
+		font-family: "Consolas", "Fira Code", "IBM Plex Mono", Courier,
+			"Courier New", monospace;
+		font-size: 13px;
+		display: inline-block;
+		background-color: rgba(0, 0, 0, 0.035);
+		border-radius: 2px;
+		padding-left: 4px;
+		padding-right: 4px;
 	}
-	
+
+	blockquote {
+		position: relative;
+		margin-left: 20px;
+
+		&::before {
+			content: " ";
+			display: block;
+			background: rgba(0, 0, 0, 0.1);
+			height: 100%;
+			width: 5px;
+			position: absolute;
+			left: -20px;
+		}
+	}
 }
 
 .underlined {
