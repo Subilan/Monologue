@@ -4,7 +4,7 @@ from Database import DBController
 class UserManager:
     def __init__(self, username):
         self.username = username
-        super().__init__()
+        pass
 
     def createUser(self, password):
         db = DBController()

@@ -54,6 +54,14 @@
             <md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
           </md-dialog-actions>
         </md-dialog>
+        <md-dialog :md-active.sync="routerConfirmDialog">
+          <md-dialog-title>跳转确认</md-dialog-title>
+          <md-dialog-content>是否确认要跳转到其它页面？未保存的更改将永久消失。</md-dialog-content>
+          <md-dialog-actions>
+            <md-button @click="next(); routerConfirmDialog = false" class="md-primary">跳转</md-button>
+            <md-button @click="routerConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+          </md-dialog-actions>
+        </md-dialog>
       </div>
     </div>
   </div>
@@ -100,7 +108,9 @@ export default Vue.extend({
       snackbarMessage: "",
       disableSubmit: false,
       invalidID: false,
-      deleteConfirmDialog: false
+      deleteConfirmDialog: false,
+      routerConfirmDialog: false,
+      actioned: false
     };
   },
   watch: {
@@ -131,8 +141,22 @@ export default Vue.extend({
     isEdit() {
       return this.$route.name === "admin-edit-event";
     },
+    validate(title: string, content: string, type: string) {
+      return (
+        title.length > 0 &&
+        title.length < 40 &&
+        content.length > 0 && content.length < 1000 &&
+        ["info", "warning", "solved"].includes(type)
+      );
+    },
     submit() {
       if (this.disableSubmit) {
+        return false;
+      }
+      // Do not let the empty data in, or the frontend array building process will blow up.
+      if (!this.validate(this.title, this.content, this.type)) {
+        this.snackbarMessage = "发送失败，请检查您填写的内容。";
+        this.snackbar = true;
         return false;
       }
       this.$server.post(
@@ -149,6 +173,7 @@ export default Vue.extend({
             this.disableSubmit = true;
             this.snackbarMessage = "成功发布新的事件，即将为您跳转";
             this.snackbar = true;
+            this.actioned = true;
             setTimeout(() => {
               this.$router.push({
                 name: "admin-panel"
@@ -172,6 +197,7 @@ export default Vue.extend({
           if (r.data) {
             this.snackbarMessage = "成功删除此事件，即将返回首页";
             this.snackbar = true;
+            this.actioned = true;
             setTimeout(() => {
               this.$router.push({
                 name: "home"
@@ -183,7 +209,8 @@ export default Vue.extend({
           }
         }
       );
-    }
+    },
+    next() {}
   },
   mounted() {
     if (this.isEdit()) {
@@ -206,6 +233,26 @@ export default Vue.extend({
         this.invalidID = true;
       }
     }
+    window.onbeforeunload = e => {
+      if ((this.$route.name === "admin-new-event" || this.$route.name === "admin-edit-event") && (this.title.length > 0 || this.content.length > 0)) {
+        e = e || window.event;
+        if (e) {
+          e.returnValue = "是否确实要离开此页面？您的修改将不会被保存。";
+        }
+        return "是否确实要离开此页面？您的修改将不会被保存。";
+      } else {
+        window.onbeforeunload = null;
+      }
+    };
+  },
+  beforeRouteLeave(to, from, next) {
+    if ((this.title.length > 0 || this.content.length > 0) && !this.actioned) {
+      this.next = next;
+      this.routerConfirmDialog = true;
+      next(false);
+    } else {
+      next();
+    }
   }
 });
 </script>
@@ -214,7 +261,11 @@ export default Vue.extend({
 .new-event-form {
   .textarea {
     position: relative;
-    height: 50% !important;
+    height: 50%;
+
+    @media screen and (max-width: 1024px) {
+      height: 60%;
+    }
 
     textarea {
       position: relative;
@@ -236,5 +287,16 @@ export default Vue.extend({
   right: 0;
   display: flex;
   align-items: center;
+}
+
+.hero {
+  @media screen and (max-width: 1024px) {
+    h1 {
+      font-size: 38px;
+    }
+    p {
+      font-size: 18px;
+    }
+  }
 }
 </style>

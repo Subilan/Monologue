@@ -22,3 +22,5 @@ yarn-error.log*
 
 pyvenv.cfg
 __pycache__
+
+deploy.sh

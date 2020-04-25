@@ -156,18 +156,39 @@
 			.logue-content {
 				padding-top: 16px;
 				padding-bottom: 16px;
+				.typo;
+			}
+		}
+	}
+}
 
-				h1 {
-					margin: 0;
-					padding-top: 12px;
-					padding-bottom: 12px;
-				}
+.content {
+	.blue + .logue-content, &.blue {
+		a, a:hover {
+			color: #2196f3 !important;
 
-				p {
-					margin: 0;
-					font-size: 16px;
-					line-height: 1.5;
-				}
+			&::after {
+				background: #2196f3;
+			}
+		}
+	}
+
+	.green + .logue-content, &.green {
+		a, a:hover {
+			color: #4caf50 !important;
+
+			&::after {
+				background: #4caf50;
+			}
+		}
+	}
+
+	.red + .logue-content, &.red {
+		a, a:hover {
+			color: #f44336 !important;
+
+			&::after {
+				background: #f44336;
 			}
 		}
 	}

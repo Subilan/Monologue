@@ -1,36 +1,139 @@
 @import "./fonts/inter/inter.css";
 @import "./logue.less";
 
-html, body {
-    scroll-behavior: smooth;
-    position: relative;
-    height: calc(100% - 56px) !important;
+html,
+body {
+	scroll-behavior: smooth;
+	position: relative;
+	height: calc(100% - 56px) !important;
 }
 
 body {
-    font-family: Inter, -apple-system, Roboto, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', '微软雅黑', 'Microsoft Yahei UI', sans-serif !important;
-    .container {
-        background-color: white;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 1024px;
+	font-family: Inter, -apple-system, Roboto, BlinkMacSystemFont, "Segoe UI",
+		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "微软雅黑",
+		"Microsoft Yahei UI", sans-serif !important;
+	.container {
+		background-color: white;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 1024px;
+		position: relative;
+		height: 100%;
+
+		@media screen and (max-width: 1024px) {
+			margin-left: 16px;
+			margin-right: 16px;
+		}
+
+		.mono-main {
+			position: relative;
+			height: 100%;
+			margin-top: 56px;
+		}
+	}
+
+	.full-height {
+		height: calc(100% - 56px);
+		position: relative;
+	}
+}
+
+button.md-primary.md-raised {
+	.md-progress-spinner-draw {
+		width: 16px !important;
+		height: 16px !important;
+	}
+
+	.md-progress-spinner-circle {
+		stroke: #fff !important;
+	}
+}
+
+.loading {
+	display: flex;
+	align-items: center;
+	height: 100%;
+
+	* {
+		display: block;
+		margin: auto;
+	}
+}
+
+.typo {
+	font-feature-settings: "calt";
+	line-height: 1.8;
+	
+	h1 {
+		margin: 0;
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+
+	p {
+		margin: 0;
+
+		font-size: 16px;
+	}
+
+	a {
+		.underlined;
+		text-decoration: none;
+	}
+
+	ol,
+	ul {
+		margin-top: 4px;
+		margin-bottom: 4px;
+		padding-left: 20px;
+		line-height: 1.6;
+		li {
+			font-size: 16px;
+		}
+	}
+
+	code {
+		font-family: "Consolas", "Fira Code", "IBM Plex Mono", Courier, "Courier New", monospace;
+        font-size: 13px;
+        display: inline-block;
+        background-color: rgba(0, 0, 0, .035);
+        border-radius: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    
+    blockquote {
         position: relative;
-        height: 100%;
+        margin-left: 20px;
 
-        @media screen and (max-width: 1024px) {
-            margin-left: 16px;
-            margin-right: 16px;
-        }
-
-        .mono-main {
-            position: relative;
+        &::before {
+            content: " ";
+            display: block;
+            background: rgba(0, 0, 0, .1);
             height: 100%;
-            margin-top: 56px;
+            width: 5px;
+            position: absolute;
+            left: -20px;
         }
-    }
+	}
+	
+}
 
-    .full-height {
-        height: calc(100% - 56px);
-        position: relative;
-    }
+.underlined {
+	display: inline-block;
+	text-decoration: none !important;
+
+	&::after {
+		content: "";
+		width: 0;
+		height: 1px;
+		display: block;
+		background: black;
+		transition: 0.3s;
+		margin-top: -4px;
+	}
+
+	&:hover::after {
+		width: 100%;
+	}
 }

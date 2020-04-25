@@ -1,17 +1,25 @@
 <template>
   <div class="home">
     <div class="mono-main">
-      <md-empty-state v-if="empty">
+      <div v-if="!empty && loadingPage" class="loading">
+        <md-progress-spinner md-mode="indeterminate"/>
+      </div>
+      <md-empty-state v-if="empty && !loadingPage">
         <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
         <span class="md-empty-state-label">空页面</span>
         <span class="md-empty-state-description">此页面目前没有任何内容</span>
       </md-empty-state>
-      <div v-if="!empty">
+      <div v-if="!empty && !loadingPage">
         <md-button
           :style="{opacity: backToTopButtonOpacity}"
           @click="toTop()"
-          class="speeddial md-primary"
+          class="speeddial desktop md-primary"
         >返回顶部</md-button>
+        <md-speed-dial class="speeddial mobile" :style="{opacity: backToTopButtonOpacity}">
+          <md-speed-dial-target class="md-primary" @click="toTop()">
+            <md-icon class="mdi mdi-chevron-up"/>
+          </md-speed-dial-target>
+        </md-speed-dial>
         <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
           <span class="md-icon mdi mdi-calendar" />
         </md-button>
@@ -63,11 +71,11 @@
       </div>
       <div class="load-more">
         <md-button
-          v-if="showLoadNextButton"
+          v-if="showLoadNextButton && !loadingPage"
           @click="loadNextTen()"
           class="md-primary md-raised load-more-button"
         >加载更多</md-button>
-        <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading" />
+        <md-progress-spinner md-mode="indeterminate" v-if="showLoading" class="loading-block" />
       </div>
       <md-dialog v-if="auth" :md-active.sync="deleteConfirmDialog">
         <md-dialog-title>删除确认</md-dialog-title>
@@ -81,13 +89,12 @@
         <md-dialog-content>
           <div class="event-detail">
             <div class="title">
-              <md-icon class="icon mdi" :class="getMdiIconByType(selectedType)" />
-              <h1>
+              <h1 :class="getColorByType(selectedType)">
                 {{ selectedTitle }}
                 <span class="id">#{{selectedID}}</span>
               </h1>
             </div>
-            <div v-html="selectedContents" class="contents"></div>
+            <div v-html="selectedContents" class="content typo" :class="getColorByType(selectedType)"></div>
           </div>
         </md-dialog-content>
         <md-dialog-actions>
@@ -156,7 +163,8 @@ export default Vue.extend({
       selectedTitle: "",
       selectedContents: "",
       selectedType: "",
-      logueDialog: false
+      logueDialog: false,
+      loadingPage: true,
     };
   },
   methods: {
@@ -268,7 +276,7 @@ export default Vue.extend({
     },
     configMaterial() {
       let locale = (this as any).$material.locale;
-      locale.dateFormat = "yyyy/MM/dd";
+      locale.dateFormat = "yyyy-MM-dd";
       locale.days = [
         "星期天",
         "星期一",
@@ -376,14 +384,6 @@ export default Vue.extend({
       this.selectedType = type;
       this.logueDialog = true;
     },
-    getMdiIconByType(type: string) {
-      let match: StringMatch = {
-        info: "mdi-information-outline",
-        warning: "mdi-alert",
-        solved: "mdi-check"
-      };
-      return match[type];
-    }
   },
   watch: {
     targetDate(v) {
@@ -397,6 +397,7 @@ export default Vue.extend({
       } else {
         this.empty = true;
       }
+      this.loadingPage = false;
     });
     this.$server.get("/api/data?comp=logue&name=length", r => {
       if (Number.isInteger(r.data)) {
@@ -462,12 +463,21 @@ export default Vue.extend({
 
 .speeddial {
   position: fixed;
-  z-index: 100;
+  z-index: 1;
   transition: opacity 0.5s ease;
+  bottom: 32px;
+  right: 32px;
+
+  @media screen and (max-width: 1024px) {
+    &.desktop {
+      display: none;
+    }
+  }
 
   @media screen and (min-width: 1024px) {
-    bottom: 32px;
-    right: 32px;
+    &.mobile {
+      display: none;
+    }
   }
 }
 
@@ -489,7 +499,7 @@ export default Vue.extend({
 }
 
 .load-more-button,
-.loading {
+.loading-block {
   display: block;
   margin: auto;
   margin-top: 56px;
@@ -498,11 +508,21 @@ export default Vue.extend({
 
 .event-detail {
   .title {
-    display: flex;
-    align-items: center;
+    text-align: left;
+
+    .blue {
+      color: #2196f3;
+    }
+
+    .green {
+      color: #4caf50;
+    }
+
+    .red {
+      color: #f44336;
+    }
 
     h1 {
-      margin-left: 16px;
       .id {
         color: #bbb;
         font-weight: normal;
