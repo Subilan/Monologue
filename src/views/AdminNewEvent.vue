@@ -153,6 +153,7 @@ export default Vue.extend({
       if (this.disableSubmit) {
         return false;
       }
+      // Do not let the empty data in, or the frontend array building process will blow up.
       if (!this.validate(this.title, this.content, this.type)) {
         this.snackbarMessage = "发送失败，请检查您填写的内容。";
         this.snackbar = true;
