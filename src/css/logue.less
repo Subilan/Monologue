@@ -153,41 +153,42 @@
                 bottom: 0;
 			}
 
-			.blue + .logue-content {
-				a {
-					color: #2196f3;
-
-					&::after {
-						background: #2196f3;
-					}
-				}
-			}
-
-			.green + .logue-content {
-				a {
-					color: #4caf50;
-
-					&::after {
-						background: #4caf50;
-					}
-				}
-			}
-
-			.red + .logue-content {
-				a {
-					color: #f44336;
-
-					&::after {
-						background: #f44336;
-					}
-				}
-			}
-
 			.logue-content {
 				padding-top: 16px;
 				padding-bottom: 16px;
-				line-height: 1.8;
 				.typo;
+			}
+		}
+	}
+}
+
+.content {
+	.blue + .logue-content, &.blue {
+		a, a:hover {
+			color: #2196f3 !important;
+
+			&::after {
+				background: #2196f3;
+			}
+		}
+	}
+
+	.green + .logue-content, &.green {
+		a, a:hover {
+			color: #4caf50 !important;
+
+			&::after {
+				background: #4caf50;
+			}
+		}
+	}
+
+	.red + .logue-content, &.red {
+		a, a:hover {
+			color: #f44336 !important;
+
+			&::after {
+				background: #f44336;
 			}
 		}
 	}
