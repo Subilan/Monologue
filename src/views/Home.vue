@@ -2,7 +2,7 @@
   <div class="home">
     <div class="mono-main">
       <div v-if="!empty && loadingPage" class="loading">
-        <md-progress-spinner md-mode="indeterminate"/>
+        <md-progress-spinner md-mode="indeterminate" />
       </div>
       <md-empty-state v-if="empty && !loadingPage">
         <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
@@ -17,16 +17,16 @@
         >返回顶部</md-button>
         <md-speed-dial class="speeddial mobile" :style="{opacity: backToTopButtonOpacity}">
           <md-speed-dial-target class="md-primary" @click="toTop()">
-            <md-icon class="mdi mdi-chevron-up"/>
+            <md-icon class="mdi mdi-chevron-up" />
           </md-speed-dial-target>
         </md-speed-dial>
-        <md-button @click="openDatePicker()" class="speeddial calendar md-primary md-icon-button">
-          <span class="md-icon mdi mdi-calendar" />
+        <md-button class="datepicker-button desktop md-primary md-raised md-icon-button" @click="openDatePicker()">
+          <md-icon class="mdi mdi-calendar" />
+        </md-button>
+        <md-button class="datepicker-button mobile md-primary md-icon-button" @click="openDatePicker()">
+          <md-icon class="mdi mdi-calendar"/>
         </md-button>
         <div class="datepicker-container">
-          <md-button class="md-primary md-raised md-icon-button" @click="openDatePicker()">
-            <md-icon class="mdi mdi-calendar" />
-          </md-button>
           <md-datepicker
             ref="picker"
             class="datepicker"
@@ -94,7 +94,11 @@
                 <span class="id">#{{selectedID}}</span>
               </h1>
             </div>
-            <div v-html="selectedContents" class="content typo" :class="getColorByType(selectedType)"></div>
+            <div
+              v-html="selectedContents"
+              class="content typo"
+              :class="getColorByType(selectedType)"
+            ></div>
           </div>
         </md-dialog-content>
         <md-dialog-actions>
@@ -164,7 +168,7 @@ export default Vue.extend({
       selectedContents: "",
       selectedType: "",
       logueDialog: false,
-      loadingPage: true,
+      loadingPage: true
     };
   },
   methods: {
@@ -383,7 +387,7 @@ export default Vue.extend({
       this.selectedContents = contents;
       this.selectedType = type;
       this.logueDialog = true;
-    },
+    }
   },
   watch: {
     targetDate(v) {
@@ -442,15 +446,24 @@ export default Vue.extend({
 }
 
 .datepicker-container {
-  float: right;
-  @media screen and (max-width: 1024px) {
-    /*display: none;*/
-    visibility: hidden;
-    top: -100px;
-    left: -100px;
-    min-width: 0px;
-    width: 0px;
+  height: 0 !important;
+}
+
+.datepicker-button {
+  @media screen and (min-width: 1024px) {
+    position: absolute;
+    &.mobile {
+      display: none;
+    }
   }
+  @media screen and (max-width: 1024px) {
+    position: fixed;
+    &.desktop {
+      display: none;
+    }
+  }
+  right: 16px;
+  top: 16px;
 }
 
 .logue {
@@ -541,7 +554,6 @@ export default Vue.extend({
     }
 
     .icon {
-
       &.mdi-check {
         color: #4caf50;
       }
