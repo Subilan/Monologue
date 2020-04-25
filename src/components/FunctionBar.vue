@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="isPC()" class="functions">
+    <div v-if="isPC() || singleOnMobile" class="functions">
       <slot></slot>
     </div>
 
-    <md-menu v-if="!isPC()" md-direction="bottom-start" class="mobile-menu-btn">
+    <md-menu v-if="!isPC() && !singleOnMobile" md-direction="bottom-start" class="mobile-menu-btn">
       <md-button md-menu-trigger class="md-raised md-icon-button">
         <md-icon class="mdi mdi-plus-circle" />
       </md-button>
@@ -33,16 +33,34 @@ Vue.use(MdMenu)
   .use(MdButton);
 
 export default Vue.extend({
+  data() {
+    return {
+      singleOnMobile: false,
+    }
+  },
   methods: {
     isPC
+  },
+  mounted() {
+    //@ts-ignore
+    if ((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) {
+      this.singleOnMobile = true;
+    }
   }
 });
 </script>
 
 <style lang="less" scoped>
 .functions {
+  @media screen and (max-width: 1024px) {
+    top: -16px;
+  }
+
+  @media screen and (min-width: 1024px) {
+    top: 32px;
+  }
+
   position: absolute;
-  top: 32px;
   right: 0;
   display: flex;
   align-items: center;
