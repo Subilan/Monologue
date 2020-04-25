@@ -463,7 +463,7 @@ export default Vue.extend({
 
 .speeddial {
   position: fixed;
-  z-index: 100;
+  z-index: 1;
   transition: opacity 0.5s ease;
   bottom: 32px;
   right: 32px;
