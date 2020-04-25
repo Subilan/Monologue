@@ -234,7 +234,7 @@ export default Vue.extend({
       }
     }
     window.onbeforeunload = e => {
-      if (this.$route.name === "admin-new-event" && (this.title.length > 0 || this.content.length > 0)) {
+      if (this.title.length > 0 || this.content.length > 0) {
         e = e || window.event;
         if (e) {
           e.returnValue = "是否确实要离开此页面？您的修改将不会被保存。";
