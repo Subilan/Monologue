@@ -463,7 +463,7 @@ export default Vue.extend({
     }
   }
   right: 16px;
-  top: 16px;
+  top: 60px;
 }
 
 .logue {
