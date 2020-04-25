@@ -5,6 +5,7 @@
 ![](https://img.shields.io/badge/coverage-25%25-red?style=flat)
 ![](https://img.shields.io/badge/front-Vue.js-brightgreen?style=flat&logo=vue.js)
 ![](https://img.shields.io/badge/back-python-blue?style=flat&logo=python)
+[![](https://img.shields.io/badge/wiki-clickhere-009688?style=flat)](https://book.sotap.org/#/monologue/index)
 
 ![main.png](https://i.loli.net/2020/04/11/CAD8nRzkWmxSFKU.png)
 
@@ -50,6 +51,10 @@ cd /backend/mono-back
 ./python.bat App.py
 # 实质上就是调用了 /backend/mono-back/Scripts 下的两个 exe
 ```
+
+## 部署
+
+参阅 [Wiki](https://book.sotap.org/#/monologue/deployment)
 
 ## 关于
 
