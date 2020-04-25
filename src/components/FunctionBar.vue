@@ -13,6 +13,9 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .functions {
+  @media screen and (max-width: 1024px) {
+    display: none;
+  }
   position: absolute;
   top: 32px;
   right: 0;
