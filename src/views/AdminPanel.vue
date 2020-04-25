@@ -4,7 +4,7 @@
       <h1>控制中心</h1>
       <p>选择您要进行的操作</p>
     </div>
-    <div class="function-bar">
+    <FunctionBar>
       <md-button @click="$router.push({name: 'home'})" class="md-raised md-icon-button">
         <md-icon class="mdi mdi-home" />
       </md-button>
@@ -14,7 +14,7 @@
       <md-button class="md-raised md-icon-button">
         <md-icon class="mdi mdi-help-circle" />
       </md-button>
-    </div>
+    </FunctionBar>
     <div class="function-group">
       <div @click="goto('admin-new-event')" class="function">
         <h1>添加新事件</h1>
@@ -70,6 +70,7 @@ import MdIcon from "vue-material/dist/components/MdIcon";
 import MdDialog from "vue-material/dist/components/MdDialog";
 // @ts-ignore
 import MdSnackbar from "vue-material/dist/components/MdSnackbar";
+import FunctionBar from '@/components/FunctionBar.vue';
 
 Vue.use(MdButton)
   .use(MdIcon)
@@ -84,6 +85,9 @@ export default Vue.extend({
       snackbarMessage: "",
       logoutConfirmDialog: false
     };
+  },
+  components: {
+    FunctionBar
   },
   created() {
     this.$server.post(
@@ -208,14 +212,6 @@ export default Vue.extend({
       right: 16px;
       z-index: 1;
     }
-  }
-}
-
-.function-bar {
-  @media screen and (min-width: 1024px) {
-    position: absolute;
-    top: 16px;
-    right: 16px;
   }
 }
 </style>
