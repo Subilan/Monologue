@@ -289,6 +289,7 @@ export default Vue.extend({
 
   .submit-btn {
     margin-top: 56px !important;
+    margin-bottom: 56px !important;
     display: block;
     margin: auto;
   }
