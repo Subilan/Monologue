@@ -43,7 +43,7 @@
             <md-option value="solved">已解决</md-option>
           </md-select>
         </md-field>
-        <md-button @click="submit()" class="submit-btn md-primary md-raised">提交</md-button>
+        <md-button @click="submit()" class="submit-btn md-primary md-raised">发布</md-button>
         <md-snackbar
           :md-active.sync="snackbar"
           md-position="center"
@@ -284,24 +284,6 @@ export default Vue.extend({
       position: relative;
       min-height: 100% !important;
       resize: none !important;
-    }
-  }
-
-  .submit-btn {
-    margin-top: 56px !important;
-    margin-bottom: 56px !important;
-    display: block;
-    margin: auto;
-  }
-}
-
-.hero {
-  @media screen and (max-width: 1024px) {
-    h1 {
-      font-size: 38px;
-    }
-    p {
-      font-size: 18px;
     }
   }
 }
