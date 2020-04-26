@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="auth ? '' : 'unauthed'">
     <div class="mono-main">
       <div v-if="!empty && loadingPage" class="loading">
         <md-progress-spinner md-mode="indeterminate" />
@@ -20,11 +20,17 @@
             <md-icon class="mdi mdi-chevron-up" />
           </md-speed-dial-target>
         </md-speed-dial>
-        <md-button class="datepicker-button desktop md-primary md-raised md-icon-button" @click="openDatePicker()">
+        <md-button
+          class="datepicker-button desktop md-primary md-raised md-icon-button"
+          @click="openDatePicker()"
+        >
           <md-icon class="mdi mdi-calendar" />
         </md-button>
-        <md-button class="datepicker-button mobile md-primary md-icon-button" @click="openDatePicker()">
-          <md-icon class="mdi mdi-calendar"/>
+        <md-button
+          class="datepicker-button mobile md-primary md-icon-button"
+          @click="openDatePicker()"
+        >
+          <md-icon class="mdi mdi-calendar" />
         </md-button>
         <div class="datepicker-container">
           <md-datepicker
@@ -47,25 +53,30 @@
             </span>
           </div>
           <div class="content" v-for="(a, b) in i.logue" :key="b">
-            <span class="status-info" :class="getColorByType(a.type)">
-              <span class="status" :class="getIconByType(a.type)">{{ a.title }}</span>
-              <span
-                v-if="auth"
-                class="edit action-span"
-                @click="$router.push({name: 'admin-edit-event', params: {id: a.id}})"
-              >编辑</span>
-              <span
-                v-if="auth"
-                class="delete action-span"
-                @click="targetID = a.id; deleteConfirmDialog = true"
-              >删除</span>
-              <span
-                @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
-                :class="auth ? '' : 'unauthed'"
-                class="id action-span"
-              >#{{a.id}}</span>
-            </span>
-            <div class="logue-content" v-html="a.contents"></div>
+            <div class="status-info" :class="getColorByType(a.type)">
+              <span class="status" :class="getIconByType(a.type)">
+                <span class="title">{{ a.title }}</span>
+              </span>
+            </div>
+            <div class="logue">
+              <div class="tools">
+                <span
+                  v-if="auth"
+                  class="edit action-span"
+                  @click="$router.push({name: 'admin-edit-event', params: {id: a.id}})"
+                >编辑</span>
+                <span
+                  v-if="auth"
+                  class="delete action-span"
+                  @click="targetID = a.id; deleteConfirmDialog = true"
+                >删除</span>
+                <span
+                  @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
+                  class="id action-span"
+                >#{{a.id}}</span>
+              </div>
+              <div class="logue-content" v-html="a.contents"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -463,7 +474,7 @@ export default Vue.extend({
     }
   }
   right: 16px;
-  top: 60px;
+  top: 16px;
 }
 
 .logue {
@@ -532,6 +543,7 @@ export default Vue.extend({
 .event-detail {
   .title {
     text-align: left;
+    line-height: 1.5;
 
     .blue {
       color: #2196f3;
