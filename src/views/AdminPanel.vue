@@ -21,6 +21,11 @@
         <p>添加新的事件以展示在首页的时间线内，可以是公告、已解决或者问题。</p>
         <span class="icon mdi mdi-alert-decagram" />
       </div>
+      <div class="function" @click="goto('admin-new-agreement')">
+        <h1>创建协议</h1>
+        <p>创建一个必须阅读和同意的协议，并记录相关人员及观点信息。</p>
+        <span class="icon mdi mdi-clipboard-text"/>
+      </div>
       <div class="function">
         <h1>创建投票</h1>
         <p>创建投票以快速收集用户观点数据，将数据归档或用作进一步处理。</p>
