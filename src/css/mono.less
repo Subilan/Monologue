@@ -143,3 +143,43 @@ button.md-primary.md-raised {
 		width: 100%;
 	}
 }
+
+.submit-btn {
+	/* force override */
+	@media screen and (min-width: 1024px) {
+		margin-top: 56px !important;
+		margin-bottom: 56px !important;
+	}
+	@media screen and (max-width: 1024px) {
+		margin-top: 42px !important;
+		margin-bottom: 16px !important;
+	}
+	display: block !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.hero {
+	p {
+		color: #aaa;
+	}
+	
+	@media screen and (max-width: 1024px) {
+		h1 {
+			font-size: 38px;
+		}
+		p {
+			font-size: 18px;
+		}
+	}
+
+	@media screen and (min-width: 1024px) {
+		h1 {
+			font-size: 48px;
+		}
+
+		p {
+			font-size: 24px;
+		}
+	}
+}
