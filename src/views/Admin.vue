@@ -69,17 +69,6 @@ export default Vue.extend({
   position: relative;
 }
 
-.hero {
-  h1 {
-    font-size: 48px;
-  }
-
-  p {
-    color: #aaa;
-    font-size: 24px;
-  }
-}
-
 .fade-enter, .fade-leave-to {
   visibility: hidden;
   opacity: 0;
