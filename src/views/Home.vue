@@ -274,7 +274,7 @@ export default Vue.extend({
             let month = monthMatch[date.getMonth()];
             let day = date.getDate();
             let year = date.getFullYear();
-            return `${day} ${month}, ${year}`;
+            return `${month} ${day}, ${year}`;
         },
         /* need fix
     disabledDates(date: Date) {
