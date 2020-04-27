@@ -55,7 +55,11 @@
                     <div class="content" v-for="(a, b) in i.logue" :key="b">
                         <div class="status-info" :class="getColorByType(a.type)">
                             <span class="status" :class="getIconByType(a.type)">
-                                <span class="title">{{ a.title }}</span>
+                                <span
+                                    @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
+                                    :id="a.id"
+                                    class="title"
+                                >{{ a.title }}</span>
                             </span>
                         </div>
                         <div class="logue">
@@ -70,10 +74,7 @@
                                     class="delete action-span"
                                     @click="targetID = a.id; deleteConfirmDialog = true"
                                 >删除</span>
-                                <span
-                                    @click="getLogueDialog(a.id, a.title, a.contents, a.type)"
-                                    class="id action-span"
-                                >#{{a.id}}</span>
+                                <span @click="copyLogueLink(a.id)" class="id action-span">#{{a.id}}</span>
                             </div>
                             <div class="logue-content" v-html="a.contents"></div>
                         </div>
@@ -153,6 +154,7 @@ import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 import MdProgress from "vue-material/dist/components/MdProgress";
 // @ts-ignore
 import MdSnackbar from "vue-material/dist/components/MdSnackbar";
+import { copy } from "@/functions";
 
 Vue.use(MdButton)
     .use(MdDialog)
@@ -288,6 +290,21 @@ export default Vue.extend({
             let date_str = this.getDate(new Date(this.targetDate));
             location.hash = date_str;
         },
+        gotoID(id: number) {
+            location.hash = id.toString();
+        },
+        copyLogueLink(id: number) {
+            let link =
+                location.protocol +
+                "//" +
+                location.host +
+                "/#" +
+                id.toString();
+            copy(link, () => {
+                this.snackbarMessage = "成功复制当前事件链接";
+                this.snackbar = true;
+            });
+        },
         getDate(date: Date, delimiter: string = "-"): string {
             let year = date.getFullYear().toString();
             let month: string | number = date.getMonth() + 1;
@@ -422,9 +439,12 @@ export default Vue.extend({
             v.forEach(k => {
                 let date = k.date;
                 k.logue = k.logue.slice().sort((a, b) => {
-                    return new Date(date + " " + b.time).getTime() - new Date(date + " " + a.time).getTime();
-                })
-            })
+                    return (
+                        new Date(date + " " + b.time).getTime() -
+                        new Date(date + " " + a.time).getTime()
+                    );
+                });
+            });
         }
     },
     mounted() {
