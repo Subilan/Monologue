@@ -417,9 +417,18 @@ export default Vue.extend({
     watch: {
         targetDate(v) {
             this.gotoDate();
+        },
+        monologue(v: Array<LogueArrayItem>) {
+            v.forEach(k => {
+                let date = k.date;
+                k.logue = k.logue.slice().sort((a, b) => {
+                    return new Date(date + " " + b.time).getTime() - new Date(date + " " + a.time).getTime();
+                })
+            })
         }
     },
     mounted() {
+        // default load
         this.$server.get("/api/logue?method=limit&limit=0,10", r => {
             if (Array.isArray(r.data) && r.data.length > 0) {
                 (this.monologue as Array<LogueArrayItem>) = this.getArray(
@@ -430,6 +439,7 @@ export default Vue.extend({
             }
             this.loadingPage = false;
         });
+        // load more
         this.$server.get("/api/data?comp=logue&name=length", r => {
             if (Number.isInteger(r.data)) {
                 this.total = r.data;
