@@ -176,7 +176,7 @@ export default Vue.extend({
         return {
             monologue: [],
             datePickDialog: false,
-            targetDate: new Date(),
+            targetDate: "",
             empty: false,
             auth: false,
             limitStart: 10,
@@ -441,34 +441,38 @@ export default Vue.extend({
                 return false;
             } else {
                 // filter
-                (this.monologue as Array<LogueArrayItem>).forEach(k => {
+                /* (this.monologue as Array<LogueArrayItem>).forEach(k => {
                     k.logue.forEach(t => {
                         if (t.id.toString() === hash) {
                             alreadyIn = true;
                         }
                     });
                 });
-                if (!alreadyIn) {
-                    this.loadingDialog = true;
-                    this.$server.get("/api/logue?method=id&id=" + hash, r => {
-                        this.loadingDialog = false;
-                        if (r.data) {
-                            let data = r.data;
-                            this.getLogueDialog(
-                                data.id,
-                                data.title,
-                                data.contents,
-                                data.type
-                            );
-                        }
-                    });
-                }
+                if (!alreadyIn) { */
+                this.logueDialog = false;
+                this.loadingDialog = true;
+                this.$server.get("/api/logue?method=id&id=" + hash, r => {
+                    this.loadingDialog = false;
+                    if (r.data) {
+                        let data = r.data;
+                        this.getLogueDialog(
+                            data.id,
+                            data.title,
+                            data.contents,
+                            data.type
+                        );
+                    }
+                });
+                /* } */
                 return;
             }
         }
     },
     watch: {
         targetDate(v) {
+            if (this.targetDate === this.getDate(new Date())) {
+                return false;
+            }
             this.gotoDate();
         },
         monologue(v: Array<LogueArrayItem>) {
@@ -483,18 +487,19 @@ export default Vue.extend({
             });
         },
         $route(to, from) {
-            this.hashContent = to.hash.slice(1);
-            this.handleIDAccess();
+            if (to.name === "home") {
+                this.hashContent = to.hash.slice(1);
+                this.handleIDAccess();
+            }
         }
     },
-    mounted() {
+    created() {
         // default load
         this.$server.get("/api/logue?method=limit&limit=0,10", r => {
             if (Array.isArray(r.data) && r.data.length > 0) {
                 (this.monologue as Array<LogueArrayItem>) = this.getArray(
                     r.data
                 );
-                this.handleIDAccess();
             } else {
                 this.empty = true;
             }
@@ -522,6 +527,9 @@ export default Vue.extend({
         (this.targetDate as Date | string) = this.getDate(new Date());
         window.addEventListener("keydown", this.hotkey);
         this.hashContent = location.hash.slice(1);
+    },
+    mounted() {
+        this.handleIDAccess();
     }
 });
 </script>
