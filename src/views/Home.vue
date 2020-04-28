@@ -362,7 +362,9 @@ export default Vue.extend({
                     if (Array.isArray(r.data) && r.data.length > 0) {
                         let data = r.data;
                         let arr: Array<LogueArrayItem> = this.monologue;
-                        arr.forEach(k => {
+                        let dateBefore = "";
+                        let ix = -1;
+                        arr.forEach((k, t) => {
                             data.forEach((e, i) => {
                                 let logueItem = {
                                     id: e.id,
@@ -371,10 +373,16 @@ export default Vue.extend({
                                     type: e.type,
                                     time: e.date.split(" ")[1]
                                 };
-                                if (e.date.split(" ")[0] == k.date) {
+                                console.log(e.date.split(" ")[0], k.date);
+                                if (e.date.split(" ")[0] === k.date) {
                                     k.logue.push(logueItem);
+                                } else if (
+                                    e.date.split(" ")[0] === dateBefore
+                                ) {
+                                    arr[ix - 1].logue.push(logueItem);
                                 } else {
-                                    arr.push({
+                                    dateBefore = e.date.split(" ")[0];
+                                    ix = arr.push({
                                         date: e.date.split(" ")[0],
                                         logue: [logueItem]
                                     });
@@ -383,6 +391,7 @@ export default Vue.extend({
                         });
                         this.showLoadNextButton = r.data.length == 10;
                         this.backToTopButtonOpacity = 1;
+                        console.log(arr);
                     } else {
                         this.showLoadNextButton = false;
                     }
@@ -526,8 +535,9 @@ export default Vue.extend({
         this.configMaterial();
         (this.targetDate as Date | string) = this.getDate(new Date());
         window.addEventListener("keydown", this.hotkey);
-        this.hashContent = location.hash.includes("?") ? location.hash.slice(1, location.hash.indexOf("?")) : location.hash.slice(1);
-        console.log(this.hashContent);
+        this.hashContent = location.hash.includes("?")
+            ? location.hash.slice(1, location.hash.indexOf("?"))
+            : location.hash.slice(1);
     },
     mounted() {
         this.handleIDAccess();
