@@ -110,6 +110,21 @@
 		}
 
 		.content {
+			&:active,
+			&:hover,
+			&:focus {
+				.logue {
+					.tools {
+						.action-span {
+							transition: opacity 0.2s ease;
+							opacity: 1;
+						}
+					}
+				}
+			}
+		}
+
+		.content {
 			padding-left: 56px;
 			padding-top: 21px;
 			position: relative;
@@ -136,17 +151,6 @@
 			}
 
 			.logue {
-				&:active,
-				&:hover,
-				&:focus {
-					.tools {
-						.action-span {
-							transition: opacity 0.2s ease;
-							opacity: 1;
-						}
-					}
-				}
-
 				.logue-content {
 					padding-top: 16px;
 					padding-bottom: 24px;
