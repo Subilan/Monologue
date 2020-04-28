@@ -130,6 +130,11 @@
                 md-persistent
                 :md-duration="1500"
             >{{ snackbarMessage }}</md-snackbar>
+            <md-dialog :md-active.sync="loadingDialog">
+                <md-dialog-content class="loading-dialog-content">
+                    <md-progress-spinner md-mode="indeterminate" class="loading-dialog-spinner" />
+                </md-dialog-content>
+            </md-dialog>
         </div>
     </div>
 </template>
@@ -154,7 +159,7 @@ import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 import MdProgress from "vue-material/dist/components/MdProgress";
 // @ts-ignore
 import MdSnackbar from "vue-material/dist/components/MdSnackbar";
-import { copy } from "@/functions";
+import { copy, isNumericString } from "@/functions";
 
 Vue.use(MdButton)
     .use(MdDialog)
@@ -188,7 +193,10 @@ export default Vue.extend({
             selectedContents: "",
             selectedType: "",
             logueDialog: false,
-            loadingPage: true
+            loadingPage: true,
+            loadedLogueID: [],
+            hashContent: "",
+            loadingDialog: false
         };
     },
     methods: {
@@ -295,11 +303,7 @@ export default Vue.extend({
         },
         copyLogueLink(id: number) {
             let link =
-                location.protocol +
-                "//" +
-                location.host +
-                "/#" +
-                id.toString();
+                location.protocol + "//" + location.host + "/#" + id.toString();
             copy(link, () => {
                 this.snackbarMessage = "成功复制当前事件链接";
                 this.snackbar = true;
@@ -429,6 +433,38 @@ export default Vue.extend({
             this.selectedContents = contents;
             this.selectedType = type;
             this.logueDialog = true;
+        },
+        handleIDAccess() {
+            let hash = this.hashContent;
+            let alreadyIn = false;
+            if (!isNumericString(hash)) {
+                return false;
+            } else {
+                // filter
+                (this.monologue as Array<LogueArrayItem>).forEach(k => {
+                    k.logue.forEach(t => {
+                        if (t.id.toString() === hash) {
+                            alreadyIn = true;
+                        }
+                    });
+                });
+                if (!alreadyIn) {
+                    this.loadingDialog = true;
+                    this.$server.get("/api/logue?method=id&id=" + hash, r => {
+                        this.loadingDialog = false;
+                        if (r.data) {
+                            let data = r.data;
+                            this.getLogueDialog(
+                                data.id,
+                                data.title,
+                                data.contents,
+                                data.type
+                            );
+                        }
+                    });
+                }
+                return;
+            }
         }
     },
     watch: {
@@ -445,6 +481,10 @@ export default Vue.extend({
                     );
                 });
             });
+        },
+        $route(to, from) {
+            this.hashContent = to.hash.slice(1);
+            this.handleIDAccess();
         }
     },
     mounted() {
@@ -454,6 +494,7 @@ export default Vue.extend({
                 (this.monologue as Array<LogueArrayItem>) = this.getArray(
                     r.data
                 );
+                this.handleIDAccess();
             } else {
                 this.empty = true;
             }
@@ -480,6 +521,7 @@ export default Vue.extend({
         this.configMaterial();
         (this.targetDate as Date | string) = this.getDate(new Date());
         window.addEventListener("keydown", this.hotkey);
+        this.hashContent = location.hash.slice(1);
     }
 });
 </script>
@@ -628,6 +670,13 @@ export default Vue.extend({
                 font-size: 30px;
             }
         }
+    }
+}
+
+.loading-dialog-content {
+    text-align: center;
+    .loading-dialog-spinner {
+        display: inline-flex;
     }
 }
 </style>
