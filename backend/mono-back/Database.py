@@ -1,11 +1,14 @@
-import pymysql;
+import pymysql
+from Yaml import Config
 
 class DBController:
     def __init__(self):
+        config = Config()
+        db = config.getConfig("database")
         self.instance = pymysql.connect(
-            host = "localhost",
-            user = "root",
-            password = "subilan1999",
+            host = db['host'],
+            user = db['user'],
+            password = db['password'],
             database = "Monologue",
             charset = "utf8mb4"
         )

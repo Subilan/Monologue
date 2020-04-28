@@ -1,0 +1,6 @@
+# Rename this file to config.yml to make it work.
+
+database:
+  host: localhost
+  user: root
+  password: ~
