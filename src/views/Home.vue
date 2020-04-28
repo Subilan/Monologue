@@ -121,7 +121,7 @@
                     </div>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button @click="logueDialog = false" class="md-primary">关闭</md-button>
+                    <md-button @click="logueDialog = false" class="md-primary">知道了</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-snackbar
@@ -665,7 +665,11 @@ export default Vue.extend({
         }
 
         h1 {
+            text-overflow: ellipsis;
+            overflow: hidden;
+
             .id {
+                width: 30px;
                 color: #bbb;
                 font-weight: normal;
                 font-size: 18px;
