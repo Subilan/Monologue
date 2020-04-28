@@ -37,3 +37,20 @@ export function isPC(): boolean {
          return true;
      }
  }
+
+ export function isDate(target: any): boolean {
+    let d = new Date(target);
+    if (Object.prototype.toString.call(d) === "[object Date]") {
+        if (isNaN(d.getTime())) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+ }
+
+ export function isNumericString(str: string): boolean {
+     return /^[1-9]\d*$/.test(str);
+ }
