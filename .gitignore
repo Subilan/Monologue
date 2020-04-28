@@ -24,3 +24,4 @@ pyvenv.cfg
 __pycache__
 
 deploy.sh
+config.yml
