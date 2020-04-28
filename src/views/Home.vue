@@ -526,7 +526,8 @@ export default Vue.extend({
         this.configMaterial();
         (this.targetDate as Date | string) = this.getDate(new Date());
         window.addEventListener("keydown", this.hotkey);
-        this.hashContent = location.hash.slice(1);
+        this.hashContent = location.hash.includes("?") ? location.hash.slice(1, location.hash.indexOf("?")) : location.hash.slice(1);
+        console.log(this.hashContent);
     },
     mounted() {
         this.handleIDAccess();
