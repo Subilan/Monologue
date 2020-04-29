@@ -8,6 +8,21 @@ import Server from '@/server';
 import "vue-material/dist/vue-material.min.css";
 import "./css/default.css";
 import "./css/override.less";
+import NProgress from 'nprogress';
+import "./css/nprogress.css";
+
+NProgress.configure({
+  showSpinner: false,
+})
+
+router.beforeEach((to, from, next) => {
+  NProgress.start();
+  next();
+})
+
+router.afterEach(t => {
+  NProgress.done();
+})
 
 Vue.config.productionTip = false
 Vue.prototype.$server = Server;
