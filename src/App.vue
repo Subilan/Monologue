@@ -8,7 +8,21 @@
 
 <script lang="ts">
 import Vue from "vue";
-export default Vue.extend({});
+import { getcookie, setcookie } from "@/cookie";
+import bus from '@/bus';
+
+export default Vue.extend({
+    mounted() {
+        if (getcookie("ft") === undefined) {
+            setcookie("ft", true);
+        } else if (getcookie("ft") === true) {
+            bus.$emit("first-time-event", null);
+        }
+        bus.$on("first-time-event-cancle", p => {
+            setcookie("ft", false);
+        })
+    }
+});
 </script>
 
 <style lang="less" scoped>
