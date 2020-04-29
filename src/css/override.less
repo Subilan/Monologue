@@ -69,3 +69,29 @@ a.date {
 .md-dialog-container {
     width: 100%;
 }
+
+.md-empty-state-label {
+    font-weight: bold;
+    font-size: 48px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+}
+
+.firsttime-dialog {
+    @media screen and (min-width: 600px) {
+        .md-steppers {
+            height: 100%;
+            position: relative;
+            .md-steppers-wrapper {
+                height: calc(100% - 72px) !important;
+                position: relative;
+                .md-steppers-container {
+                    height: 100%;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}
