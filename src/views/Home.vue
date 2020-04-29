@@ -144,7 +144,7 @@
 					</md-steppers>
 				</md-dialog-content>
 				<md-dialog-actions>
-					<md-button v-if="firstTimeActiveStep === 'firsttime-first'" class="md-primary" @click="firstTimeDialog = false">不了</md-button>
+					<md-button v-if="firstTimeActiveStep === 'firsttime-first'" class="md-primary" @click="closeFirstTimeDialog()">不了</md-button>
 					<md-button class="md-primary md-raised" @click="nextStep()">
 						{{ firstTimeActiveStep === "firsttime-first" ? "开始吧" : firstTimeSteps.indexOf(firstTimeActiveStep) === firstTimeSteps.length - 1 ? "结束" : "继续" }}
 					</md-button>
@@ -225,11 +225,15 @@ export default Vue.extend({
 		isPC,
 		nextStep() {
 			if (this.firstTimeSteps.indexOf(this.firstTimeActiveStep) === this.firstTimeSteps.length - 1) {
-				this.firstTimeDialog = false;
+				this.closeFirstTimeDialog();
 				return;
 			}
 			let targetIndex = this.firstTimeSteps.indexOf(this.firstTimeActiveStep) + 1;
 			this.firstTimeActiveStep = this.firstTimeSteps[targetIndex];
+		},
+		closeFirstTimeDialog() {
+			setcookie("ft", "false");
+			this.firstTimeDialog = false;
 		},
 		getArray(array: Array<LogueOrigin>): Array<LogueArrayItem> {
 			let arr: Array<LogueArrayItem> = [];
@@ -517,7 +521,6 @@ export default Vue.extend({
 	mounted() {
 		this.handleIDAccess();
 		if (getcookie("ft") === undefined) {
-			setcookie("ft", "false");
 			this.firstTimeDialog = true;
 		}
 	}
