@@ -39,7 +39,7 @@
 							</span>
 						</div>
 						<div class="logue">
-							<function-bar :ignoreSingle="auth">
+							<function-bar>
 								<div class="tools" :class="auth ? '' : 'unauthed'">
 									<span v-if="auth" class="edit action-span" @click="$router.push({ name: 'admin-edit-event', params: { id: a.id } })">编辑</span>
 									<span
@@ -530,9 +530,7 @@ export default Vue.extend({
 		if (getcookie("ft") === undefined) {
 			this.firstTimeDialog = true;
 		}
-		this.$nextTick(() => {
-			this.pc = isPC();
-		})
+		this.pc = isPC();
 	}
 });
 </script>

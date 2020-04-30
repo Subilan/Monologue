@@ -6,7 +6,7 @@
 			</div>
 		</div>
 
-		<md-menu :class="$route.name === 'home' ? 'home-scoped' : ''" v-if="!pc && !singleOnMobile" md-direction="bottom-start" class="mobile-menu-btn">
+		<md-menu :class="is('home') ? 'home-scoped' : ''" v-if="!pc && !singleOnMobile" md-direction="bottom-start" class="mobile-menu-btn">
 			<md-button md-menu-trigger class="md-raised md-icon-button">
 				<md-icon class="mdi mdi-plus-circle" />
 			</md-button>
@@ -35,23 +35,24 @@ Vue.use(MdMenu)
 	.use(MdButton);
 
 export default Vue.extend({
-    props: ["ignoreSingle"],
 	data() {
 		return {
 			singleOnMobile: false,
-			pc: false,
+			pc: false
 		};
 	},
 	methods: {
-		isPC
+		isPC,
+		is(name: string) {
+			return this.$route.name === name;
+		}
 	},
 	mounted() {
-		let ignoreSingle = this.ignoreSingle === true ? true : false;
 		// @ts-ignore
-		if (((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) && ignoreSingle === false) {
+		if (((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) && !this.is("home")) {
 			this.singleOnMobile = true;
 		}
-		this.pc = isPC()
+		this.pc = isPC();
 	}
 });
 </script>
@@ -60,11 +61,11 @@ export default Vue.extend({
 .mobile-menu-btn {
 	position: absolute;
 	top: -16px;
-    right: 0;
+	right: 0;
 
-    &.home-scoped {
-        top: 16px !important;
-    }
+	&.home-scoped {
+		top: 16px !important;
+	}
 }
 
 .mobile-menu {
