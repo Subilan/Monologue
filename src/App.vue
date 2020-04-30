@@ -1,5 +1,9 @@
 <template>
     <div class="app container">
+        <info-bar @click.native="$router.go(0)" color="red" class="layout-alert" :class="pc ? 'pc' : 'mobile'">
+			<md-icon class="mdi mdi-alert" />
+			需要刷新以显示正常布局
+		</info-bar>
         <transition name="fade" mode="out-in">
             <router-view />
         </transition>
@@ -8,8 +12,21 @@
 
 <script lang="ts">
 import Vue from "vue";
+import InfoBar from "@/components/InfoBar.vue";
+import { isPCView } from '@/functions';
+
 export default Vue.extend({
-    mounted() {}
+    data() {
+        return {
+            pc: false,
+        }
+    },
+    components: {
+        InfoBar,
+    },
+    mounted() {
+        this.pc = isPCView();
+    }
 });
 </script>
 
@@ -29,5 +46,19 @@ export default Vue.extend({
 .fade-leave {
     opacity: 1;
     visibility: visible;
+}
+
+.layout-alert {
+	&.pc {
+		@media screen and (min-width: 1024px) {
+			display: none;
+		}
+	}
+
+	&.mobile {
+		@media screen and (max-width: 1024px) {
+			display: none;
+		}
+	}
 }
 </style>

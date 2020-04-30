@@ -1,9 +1,5 @@
 <template>
 	<div class="home" :class="auth ? '' : 'unauthed'">
-		<info-bar @click.native="$router.go(0)" color="red" class="layout-alert" :class="pc ? 'pc' : 'mobile'">
-			<md-icon class="mdi mdi-alert" />
-			需要刷新以显示正常布局
-		</info-bar>
 		<div class="mono-main">
 			<div v-if="!empty && loadingPage" class="loading">
 				<md-progress-spinner md-mode="indeterminate" />
@@ -185,7 +181,6 @@ import MdSteppers from "vue-material/dist/components/MdSteppers";
 import { copy, isNumericString, isPCView } from "@/functions";
 import { setcookie, getcookie } from "@/cookie";
 import FunctionBar from "@/components/FunctionBar.vue";
-import InfoBar from '@/components/InfoBar.vue';
 
 Vue.use(MdButton)
 	.use(MdDialog)
@@ -232,7 +227,6 @@ export default Vue.extend({
 	},
 	components: {
 		FunctionBar,
-		InfoBar,
 	},
 	methods: {
 		isPCView,
@@ -702,19 +696,5 @@ export default Vue.extend({
 
 .firsttime-logo {
 	width: 250px;
-}
-
-.layout-alert {
-	&.pc {
-		@media screen and (min-width: 1024px) {
-			display: none;
-		}
-	}
-
-	&.mobile {
-		@media screen and (max-width: 1024px) {
-			display: none;
-		}
-	}
 }
 </style>
