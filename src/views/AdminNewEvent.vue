@@ -31,8 +31,8 @@
                 <md-field :class="titleInvalid">
                     <md-icon class="mdi mdi-format-title" />
                     <label>事件标题</label>
-                    <md-input type="text" v-model="title" maxlength="20" required />
-                    <span class="md-helper-text">不能超过 20 字。</span>
+                    <md-input type="text" v-model="title" maxlength="30" required />
+                    <span class="md-helper-text">不能超过 30 字。</span>
                     <span class="md-error">长度无效</span>
                 </md-field>
                 <md-field class="textarea" :class="contentInvalid">
@@ -145,7 +145,7 @@ export default Vue.extend({
     },
     watch: {
         title(v) {
-            if (v.length > 0 && v.length < 20) {
+            if (v.length > 0 && v.length < 30) {
                 this.titleInvalid = "";
             } else {
                 this.titleInvalid = "md-invalid";
@@ -174,7 +174,7 @@ export default Vue.extend({
         validate(title: string, content: string, type: string) {
             return (
                 title.length > 0 &&
-                title.length < 20 &&
+                title.length < 30 &&
                 content.length > 0 &&
                 content.length < 1000 &&
                 ["info", "warning", "solved"].includes(type)
