@@ -1,5 +1,9 @@
 <template>
 	<div class="home" :class="auth ? '' : 'unauthed'">
+		<info-bar @click.native="$router.go(0)" color="red" class="layout-alert" :class="pc ? 'pc' : 'mobile'">
+			<md-icon class="mdi mdi-alert" />
+			需要刷新以显示正常布局
+		</info-bar>
 		<div class="mono-main">
 			<div v-if="!empty && loadingPage" class="loading">
 				<md-progress-spinner md-mode="indeterminate" />
@@ -178,9 +182,10 @@ import MdProgress from "vue-material/dist/components/MdProgress";
 import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 // @ts-ignore
 import MdSteppers from "vue-material/dist/components/MdSteppers";
-import { copy, isNumericString, isPC } from "@/functions";
+import { copy, isNumericString, isPCView } from "@/functions";
 import { setcookie, getcookie } from "@/cookie";
 import FunctionBar from "@/components/FunctionBar.vue";
+import InfoBar from '@/components/InfoBar.vue';
 
 Vue.use(MdButton)
 	.use(MdDialog)
@@ -222,14 +227,15 @@ export default Vue.extend({
 			firstTimeDialog: false,
 			firstTimeActiveStep: "firsttime-first",
 			firstTimeSteps: ["firsttime-first", "firsttime-second", "firsttime-third", "firsttime-fourth"],
-			pc: false,
+			pc: false
 		};
 	},
 	components: {
-		FunctionBar
+		FunctionBar,
+		InfoBar,
 	},
 	methods: {
-		isPC,
+		isPCView,
 		nextStep() {
 			if (this.firstTimeSteps.indexOf(this.firstTimeActiveStep) === this.firstTimeSteps.length - 1) {
 				this.closeFirstTimeDialog();
@@ -530,7 +536,7 @@ export default Vue.extend({
 		if (getcookie("ft") === undefined) {
 			this.firstTimeDialog = true;
 		}
-		this.pc = isPC();
+		this.pc = isPCView();
 	}
 });
 </script>
@@ -548,8 +554,8 @@ export default Vue.extend({
 	font-weight: 300;
 	cursor: default;
 	&.latest {
-		border: 1px solid #4caf50;
-		color: #4caf50;
+		border: 1px solid @green-primary;
+		color: @green-primary;
 	}
 }
 
@@ -644,15 +650,15 @@ export default Vue.extend({
 		line-height: 1.5;
 
 		.blue {
-			color: #2196f3;
+			color: @blue-primary;
 		}
 
 		.green {
-			color: #4caf50;
+			color: @green-primary;
 		}
 
 		.red {
-			color: #f44336;
+			color: @red-primary;
 		}
 
 		h1 {
@@ -669,15 +675,15 @@ export default Vue.extend({
 
 		.icon {
 			&.mdi-check {
-				color: #4caf50;
+				color: @green-primary;
 			}
 
 			&.mdi-information-outline {
-				color: #2196f3;
+				color: @blue-primary;
 			}
 
 			&.mdi-alert {
-				color: #f44336;
+				color: @red-primary;
 			}
 
 			&::before {
@@ -696,5 +702,19 @@ export default Vue.extend({
 
 .firsttime-logo {
 	width: 250px;
+}
+
+.layout-alert {
+	&.pc {
+		@media screen and (min-width: 1024px) {
+			display: none;
+		}
+	}
+
+	&.mobile {
+		@media screen and (max-width: 1024px) {
+			display: none;
+		}
+	}
 }
 </style>

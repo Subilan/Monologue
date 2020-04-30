@@ -27,7 +27,7 @@ import MdList from "vue-material/dist/components/MdList";
 import MdIcon from "vue-material/dist/components/MdIcon";
 // @ts-ignore
 import MdButton from "vue-material/dist/components/MdButton";
-import { isPC } from "@/functions";
+import { isPCView } from "@/functions";
 
 Vue.use(MdMenu)
 	.use(MdList)
@@ -42,7 +42,7 @@ export default Vue.extend({
 		};
 	},
 	methods: {
-		isPC,
+		isPCView,
 		is(name: string) {
 			return this.$route.name === name;
 		}
@@ -52,7 +52,7 @@ export default Vue.extend({
 		if (((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) && !this.is("home")) {
 			this.singleOnMobile = true;
 		}
-		this.pc = isPC();
+		this.pc = isPCView();
 	}
 });
 </script>

@@ -62,3 +62,7 @@ export function isPC(): boolean {
          yield [_k, object[_k]];
      }
  }
+
+ export function isPCView(): boolean {
+     return isPC() && window.innerWidth > 1024;
+ }
