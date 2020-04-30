@@ -697,4 +697,59 @@ export default Vue.extend({
 .firsttime-logo {
 	width: 250px;
 }
+
+.firsttime-step {
+	> .md-stepper-content {
+		> .mdi {
+			&::before {
+				font-size: 72px;
+				color: black;
+			}
+		}
+
+		.title {
+			display: flex;
+			align-items: center;
+			padding-left: 16px;
+			padding-right: 16px;
+			line-height: 1.8;
+
+			.mdi {
+				margin: 0;
+				margin-right: 32px;
+			}
+
+			h1,
+			.mdi::before {
+				@media screen and (max-width: 1024px) {
+					font-size: 36px;
+				}
+
+				@media screen and (min-width: 1024px) {
+					font-size: 56px;
+				}
+			}
+		}
+
+		.typo;
+
+		p {
+			@media screen and (max-width: 1024px) {
+				font-size: 20px;
+			}
+
+			@media screen and (min-width: 1024px) {
+				font-size: 28px;
+			}
+
+			line-height: 1.8;
+
+			.mdi {
+				&::before {
+					font-size: 32px;
+				}
+			}
+		}
+	}
+}
 </style>
