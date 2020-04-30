@@ -1,3 +1,5 @@
+@import "./lib.less";
+
 .mono-main {
 	.logue {
 		.date-info,
@@ -60,7 +62,7 @@
 				align-items: flex-start;
 				font-size: 22px;
 				position: relative;
-				width: 100%;
+				width: 75%;
 
 				&::before {
 					border: 2px solid white;
@@ -89,26 +91,26 @@
 			}
 
 			&.blue {
-				color: #2196f3;
+				color: @blue-primary;
 				& + .logue .logue-content *::selection,
 				& .status::selection {
-					background-color: #bbdefb;
+					background-color: @blue-light;
 				}
 			}
 
 			&.red {
-				color: #f44336;
+				color: @red-primary;
 				& + .logue .logue-content *::selection,
 				& .status::selection {
-					background-color: #ffcdd2;
+					background-color: @red-light;
 				}
 			}
 
 			&.green {
-				color: #4caf50;
+				color: @green-primary;
 				& + .logue .logue-content *::selection,
 				& .status::selection {
-					background-color: #c8e6c9;
+					background-color: @green-light;
 				}
 			}
 		}
@@ -118,10 +120,17 @@
 			&:hover,
 			&:focus {
 				.logue {
-					.tools {
-						.action-span {
-							transition: opacity 0.2s ease;
-							opacity: 1;
+					.functions {
+						.tools {
+							@media screen and (min-width: 1024px) {
+								transition: opacity 0.2s ease;
+								opacity: 1;
+							}
+
+							&.unauthed {
+								transition: opacity 0.2s ease;
+								opacity: 1;
+							}
 						}
 					}
 				}
@@ -171,10 +180,10 @@
 	&.blue {
 		a,
 		a:hover {
-			color: #2196f3 !important;
+			color: @blue-primary !important;
 
 			&::after {
-				background: #2196f3;
+				background: @blue-primary;
 			}
 		}
 	}
@@ -183,10 +192,10 @@
 	&.green {
 		a,
 		a:hover {
-			color: #4caf50 !important;
+			color: @green-primary !important;
 
 			&::after {
-				background: #4caf50;
+				background: @green-primary;
 			}
 		}
 	}
@@ -195,10 +204,10 @@
 	&.red {
 		a,
 		a:hover {
-			color: #f44336 !important;
+			color: @red-primary !important;
 
 			&::after {
-				background: #f44336;
+				background: @red-primary;
 			}
 		}
 	}
@@ -208,8 +217,13 @@
 	.tools {
 		margin-left: 0;
 		position: absolute;
-		top: 28px;
 		right: 16px;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+
+		@media screen and (max-width: 1024px) {
+			top: 40px;
+		}
 
 		.action-span {
 			&.id {
@@ -229,14 +243,17 @@
 }
 
 .tools {
-	position: absolute;
-	top: 28px;
-	right: 16px;
+	@media screen and (min-width: 1024px) {
+		position: absolute;
+		top: 1px;
+		right: 16px;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
 
 	.action-span {
 		display: inline-block;
 		color: #bbb;
-		opacity: 0;
 		transition: opacity 0.2s ease;
 		cursor: pointer;
 
@@ -260,6 +277,44 @@
 			display: inline-block;
 			margin-right: 8px;
 			margin-left: 8px;
+		}
+	}
+}
+
+.function-bar-float-right {
+	.functions {
+		flex-direction: row-reverse;
+	}
+}
+
+.functions {
+	.fontfamily-default;
+
+	@media screen and (max-width: 1024px) {
+		top: -16px;
+	}
+
+	@media screen and (min-width: 1024px) {
+		top: 32px;
+	}
+
+	position: absolute;
+	right: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+
+	> * {
+		margin-left: 8px;
+		margin-right: 8px;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:last-child {
+			margin-right: 0;
 		}
 	}
 }
