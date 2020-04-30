@@ -1,5 +1,5 @@
 <template>
-	<div class="information-bar" :class="[color]" :style="{opacity}">
+	<div class="information-bar" :class="[color]" :style="{opacity}" v-if="!disabled">
 		<slot></slot>
 	</div>
 </template>
@@ -16,6 +16,7 @@ export default Vue.extend({
 	data() {
 		return {
 			opacity: 1,
+			disabled: false,
 		}
 	},
 	mounted() {
