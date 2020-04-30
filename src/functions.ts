@@ -54,3 +54,11 @@ export function isPC(): boolean {
  export function isNumericString(str: string): boolean {
      return /^[1-9]\d*$/.test(str);
  }
+
+ export function* createIterator(object: object): Generator<any[], void, unknown> {
+     let k = Object.keys(object);
+     for (let i = 0; i < k.length; i++) {
+         let _k = k[i];
+         yield [_k, object[_k]];
+     }
+ }
