@@ -1,3 +1,5 @@
+@import "./lib.less";
+
 a {
     cursor: pointer;
 }
@@ -94,4 +96,21 @@ a.date {
             }
         }
     }
+}
+
+.md-button .md-ripple {
+    @media screen and (max-width: 1024px) {
+        padding: 0 !important;
+    }
+}
+
+.functions {
+    .md-button {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+}
+
+.md-menu-content-container .md-list {
+    .fontfamily-default;
 }
