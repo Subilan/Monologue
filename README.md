@@ -23,7 +23,7 @@ Monologue 就是对这些功能的整合，是可部署的，扩展性更高。�
 
 ## 贡献或部署
 
-贡献或部署时，需要手动部署前端和后端。参阅 [Wiki](https://book.sotap.org/#/monologue/index)，我们编写了 production 和 development 两种部署方式，按需选择。
+贡献时，需要手动部署前端和后端。参阅 [Wiki](https://book.sotap.org/#/monologue/index)，我们编写了针对 production 和 development 的两种部署方式，按需选择。
 
 ## 关于
 
