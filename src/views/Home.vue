@@ -39,19 +39,21 @@
 							</span>
 						</div>
 						<div class="logue">
-							<div class="tools">
-								<span v-if="auth" class="edit action-span" @click="$router.push({ name: 'admin-edit-event', params: { id: a.id } })">编辑</span>
-								<span
-									v-if="auth"
-									class="delete action-span"
-									@click="
-										targetID = a.id;
-										deleteConfirmDialog = true;
-									"
-									>删除</span
-								>
-								<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
-							</div>
+							<function-bar :ignoreSingle="auth">
+								<div class="tools" :class="auth ? '' : 'unauthed'">
+									<span v-if="auth" class="edit action-span" @click="$router.push({ name: 'admin-edit-event', params: { id: a.id } })">编辑</span>
+									<span
+										v-if="auth"
+										class="delete action-span"
+										@click="
+											targetID = a.id;
+											deleteConfirmDialog = true;
+										"
+										>删除</span
+									>
+									<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
+								</div>
+							</function-bar>
 							<div class="logue-content" v-html="a.contents"></div>
 						</div>
 					</div>
@@ -100,7 +102,7 @@
 			</md-dialog>
 			<md-dialog class="firsttime-dialog" :md-active.sync="firstTimeDialog">
 				<md-dialog-content>
-					<md-steppers :md-active-step.sync="firstTimeActiveStep" :md-vertical="!isPC()" :md-linear="isPC()">
+					<md-steppers :md-active-step.sync="firstTimeActiveStep" :md-vertical="!pc" :md-linear="pc">
 						<md-step class="firsttime-step" :id="firstTimeSteps[0]" md-label="欢迎" md-description="让我们开始吧">
 							<md-empty-state>
 								<img src="../assets/block.png" class="firsttime-logo" />
@@ -117,7 +119,7 @@
 								看到右上角的
 								<md-icon class="mdi mdi-calendar" /> 了吗？那个是日期选择器。点击它，即可选择一个日期。如果此日期当天有过更新，则会跳转到这个日期的位置。
 							</p>
-							<p v-if="isPC()">
+							<p v-if="pc">
 								你可以通过
 								<kbd>Ctrl</kbd> + <kbd>G</kbd> 组合键快速唤出它。
 							</p>
@@ -128,7 +130,7 @@
 								<h1>分享事件</h1>
 							</div>
 							<p>
-								如果想要获取属于某一特定事件的链接，可以{{ isPC() ? "将鼠标移动至一个请求上方" : "点击该请求所在区域" }}，随即会出现一个类似于
+								如果想要获取属于某一特定事件的链接，可以{{ pc ? "将鼠标移动至一个请求上方" : "点击该请求所在区域" }}，随即会出现一个类似于
 								<span style="font-weight: bold; color: #aaa">#1</span> 的标识。
 							</p>
 							<p>点击标识即可复制链接，当他人访问该链接时，第一时间将会展示出此事件。</p>
@@ -177,7 +179,8 @@ import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 // @ts-ignore
 import MdSteppers from "vue-material/dist/components/MdSteppers";
 import { copy, isNumericString, isPC } from "@/functions";
-import { setcookie, getcookie } from '@/cookie';
+import { setcookie, getcookie } from "@/cookie";
+import FunctionBar from "@/components/FunctionBar.vue";
 
 Vue.use(MdButton)
 	.use(MdDialog)
@@ -218,8 +221,12 @@ export default Vue.extend({
 			loadingDialog: false,
 			firstTimeDialog: false,
 			firstTimeActiveStep: "firsttime-first",
-			firstTimeSteps: ["firsttime-first", "firsttime-second", "firsttime-third", "firsttime-fourth"]
+			firstTimeSteps: ["firsttime-first", "firsttime-second", "firsttime-third", "firsttime-fourth"],
+			pc: false,
 		};
+	},
+	components: {
+		FunctionBar
 	},
 	methods: {
 		isPC,
@@ -523,6 +530,9 @@ export default Vue.extend({
 		if (getcookie("ft") === undefined) {
 			this.firstTimeDialog = true;
 		}
+		this.$nextTick(() => {
+			this.pc = isPC();
+		})
 	}
 });
 </script>
@@ -558,6 +568,7 @@ export default Vue.extend({
 	}
 	@media screen and (max-width: 1024px) {
 		position: fixed;
+		z-index: 20;
 		&.desktop {
 			display: none;
 		}
@@ -581,7 +592,7 @@ export default Vue.extend({
 
 .speeddial {
 	position: fixed;
-	z-index: 1;
+	z-index: 10;
 	transition: opacity 0.5s ease;
 	bottom: 32px;
 	right: 32px;
