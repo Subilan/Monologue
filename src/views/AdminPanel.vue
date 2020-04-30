@@ -4,7 +4,7 @@
             <h1>控制中心</h1>
             <p>选择您要进行的操作</p>
         </div>
-        <FunctionBar>
+        <FunctionBar class="function-bar-float-right">
             <md-button @click="$router.push({name: 'home'})" class="md-raised md-icon-button">
                 <md-icon class="mdi mdi-home" />
             </md-button>

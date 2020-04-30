@@ -12,7 +12,7 @@
                 <h1>创建协议</h1>
                 <p>创建协议并收集同意或不同意协议的人员。</p>
             </div>
-            <FunctionBar>
+            <FunctionBar class="function-bar-float-right">
                 <md-checkbox v-model="allowDisagreement" class="md-primary">允许反对意见</md-checkbox>
                 <md-button
                     @click="$router.push({name: 'admin-panel'})"
