@@ -72,4 +72,37 @@ export default Vue.extend({
 	display: flex;
 	align-items: center;
 }
+
+.functions {
+	.fontfamily-default;
+
+	@media screen and (max-width: 1024px) {
+		top: -16px;
+	}
+
+	@media screen and (min-width: 1024px) {
+		top: 32px;
+	}
+
+	position: absolute;
+	right: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+
+	> * {
+		margin-left: 8px;
+		margin-right: 8px;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
 </style>
