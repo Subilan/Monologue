@@ -1,5 +1,5 @@
-@import "./fonts/inter/inter.css";
 @import "./logue.less";
+@import "./lib.less";
 
 html,
 body {
@@ -10,9 +10,7 @@ body {
 }
 
 body {
-	font-family: Inter, -apple-system, Roboto, BlinkMacSystemFont, "Segoe UI",
-		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "微软雅黑",
-		"Microsoft Yahei UI", sans-serif !important;
+	.fontfamily-default;
 	.container {
 		background-color: white;
 		margin-left: auto;
@@ -138,8 +136,7 @@ button.md-primary.md-raised {
 	}
 
 	code, kbd {
-		font-family: "Consolas", "Fira Code", "IBM Plex Mono", Courier,
-			"Courier New", monospace;
+		.fontfamily-monospace;
 	}
 }
 
