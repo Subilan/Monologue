@@ -109,6 +109,11 @@ export function isPC(): boolean {
      return isPC() && window.innerWidth > 1024;
  }
 
+ /**
+  * 使用 nzh 将阿拉伯数字转换为简体中文小写
+  * 
+  * @param number 要转换的数字
+  */
 export function translateNumber(number: number): string {
     const Nzh = require("nzh");
     const cn = Nzh.cn;
