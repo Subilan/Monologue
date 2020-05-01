@@ -39,7 +39,7 @@
 							</span>
 						</div>
 						<div class="logue">
-							<function-bar>
+							<function-bar :auth="auth">
 								<div class="tools" :class="auth ? '' : 'unauthed'">
 									<span v-if="auth" class="edit action-span" @click="$router.push({ name: 'admin-edit-event', params: { id: a.id } })">编辑</span>
 									<span

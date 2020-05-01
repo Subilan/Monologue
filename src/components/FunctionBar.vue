@@ -35,6 +35,7 @@ Vue.use(MdMenu)
 	.use(MdButton);
 
 export default Vue.extend({
+	props: ["auth"],
 	data() {
 		return {
 			singleOnMobile: false,
@@ -49,7 +50,7 @@ export default Vue.extend({
 	},
 	mounted() {
 		// @ts-ignore
-		if (((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) && !this.is("home")) {
+		if (((this.$slots.default.length === 2 && this.$slots.default[0].tag === undefined) || this.$slots.default.length === 1) && (!this.is("home") || !this.auth)) {
 			this.singleOnMobile = true;
 		}
 		this.pc = isPCView();
@@ -104,5 +105,4 @@ export default Vue.extend({
 		}
 	}
 }
-
 </style>
