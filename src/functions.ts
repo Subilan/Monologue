@@ -1,3 +1,8 @@
+/**
+ * 根据 UA 判断当前所处设备环境
+ * 
+ * @return boolean
+ */
 export function isPC(): boolean {  
     var userAgentInfo = navigator.userAgent;
     var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");  
@@ -8,7 +13,12 @@ export function isPC(): boolean {
     return flag;
  }
 
- // do not use the function in return or if statements because there is something async which is impossible to return a value in a sync way.
+/**
+ * 复制一段文本到剪贴板
+ * 
+ * @param {string} text 要复制的文字
+ * @param {Function | undefined} callback 处理完毕的回调
+ */
  export function copy(text: string, callback: Function | undefined = undefined): boolean {
      if (!navigator.clipboard) {
          let a = document.createElement("textarea");
@@ -39,6 +49,11 @@ export function isPC(): boolean {
      }
  }
 
+ /**
+  * 判断一个值是否为合法的日期字符串
+  * 
+  * @param {any} target 要判断的目标，理论上应当是 string | number
+  */
  export function isDate(target: any): boolean {
     let d = new Date(target);
     if (Object.prototype.toString.call(d) === "[object Date]") {
@@ -52,10 +67,29 @@ export function isPC(): boolean {
     }
  }
 
+ /**
+  * 判断一个字符串是否为数字
+  * 
+  * @param {string} str 要判断的字符串
+  */
  export function isNumericString(str: string): boolean {
      return /^[1-9]\d*$/.test(str);
  }
 
+ /**
+  * 生成器函数。创建一个对象的遍历器，使用此遍历器可以在 for ... of 循环中同时得到 Key 和 Value
+  * 
+  * @param {object} object
+  * 
+  * @example
+  * 
+  * 下面是一个使用例子
+  * 
+  * for (let [k, v] of createIterator(obj)) {
+  *     console.log(obj[k] === v);
+  *     // => true 
+  * }
+  */
  export function* createIterator(object: object): Generator<any[], void, unknown> {
      let k = Object.keys(object);
      for (let i = 0; i < k.length; i++) {
@@ -64,6 +98,13 @@ export function isPC(): boolean {
      }
  }
 
+ /**
+  * 判断是否为桌面视图。如果同时符合 UA 判断和窗口宽度判断，则可以被认定为桌面视图。
+  * 
+  * 需要注意的是，如果只是桌面平台（即通过了 UA 判断），但是窗口宽度并不足够，仍然会使用移动视图。
+  * 
+  * @return boolean
+  */
  export function isPCView(): boolean {
      return isPC() && window.innerWidth > 1024;
  }
