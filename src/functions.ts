@@ -108,3 +108,9 @@ export function isPC(): boolean {
  export function isPCView(): boolean {
      return isPC() && window.innerWidth > 1024;
  }
+
+export function translateNumber(number: number): string {
+    const Nzh = require("nzh");
+    const cn = Nzh.cn;
+    return cn.encodeS(number);
+}
