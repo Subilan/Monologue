@@ -21,11 +21,12 @@ export function isPC(): boolean {
          a.focus();
          a.select();
          try {
-             return document.execCommand("copy");
+             document.execCommand("copy");
          } catch (e) {
              return false;
          }
          document.body.removeChild(a);
+         return true;
      } else {
          navigator.clipboard.writeText(text).then(r => {
              if (callback) {
