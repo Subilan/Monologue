@@ -127,7 +127,9 @@ export default Vue.extend({
 			imageLink: "",
 			link: "",
 			insertImageDialog: false,
-			insertLinkDialog: false
+			insertLinkDialog: false,
+			textareaValue1: "",
+			textareaValue2: "",
 		};
 	},
 	methods: {
