@@ -166,6 +166,7 @@ export default Vue.extend({
 				header3: [5, 4],
 				header4: [6, 4],
 				header5: [7, 4],
+				header6: [8, 4],
 				blockquote: [4, 4],
 				strikethrough: [2, 4],
 				codeblock: [1, 3]
