@@ -117,3 +117,25 @@ button.md-primary.md-raised {
 		display: block;
 	}
 }
+
+.textarea-with-toolbar {
+	height: calc(50% + 68px);
+	position: relative;
+	margin-bottom: 32px;
+}
+
+.textarea-with-toolbar .textarea,
+.textarea {
+	position: relative;
+	height: calc(100% - 68px);
+
+	@media screen and (max-width: 1024px) {
+		height: 60%;
+	}
+
+	textarea {
+		position: relative;
+		min-height: 100% !important;
+		resize: none !important;
+	}
+}
