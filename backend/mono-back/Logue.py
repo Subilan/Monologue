@@ -24,7 +24,7 @@ class LogueController:
             if (data != None):
                 if (self.markdown):
                     for i in range(len(data)):
-                        data[i]["contents"] = markdown.markdown(data[i]["contents"], extensions=['sane_lists'])
+                        data[i]["contents"] = markdown.markdown(data[i]["contents"], extensions=['sane_lists', 'pymdownx.tilde', 'pymdownx.emoji', 'pymdownx.extra'])
                 return data
         return False
     
