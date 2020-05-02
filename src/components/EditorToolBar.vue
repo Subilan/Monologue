@@ -110,7 +110,7 @@ import MdMenu from "vue-material/dist/components/MdMenu";
 import MdDialog from "vue-material/dist/components/MdDialog";
 // @ts-ignore
 import MdField from "vue-material/dist/components/MdField";
-import { translateNumber } from "@/functions";
+import { translateNumber, isNumericStringBetween } from "@/functions";
 
 Vue.use(MdButton)
 	.use(MdIcon)
@@ -118,6 +118,8 @@ Vue.use(MdButton)
 	.use(MdMenu)
 	.use(MdDialog)
 	.use(MdField);
+
+type FormatNames = "bold" | "italic" | "underline" | "header1" | "header2" | "header3" | "header4" | "header5" | "header6" | "blockquote" | "strikethrough" | "codeblock";
 
 export default Vue.extend({
 	props: ["content"],
@@ -129,7 +131,7 @@ export default Vue.extend({
 			insertImageDialog: false,
 			insertLinkDialog: false,
 			textareaValue1: "",
-			textareaValue2: "",
+			textareaValue2: ""
 		};
 	},
 	methods: {
@@ -140,7 +142,7 @@ export default Vue.extend({
 			textarea.setSelectionRange(start, end);
 			textarea.focus();
 		},
-		createFormat(name: string) {
+		createFormat(name: FormatNames) {
 			let content = this.content;
 			let beforeLength = content.length;
 			let match = {
@@ -181,19 +183,88 @@ export default Vue.extend({
 		},
 		insertData(type: string, arg1: string, arg2: string) {
 			let content = this.content;
-			switch (type) {
-				case "image":
-					content += "![" + arg1 + "](" + arg2 + ")";
-					break;
+			if (arg2.length > 0) {
+				switch (type) {
+					case "image":
+						content += "![" + arg1 + "](" + arg2 + ")";
+						break;
 
-				case "link":
-					content += "[" + arg1 + "](" + arg2 + ")";
-					break;
-            }
-            this.$emit("update-content", content);
+					case "link":
+						content += "[" + arg1 + "](" + arg2 + ")";
+						break;
+				}
+				this.$emit("update-content", content);
+			}
 		}
 	},
-	mounted() {}
+	mounted() {
+		window.addEventListener("keydown", e => {
+			let key = e.keyCode;
+			if (e.ctrlKey) {
+				if (e.shiftKey) {
+					switch (key) {
+						// L
+						case 76:
+							e.preventDefault();
+							this.insertLinkDialog = true;
+							break;
+
+						// I
+						case 73:
+							e.preventDefault();
+							this.insertImageDialog = true;
+							break;
+					}
+				} else {
+					switch (key) {
+						// B
+						case 66:
+							e.preventDefault();
+							this.createFormat("bold");
+							break;
+
+						// I
+						case 73:
+							e.preventDefault();
+							this.createFormat("italic");
+							break;
+
+						// U
+						case 85:
+							e.preventDefault();
+							this.createFormat("underline");
+							break;
+						// Q
+						case 81:
+							e.preventDefault();
+							this.createFormat("blockquote");
+							break;
+
+						// D
+						case 68:
+							e.preventDefault();
+							this.createFormat("strikethrough");
+							break;
+
+						// C
+						case 67:
+							e.preventDefault();
+							this.createFormat("codeblock");
+							break;
+
+						default:
+							// 1 ~ 6
+							if (key >= 49 && key <= 54) {
+								e.preventDefault();
+								// @ts-ignore
+								this.createFormat("header" + (key - 48).toString())
+							}
+							break;
+					}
+				}
+			}
+		});
+	}
 });
 </script>
 
