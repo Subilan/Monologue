@@ -119,3 +119,20 @@ export function translateNumber(number: number): string {
     const cn = Nzh.cn;
     return cn.encodeS(number);
 }
+
+/**
+ * 判断一个数字字符串是否在某一范围内（包含两端），仅适用于整数。
+ * 
+ * @param str 要判断的字符串
+ * @param from 起始范围
+ * @param to 结束范围
+ */
+export function isNumericStringBetween(str: string, from: number, to: number): boolean {
+    if (isNumericString(str)) {
+        let number = Number(str);
+        if (Number.isInteger(number)) {
+            return number >= from && number <= to;
+        }
+    }
+    return false;
+}
