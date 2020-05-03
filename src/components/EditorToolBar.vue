@@ -246,8 +246,8 @@ export default Vue.extend({
 							this.createFormat("strikethrough");
 							break;
 
-						// C
-						case 67:
+						// K
+						case 75:
 							e.preventDefault();
 							this.createFormat("codeblock");
 							break;
