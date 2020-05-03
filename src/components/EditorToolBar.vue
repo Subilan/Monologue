@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<div class="editor-toolbar">
+	<div class="editor-toolbar-container">
+		<div class="editor-toolbar" v-if="enabled">
 			<md-button @click="createFormat('bold')" class="item md-raised md-icon-button">
 				<md-icon class="mdi mdi-format-bold" />
 			</md-button>
@@ -92,7 +92,7 @@
 				>
 			</md-dialog-actions>
 		</md-dialog>
-		<slot></slot>
+		<slot class="textfield"></slot>
 	</div>
 </template>
 
@@ -122,7 +122,7 @@ Vue.use(MdButton)
 type FormatNames = "bold" | "italic" | "underline" | "header1" | "header2" | "header3" | "header4" | "header5" | "header6" | "blockquote" | "strikethrough" | "codeblock";
 
 export default Vue.extend({
-	props: ["content"],
+	props: ["content", "enabled"],
 	data() {
 		return {
 			textarea: null,
@@ -289,5 +289,15 @@ export default Vue.extend({
 			margin-right: 0;
 		}
 	}
+}
+
+.editor-toolbar-container {
+	@media screen and (min-width: 1024px){
+		height: calc(60% + 68px);
+	}
+	@media screen and (max-width: 1024px) {
+		height: 60%;
+	} 
+	position: relative;
 }
 </style>
