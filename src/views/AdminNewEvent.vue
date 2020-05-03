@@ -2,11 +2,11 @@
 	<div class="admin-event admin-container">
 		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" :invalid="invalidID" @submit="submit($event)">
 			<template v-slot:hero>
-				<h1>{{ isEdit() ? "编辑事件 #" + id : "添加新事件" }}</h1>
-				<p>{{ isEdit() ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
+				<h1>{{ editing ? "编辑事件 #" + id : "添加新事件" }}</h1>
+				<p>{{ editing ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
 			</template>
 			<template v-slot:toolbar>
-				<md-button v-if="isEdit()" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
+				<md-button v-if="editing" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-delete" />
 				</md-button>
 				<md-button @click="$router.push({ name: 'admin-panel' })" class="md-icon-button md-raised">
@@ -73,7 +73,8 @@ export default Vue.extend({
 			deleteConfirmDialog: false,
 			configurationDialog: false,
 			actioned: false,
-			loading: false
+			loading: false,
+			editing: false,
 		};
 	},
 	components: {
@@ -88,7 +89,7 @@ export default Vue.extend({
 			};
 			return match[this.type];
 		},
-		isEdit() {
+		isEditing() {
 			return this.$route.name === "admin-edit-event";
 		},
 		validate(title: string, content: string, type: string) {
@@ -107,7 +108,7 @@ export default Vue.extend({
 			this.$server.post(
 				"/api/logue",
 				{
-					method: this.isEdit() ? "alter" : "submit",
+					method: this.editing ? "alter" : "submit",
 					title: data.title,
 					contents: data.content,
 					type: this.type,
@@ -158,7 +159,8 @@ export default Vue.extend({
 		next() {}
 	},
 	mounted() {
-		if (this.isEdit()) {
+		this.editing = this.isEditing();
+		if (this.editing) {
 			this.loading = true;
 			this.id = Number(this.$route.params.id);
 			if (this.id > 0 && Number.isInteger(this.id) && this.id !== NaN) {

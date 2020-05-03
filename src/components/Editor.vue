@@ -30,21 +30,6 @@
 			</editor-tool-bar>
 			<md-button @click="createSubmitEvent()" class="submit-btn md-primary md-raised">发布</md-button>	
 		</div>
-		<md-dialog :md-active.sync="routerConfirmDialog">
-			<md-dialog-title>跳转确认</md-dialog-title>
-			<md-dialog-content>是否确认要跳转到其它页面？未保存的更改将永久消失。</md-dialog-content>
-			<md-dialog-actions>
-				<md-button
-					@click="
-						next();
-						routerConfirmDialog = false;
-					"
-					class="md-primary"
-					>跳转</md-button
-				>
-				<md-button @click="routerConfirmDialog = false" class="md-primary md-raised">取消</md-button>
-			</md-dialog-actions>
-		</md-dialog>
 	</div>
 </template>
 
@@ -88,7 +73,6 @@ export default Vue.extend({
 	data() {
 		return {
 			empty: false,
-			routerConfirmDialog: false,
 			title: "",
 			content: "",
 			titleInvalid: "",
@@ -102,7 +86,6 @@ export default Vue.extend({
 		EditorToolBar
 	},
 	methods: {
-		next() {},
 		createSubmitEvent() {
 			this.$emit("submit", {
 				title: this.title,
@@ -131,12 +114,7 @@ export default Vue.extend({
 		},
 		editingContent(v) {
 			this.content = v;
-		}
-	},
-	beforeRouteLeave(to, from, next) {
-		this.next = next;
-		this.routerConfirmDialog = true;
-		next(false);
+		},
 	},
 	mounted() {
 		this.pcView = this.isPCView();

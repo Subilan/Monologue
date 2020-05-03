@@ -24,23 +24,30 @@ const routes = [
 				name: "admin-auth",
 				component: () => import("@/views/AdminAuth.vue")
 			},
+		]
+	},
+	{
+		path: "/admin/editor",
+		name: "admin-editor",
+		component: () => import("@/views/AdminEditor.vue"),
+		children: [
 			{
-				path: "new-event",
+				path: "event",
 				name: "admin-new-event",
 				component: () => import("@/views/AdminNewEvent.vue")
 			},
 			{
-				path: "edit-event/:id?",
+				path: "event/:id?",
 				name: "admin-edit-event",
 				component: () => import("@/views/AdminNewEvent.vue")
 			},
 			{
-				path: "new-agreement",
+				path: "agreement",
 				name: "admin-new-agreement",
 				component: () => import("@/views/AdminNewAgreement.vue")
 			},
 			{
-				path: "edit-agreement/:id?",
+				path: "agreement/:id?",
 				name: "admin-edit-agreement",
 				component: () => import("@/views/AdminNewAgreement.vue")
 			}
