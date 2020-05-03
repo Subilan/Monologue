@@ -22,3 +22,8 @@ interface Logue {
 interface LogueOrigin extends Logue {
 	date: string;
 }
+
+interface EditorResult {
+	content: string,
+	title: string
+}
