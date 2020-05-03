@@ -1,41 +1,41 @@
 <template>
 	<div class="admin-event admin-container">
-		<md-empty-state v-if="invalidID">
-			<span class="md-empty-state-icon mdi mdi-help-circle-outline" />
-			<span class="md-empty-state-label">无效的 ID</span>
-			<span class="md-empty-state-description">您输入的 ID 有误或者不存在</span>
-			<md-button @click="$router.go(-1)" class="md-primary md-raised">后退</md-button>
-		</md-empty-state>
-		<LoadingScreen v-if="loading" />
-		<div class="full-height" v-if="!isEdit() || !invalidID">
-			<div class="hero">
+		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" :invalid="invalidID" @submit="submit($event)">
+			<template v-slot:hero>
 				<h1>{{ isEdit() ? "编辑事件 #" + id : "添加新事件" }}</h1>
 				<p>{{ isEdit() ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
-			</div>
-			<FunctionBar class="function-bar-float-right">
+			</template>
+			<template v-slot:toolbar>
 				<md-button v-if="isEdit()" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-delete" />
 				</md-button>
 				<md-button @click="$router.push({ name: 'admin-panel' })" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-cogs" />
 				</md-button>
-			</FunctionBar>
-			<div class="new-event-form full-height">
-				<md-field :class="titleInvalid">
-					<md-icon class="mdi mdi-format-title" />
-					<label>事件标题</label>
-					<md-input type="text" v-model="title" maxlength="30" required />
-					<span class="md-helper-text">不能超过 30 字。</span>
-					<span class="md-error">长度无效</span>
-				</md-field>
-				<editor-tool-bar class="textarea-with-toolbar" @update-content="content = $event" :content="content">
-					<md-field class="textarea" :class="contentInvalid">
-						<label>事件内容</label>
-						<md-textarea ref="content_textarea" type="text" v-model="content" maxlength="1000" required />
-						<span class="md-helper-text">支持 Markdown 语法，不能超过 1000 字。</span>
-						<span class="md-error">长度无效</span>
-					</md-field>
-				</editor-tool-bar>
+				<md-button @click="configurationDialog = true" class="md-icon-button md-raised">
+					<md-icon class="mdi mdi-card-bulleted"/>
+				</md-button>
+			</template>
+		</Editor>
+		<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
+		<md-dialog :md-active.sync="deleteConfirmDialog">
+			<md-dialog-title>删除确认</md-dialog-title>
+			<md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
+			<md-dialog-actions>
+				<md-button
+					@click="
+						deleteEvent();
+						deleteConfirmDialog = false;
+					"
+					class="md-primary"
+					>确认删除</md-button
+				>
+				<md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+		<md-dialog :md-active.sync="configurationDialog">
+			<md-dialog-title>配置</md-dialog-title>
+			<md-dialog-content>
 				<md-field>
 					<md-icon class="mdi" :class="getIconByType()" />
 					<label>选择事件类型</label>
@@ -45,79 +45,23 @@
 						<md-option value="solved">已解决</md-option>
 					</md-select>
 				</md-field>
-				<md-button @click="submit()" class="submit-btn md-primary md-raised">发布</md-button>
-				<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
-				<md-dialog :md-active.sync="deleteConfirmDialog">
-					<md-dialog-title>删除确认</md-dialog-title>
-					<md-dialog-content>是否要确认删除此事件？此操作无法回滚。</md-dialog-content>
-					<md-dialog-actions>
-						<md-button
-							@click="
-								deleteEvent();
-								deleteConfirmDialog = false;
-							"
-							class="md-primary"
-							>确认删除</md-button
-						>
-						<md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
-					</md-dialog-actions>
-				</md-dialog>
-				<md-dialog :md-active.sync="routerConfirmDialog">
-					<md-dialog-title>跳转确认</md-dialog-title>
-					<md-dialog-content>是否确认要跳转到其它页面？未保存的更改将永久消失。</md-dialog-content>
-					<md-dialog-actions>
-						<md-button
-							@click="
-								next();
-								routerConfirmDialog = false;
-							"
-							class="md-primary"
-							>跳转</md-button
-						>
-						<md-button @click="routerConfirmDialog = false" class="md-primary md-raised">取消</md-button>
-					</md-dialog-actions>
-				</md-dialog>
-			</div>
-		</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary md-raised" @click="configurationDialog = false">OK</md-button>
+			</md-dialog-actions>
+		</md-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-// @ts-ignore
-import MdField from "vue-material/dist/components/MdField";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdMenu from "vue-material/dist/components/MdMenu";
-// @ts-ignore
-import MdList from "vue-material/dist/components/MdList";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
-// @ts-ignore
-import MdEmptyState from "vue-material/dist/components/MdEmptyState";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-import LoadingScreen from "@/components/LoadingScreen.vue";
-import FunctionBar from "@/components/FunctionBar.vue";
-import EditorToolBar from "@/components/EditorToolBar.vue";
-
-Vue.use(MdField)
-	.use(MdIcon)
-	.use(MdButton)
-	.use(MdMenu)
-	.use(MdList)
-	.use(MdSnackbar)
-	.use(MdEmptyState)
-	.use(MdDialog);
+import Editor from "@/components/Editor.vue";
 
 export default Vue.extend({
 	data() {
 		return {
-			title: "",
-			content: "",
+			editingTitle: "",
+			editingContent: "",
 			type: "info",
 			id: -1,
 			titleInvalid: "",
@@ -127,32 +71,13 @@ export default Vue.extend({
 			disableSubmit: false,
 			invalidID: false,
 			deleteConfirmDialog: false,
-			routerConfirmDialog: false,
+			configurationDialog: false,
 			actioned: false,
-			loading: false,
-			textareaInstance: null
+			loading: false
 		};
 	},
 	components: {
-		LoadingScreen,
-		FunctionBar,
-		EditorToolBar
-	},
-	watch: {
-		title(v) {
-			if (v.length > 0 && v.length < 30) {
-				this.titleInvalid = "";
-			} else {
-				this.titleInvalid = "md-invalid";
-			}
-		},
-		content(v) {
-			if (v.length > 0 && v.length <= 1000) {
-				this.contentInvalid = "";
-			} else {
-				this.contentInvalid = "md-invalid";
-			}
-		}
+		Editor
 	},
 	methods: {
 		getIconByType() {
@@ -169,12 +94,12 @@ export default Vue.extend({
 		validate(title: string, content: string, type: string) {
 			return title.length > 0 && title.length < 30 && content.length > 0 && content.length < 1000 && ["info", "warning", "solved"].includes(type);
 		},
-		submit() {
+		submit(data: EditorResult) {
 			if (this.disableSubmit) {
 				return false;
 			}
 			// Do not let the empty data in, or the frontend array building process will blow up.
-			if (!this.validate(this.title, this.content, this.type)) {
+			if (!this.validate(data.title, data.content, this.type)) {
 				this.snackbarMessage = "发送失败，请检查您填写的内容。";
 				this.snackbar = true;
 				return false;
@@ -183,8 +108,8 @@ export default Vue.extend({
 				"/api/logue",
 				{
 					method: this.isEdit() ? "alter" : "submit",
-					title: this.title,
-					contents: this.content,
+					title: data.title,
+					contents: data.content,
 					type: this.type,
 					id: this.id
 				},
@@ -240,8 +165,8 @@ export default Vue.extend({
 				this.$server.get("/api/logue?method=id&markdown=false&id=" + this.id, r => {
 					let data = r.data;
 					if (r.data) {
-						this.title = data.title;
-						this.content = data.contents;
+						this.editingTitle = data.title;
+						this.editingContent = data.contents;
 						this.type = data.type;
 					} else {
 						this.invalidID = true;
@@ -252,26 +177,13 @@ export default Vue.extend({
 				this.invalidID = true;
 			}
 		}
-		window.onbeforeunload = e => {
-			if ((this.$route.name === "admin-new-event" || this.$route.name === "admin-edit-event") && (this.title.length > 0 || this.content.length > 0)) {
-				e = e || window.event;
-				if (e) {
-					e.returnValue = "是否确实要离开此页面？您的修改将不会被保存。";
-				}
-				return "是否确实要离开此页面？您的修改将不会被保存。";
-			} else {
-				window.onbeforeunload = null;
-			}
-		};
-	},
-	beforeRouteLeave(to, from, next) {
-		if ((this.title.length > 0 || this.content.length > 0) && !this.actioned) {
-			this.next = next;
-			this.routerConfirmDialog = true;
-			next(false);
-		} else {
-			next();
-		}
 	}
 });
 </script>
+
+<style lang="less">
+.admin-container {
+	height: 100%;
+	position: relative;
+}
+</style>
