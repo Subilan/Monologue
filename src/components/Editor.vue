@@ -17,7 +17,7 @@
 			<md-field :class="titleInvalid">
 				<md-icon class="mdi mdi-format-title" />
 				<label>标题</label>
-				<md-input v-model="title" type="text" maxlength="40" required />
+				<md-input v-model="title" type="text" maxlength="30" required />
 				<span class="md-error">无效的标题</span>
 			</md-field>
 			<editor-tool-bar :enabled="pcView" @update-content="content = $event" :content="content">
