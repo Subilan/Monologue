@@ -207,6 +207,7 @@ export default Vue.extend({
 			showLoadNextButton: false,
 			showLoading: false,
 			total: 0,
+			loaded: 0,
 			backToTopButtonOpacity: 0,
 			targetID: -1,
 			deleteConfirmDialog: false,
@@ -228,7 +229,7 @@ export default Vue.extend({
 		};
 	},
 	components: {
-		FunctionBar,
+		FunctionBar
 	},
 	methods: {
 		isPCView,
@@ -372,36 +373,42 @@ export default Vue.extend({
 			this.showLoading = true;
 			this.$server.get("/api/logue?method=limit&limit=" + this.limitStart + ",10", r => {
 				if (Array.isArray(r.data) && r.data.length > 0) {
+					this.loaded += r.data.length;
 					let data = r.data;
 					let arr: Array<LogueArrayItem> = this.monologue;
 					let dateBefore = "";
 					let ix = -1;
-					arr.forEach((k, t) => {
-						data.forEach((e, i) => {
-							let logueItem = {
-								id: e.id,
-								title: e.title,
-								contents: e.contents,
-								type: e.type,
-								time: e.date.split(" ")[1]
-							};
-							console.log(e.date.split(" ")[0], k.date);
-							if (e.date.split(" ")[0] === k.date) {
-								k.logue.push(logueItem);
-							} else if (e.date.split(" ")[0] === dateBefore) {
-								arr[ix - 1].logue.push(logueItem);
-							} else {
-								dateBefore = e.date.split(" ")[0];
-								ix = arr.push({
-									date: e.date.split(" ")[0],
-									logue: [logueItem]
-								});
-							}
+					try {
+						arr.forEach((k, t) => {
+							data.forEach((e, i) => {
+								let logueItem = {
+									id: e.id,
+									title: e.title,
+									contents: e.contents,
+									type: e.type,
+									time: e.date.split(" ")[1]
+								};
+								if (e.date.split(" ")[0] === k.date) {
+									k.logue.push(logueItem);
+								} else if (e.date.split(" ")[0] === dateBefore) {
+									arr[ix - 1].logue.push(logueItem);
+								} else {
+									dateBefore = e.date.split(" ")[0];
+									ix = arr.push({
+										date: e.date.split(" ")[0],
+										logue: [logueItem]
+									});
+								}
+								if (i + 1 === data.length) {
+									throw new Error("end");
+								}
+							});
 						});
-					});
+					} catch (e) {
+						// do nothing
+					}
 					this.showLoadNextButton = r.data.length == 10;
 					this.backToTopButtonOpacity = 1;
-					console.log(arr);
 				} else {
 					this.showLoadNextButton = false;
 				}
@@ -528,6 +535,7 @@ export default Vue.extend({
 		// default load
 		this.$server.get("/api/logue?method=limit&limit=0,10", r => {
 			if (Array.isArray(r.data) && r.data.length > 0) {
+				this.loaded += r.data.length;
 				(this.monologue as Array<LogueArrayItem>) = this.getArray(r.data);
 			} else {
 				this.empty = true;
