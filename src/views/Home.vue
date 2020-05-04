@@ -54,7 +54,9 @@
 									<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
 								</div>
 							</function-bar>
-							<div class="logue-content" v-html="a.contents"></div>
+							<div class="logue-content" v-html="limitContentLen(a.contents, 100)"></div>
+							<!-- TODO: Add vi-if -->
+							<!-- <md-button class="md-primary md-raised" @click="getLogueDialog(a.id, a.title, a.contents, a.type)">查看全部</md-button> -->
 						</div>
 					</div>
 				</div>
@@ -468,6 +470,36 @@ export default Vue.extend({
 				/* } */
 				return;
 			}
+		},
+		limitContentLen(contentEl, limitLen) {
+			let contentLen = 0;
+			let isBlockquoteClose = true;
+			let displayElement : string[] = [];
+			let isLimit = false;
+
+			contentEl.split('\n').some(item => {
+				let content = item.replace(/<.+?>/g, '');
+
+				if (content == "") {
+					if (item == "<blockquote>") {
+						isBlockquoteClose = false
+					} else if (item == "</blockquote>") {
+						isBlockquoteClose = true;
+					}
+				}
+
+				if ((contentLen += content.length) > limitLen) {
+					if (!isBlockquoteClose) {
+						displayElement.pop()
+					}
+					isLimit = true
+					return true
+				} else {
+					displayElement.push(item)
+				}
+			});
+
+			return displayElement.join("\n")
 		}
 	},
 	watch: {
