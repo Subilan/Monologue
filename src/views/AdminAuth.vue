@@ -6,13 +6,13 @@
                 <md-field>
                     <md-icon class="mdi mdi-account-circle" />
                     <label>用户名</label>
-                    <md-input v-model="username" type="text" />
+                    <md-input v-model="username" type="text" @keyup.enter="submit()" />
                     <span class="md-helper-text">您的用户名。</span>
                 </md-field>
                 <md-field>
                     <md-icon class="mdi mdi-textbox-password" />
                     <label>密码</label>
-                    <md-input v-model="password" type="password" />
+                    <md-input v-model="password" type="password" @keyup.enter="submit()" />
                     <span class="md-helper-text">您的密码。</span>
                 </md-field>
                 <md-button @click="submit()" class="login-btn md-primary md-raised">
