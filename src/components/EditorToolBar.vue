@@ -147,7 +147,7 @@ export default Vue.extend({
 			let beforeLength = content.length;
 			let match = {
 				bold: "**粗体**",
-				italic: "**斜体**",
+				italic: "*斜体*",
 				underline: "<u>下划线</u>",
 				header1: "\n# 一级标题",
 				header2: "\n## 二级标题",
@@ -161,7 +161,7 @@ export default Vue.extend({
 			};
 			let posMatch = {
 				bold: [2, 2],
-				italic: [2, 2],
+				italic: [1, 2],
 				underline: [3, 3],
 				header1: [3, 4],
 				header2: [4, 4],
@@ -257,7 +257,7 @@ export default Vue.extend({
 							if (key >= 49 && key <= 54) {
 								e.preventDefault();
 								// @ts-ignore
-								this.createFormat("header" + (key - 48).toString())
+								this.createFormat("header" + (key - 48).toString());
 							}
 							break;
 					}
@@ -292,12 +292,12 @@ export default Vue.extend({
 }
 
 .editor-toolbar-container {
-	@media screen and (min-width: 1024px){
+	@media screen and (min-width: 1024px) {
 		height: calc(60% + 68px);
 	}
 	@media screen and (max-width: 1024px) {
 		height: 60%;
-	} 
+	}
 	position: relative;
 }
 </style>
