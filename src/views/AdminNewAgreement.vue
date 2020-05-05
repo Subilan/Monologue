@@ -1,176 +1,186 @@
 <template>
-    <div class="admin-agreement">
-        <md-empty-state v-if="invalidID">
-            <span class="md-empty-state-icon mdi mdi-help-circle-outline" />
-            <span class="md-empty-state-label">无效的 ID</span>
-            <span class="md-empty-state-description">您输入的 ID 有误或者不存在</span>
-            <md-button @click="$router.go(-1)" class="md-primary md-raised">后退</md-button>
-        </md-empty-state>
-        <LoadingScreen v-if="loading" />
-        <div class="full-height" v-if="!isEdit()">
-            <div class="hero">
-                <h1>创建协议</h1>
-                <p>创建协议并收集同意或不同意协议的人员。</p>
-            </div>
-            <FunctionBar class="function-bar-float-right">
-                <md-checkbox v-model="allowDisagreement" class="md-primary">允许反对意见</md-checkbox>
-                <md-button
-                    @click="$router.push({name: 'admin-panel'})"
-                    class="md-icon-button md-raised"
-                >
-                    <md-icon class="mdi mdi-cogs" />
-                </md-button>
-            </FunctionBar>
-            <md-field :class="titleInvalid">
-                <md-icon class="mdi mdi-format-title" />
-                <label>协议标题</label>
-                <md-input v-model="title" type="text" maxlength="40" required />
-                <span class="md-error">无效的标题</span>
-            </md-field>
-            <md-field class="agreement-content" :class="contentInvalid">
-                <label>内容</label>
-                <md-textarea
-                    class="agreement-content-input"
-                    v-model="content"
-                    type="text"
-                    maxlength="1000"
-                    required
-                />
-                <span class="md-helper-text">协议的内容，支持 Markdown 语法。</span>
-                <span class="md-error">无效的内容</span>
-            </md-field>
-            <md-button class="submit-btn md-primary md-raised">发布</md-button>
-        </div>
-        <md-dialog :md-active.sync="routerConfirmDialog">
-            <md-dialog-title>跳转确认</md-dialog-title>
-            <md-dialog-content>是否确认要跳转到其它页面？未保存的更改将永久消失。</md-dialog-content>
-            <md-dialog-actions>
-                <md-button @click="next(); routerConfirmDialog = false" class="md-primary">跳转</md-button>
-                <md-button @click="routerConfirmDialog = false" class="md-primary md-raised">取消</md-button>
-            </md-dialog-actions>
-        </md-dialog>
-    </div>
+	<div class="admin-agreement">
+		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" :invalid="invalidID" @submit="submit($event)">
+			<template v-slot:hero>
+				<h1>{{ isEdit() ? "编辑协议 #" + id : "创建协议" }}</h1>
+				<p>{{ isEdit() ? "修改协议的内容。" : "创建协议并收集同意或不同意协议的人员。" }}</p>
+			</template>
+			<template v-slot:toolbar>
+                <md-button v-if="editing" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
+					<md-icon class="mdi mdi-delete" />
+				</md-button>
+				<md-button @click="$router.push({ name: 'admin-panel' })" class="md-icon-button md-raised">
+					<md-icon class="mdi mdi-cogs" />
+				</md-button>
+                <md-button @click="configurationDialog = true" class="md-icon-button md-raised">
+					<md-icon class="mdi mdi-card-bulleted"/>
+				</md-button>
+			</template>
+		</Editor>
+		<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
+		<md-dialog :md-active.sync="deleteConfirmDialog">
+			<md-dialog-title>删除确认</md-dialog-title>
+			<md-dialog-content>是否要确认删除此协议？此操作无法回滚。</md-dialog-content>
+			<md-dialog-actions>
+				<md-button
+					@click="
+						deleteAgreement();
+						deleteConfirmDialog = false;
+					"
+					class="md-primary"
+					>确认删除</md-button
+				>
+				<md-button @click="deleteConfirmDialog = false" class="md-primary md-raised">取消</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+		<md-dialog :md-active.sync="configurationDialog">
+			<md-dialog-title>配置</md-dialog-title>
+			<md-dialog-content>
+				<md-checkbox v-model="allowDisagreement" class="md-primary">允许反对意见</md-checkbox>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary md-raised" @click="configurationDialog = false">OK</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+	</div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-// @ts-ignore
-import MdField from "vue-material/dist/components/MdField";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdMenu from "vue-material/dist/components/MdMenu";
-// @ts-ignore
-import MdList from "vue-material/dist/components/MdList";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
-// @ts-ignore
-import MdEmptyState from "vue-material/dist/components/MdEmptyState";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-// @ts-ignore
-import MdCheckbox from "vue-material/dist/components/MdCheckbox";
-import LoadingScreen from "@/components/LoadingScreen.vue";
-import FunctionBar from "@/components/FunctionBar.vue";
-
-Vue.use(MdField)
-    .use(MdIcon)
-    .use(MdButton)
-    .use(MdMenu)
-    .use(MdList)
-    .use(MdSnackbar)
-    .use(MdEmptyState)
-    .use(MdDialog)
-    .use(MdCheckbox);
+import Editor from "@/components/Editor.vue";
+import { stringToBoolean } from '@/functions';
 
 export default Vue.extend({
-    data() {
-        return {
-            titleInvalid: "",
-            contentInvalid: "",
-            title: "",
-            content: "",
-            invalidID: false,
-            loading: false,
-            allowDisagreement: false,
-            routerConfirmDialog: false,
-            actioned: false,
-            next: () => {}
-        };
-    },
-    methods: {
-        isEdit() {
-            return this.$route.name === "admin-edit-agreement";
-        }
-    },
-    watch: {
-        title(v) {
-            if (v.length > 0 && v.length < 40) {
-                this.titleInvalid = "";
-            } else {
-                this.titleInvalid = "md-invalid";
-            }
+	data() {
+		return {
+			id: -1,
+			invalidID: false,
+			loading: false,
+			allowDisagreement: false,
+			editing: false,
+			editingTitle: "",
+			editingContent: "",
+			deleteConfirmDialog: false,
+			configurationDialog: false,
+			snackbar: false,
+			snackbarMessage: "",
+			disableSubmit: false
+		};
+	},
+	methods: {
+		isEdit() {
+			return this.$route.name === "admin-edit-agreement";
+		},
+		validate(title: string, content: string, allowdisagreement: boolean) {
+
+			return title.length > 0 && title.length <= 30 && content.length > 0 && content.length <= 1000 && typeof allowdisagreement === "boolean";
+		},
+		submit(e: EditorResult) {
+			if (this.disableSubmit) {
+				return false;
+			}
+			if (!this.validate(e.title, e.content, this.allowDisagreement)) {
+				this.snackbarMessage = "发送失败，请检查您填写的内容。";
+				this.snackbar = true;
+				return false;
+			}
+			this.$server.post(
+				"/api/agreement",
+				{
+					method: this.editing ? "alter" : "submit",
+					title: e.title,
+					contents: e.content,
+                    disagreement: this.allowDisagreement,
+                    id: this.editing ? this.id : -1
+				},
+				r => {
+					if (r.data) {
+						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+							state: true
+						});
+						this.disableSubmit = true;
+						this.snackbarMessage = "成功发布新的协议，即将为您跳转";
+						this.snackbar = true;
+						setTimeout(() => {
+							this.$router.push({
+								name: "admin-panel"
+							});
+						}, 1500);
+					} else {
+						this.snackbarMessage = "发送失败，请检查控制台";
+						this.snackbar = true;
+					}
+				}
+			);
+		},
+		deleteAgreement() {
+			this.$server.post(
+				"/api/agreement",
+				{
+					method: "delete",
+					id: this.id
+				},
+				r => {
+					if (r.data) {
+                        this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+                            state: true
+                        });
+						this.snackbarMessage = "成功删除此协议，即将返回首页";
+						this.snackbar = true;
+						setTimeout(() => {
+							this.$router.push({
+								name: "admin-panel"
+							});
+						}, 1500);
+					} else {
+                        this.snackbarMessage = "删除失败，请检查控制台"
+                    }
+				}
+			);
         },
-        content(v) {
-            if (v.length > 0 && v.length < 1000) {
-                this.contentInvalid = "";
-            } else {
-                this.contentInvalid = "md-invalid";
-            }
-        }
-    },
-    components: {
-        LoadingScreen,
-        FunctionBar
-    },
-    mounted() {
-        window.onbeforeunload = e => {
-            if (
-                (this.$route.name === "admin-new-agreement" ||
-                    this.$route.name === "admin-edit-agreement") &&
-                (this.title.length > 0 || this.content.length > 0)
-            ) {
-                e = e || window.event;
-                if (e) {
-                    e.returnValue =
-                        "是否确实要离开此页面？您的修改将不会被保存。";
-                }
-                return "是否确实要离开此页面？您的修改将不会被保存。";
-            } else {
-                window.onbeforeunload = null;
-            }
-        };
-    },
-    beforeRouteLeave(to, from, next) {
-        if (
-            (this.title.length > 0 || this.content.length > 0) &&
-            !this.actioned
-        ) {
-            this.next = next;
-            this.routerConfirmDialog = true;
-            next(false);
-        } else {
-            next();
-        }
-    }
+	},
+	components: {
+		Editor
+	},
+	created() {
+		this.editing = this.isEdit();
+		if (this.editing) {
+			this.loading = true;
+			this.$server.get("/api/agreement?id=" + this.$route.params.id, r => {
+                this.loading = false;
+				if (r.data) {
+					let data = r.data;
+					this.editingTitle = data.title;
+					this.editingContent = data.contents;
+                    this.allowDisagreement = stringToBoolean(data.disagreement);
+				} else {
+					this.invalidID = true;
+				}
+			});
+		}
+		this.id = Number(this.$route.params.id);
+	},
+	mounted() {
+		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+			state: false
+        });
+	}
 });
 </script>
 
 <style lang="less" scoped>
 .admin-agreement {
-    height: 100%;
-    position: relative;
-    padding: 16px;
-    padding-bottom: 0;
-    .agreement-content {
-        height: 70% !important;
-        position: relative;
-        .agreement-content-input {
-            height: 100% !important;
-            position: relative;
-        }
-    }
+	height: 100%;
+	position: relative;
+	padding: 16px;
+	padding-bottom: 0;
+	.agreement-content {
+		height: 70% !important;
+		position: relative;
+		.agreement-content-input {
+			height: 100% !important;
+			position: relative;
+		}
+	}
 }
 </style>
