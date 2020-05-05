@@ -30,19 +30,28 @@ Vue.use(MdDialog);
 export default Vue.extend({
 	data() {
 		return {
-			routerConfirmDialog: false
+			routerConfirmDialog: false,
+			ignoreConfirm: false,
 		};
 	},
 	methods: {
 		next() {}
 	},
 	beforeRouteLeave(to, from, next) {
-		if (this.$store.state.editorCommited) {
+		if (this.$store.state.editorCommited || this.ignoreConfirm) {
 			next();
 		} else {
 			this.next = next;
 			this.routerConfirmDialog = true;
 			next(false);
+		}
+	},
+	mounted() {
+		if (this.$route.matched.length === 1) {
+			this.ignoreConfirm = true;
+			this.$router.push({
+				name: "admin-panel"
+			})
 		}
 	}
 });
