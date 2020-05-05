@@ -1,14 +1,10 @@
 import axios from 'axios';
+import Vue from 'vue';
 
 declare module "vue/types/vue" {
-	interface Vue {
-		$server: ServerController;
-	}
-}
-
-interface ServerController {
-    post(url: string, data: object, callback: Function): void
-    get(url: string, callback: Function): void
+    interface Vue {
+        $server: ServerController;
+    }
 }
 
 const Server: ServerController = class {
