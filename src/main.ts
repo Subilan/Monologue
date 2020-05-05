@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import store from './store/index';
 import './registerServiceWorker'
 import router from './router'
 import "@/css/mono.less"
@@ -12,6 +13,8 @@ import "./css/lib.less";
 import "./css/mdui.inuse.less";
 import NProgress from 'nprogress';
 import "./css/nprogress.css";
+import "./types";
+import mutations from '@/store/mutations';
 
 NProgress.configure({
   showSpinner: false,
@@ -28,8 +31,10 @@ router.afterEach(t => {
 
 Vue.config.productionTip = false
 Vue.prototype.$server = Server;
+Vue.prototype.$mutations = mutations;
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
