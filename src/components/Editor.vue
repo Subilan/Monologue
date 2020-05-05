@@ -23,7 +23,7 @@
 			<editor-tool-bar :enabled="pcView" @update-content="content = $event" :content="content">
 				<md-field class="content-field" :class="contentInvalid">
 					<label>内容</label>
-					<md-textarea class="content-input" v-model="content" type="text" maxlength="1000" required />
+					<md-textarea @keydown.enter="createSubmitEvent()" class="content-input" v-model="content" type="text" maxlength="1000" required />
 					<span class="md-helper-text">支持 Markdown 语法。</span>
 					<span class="md-error">无效的内容</span>
 				</md-field>
