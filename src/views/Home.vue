@@ -54,7 +54,8 @@
 									<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
 								</div>
 							</function-bar>
-							<div class="logue-content" v-html="limitContentLen(a.contents, 100)"></div>
+							<div class="logue-content" v-html="a.contents"></div>
+							<!-- please recover v-html="limitContentLen(a.contents, 100)" to the div above when the 'View all' function is completed-->
 							<!-- TODO: Add vi-if -->
 							<!-- <md-button class="md-primary md-raised" @click="getLogueDialog(a.id, a.title, a.contents, a.type)">查看全部</md-button> -->
 						</div>
