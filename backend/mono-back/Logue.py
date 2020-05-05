@@ -1,6 +1,5 @@
 from Database import DBController
-import time
-import markdown
+from Functions import parseMarkdown, getDateString
 
 class LogueController:
     def get(self, arg, typ, markdown):
@@ -24,7 +23,7 @@ class LogueController:
             if (data != None):
                 if (self.markdown):
                     for i in range(len(data)):
-                        data[i]["contents"] = markdown.markdown(data[i]["contents"], extensions=['sane_lists', 'pymdownx.tilde', 'pymdownx.emoji', 'pymdownx.extra'])
+                        data[i]["contents"] = parseMarkdown(data[i]["contents"])
                 return data
         return False
     
@@ -45,7 +44,7 @@ class LogueController:
     def write(self, title, contents, typ):
         db = DBController()
         cur = db.cursor(True)
-        date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        date = getDateString()
         args = (title, contents, typ, date)
         sql = ("INSERT INTO Logue (title, contents, type, date) VALUES (%s, %s, %s, %s)");
         cur.execute(sql, args)
