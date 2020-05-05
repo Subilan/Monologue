@@ -118,6 +118,9 @@ export default Vue.extend({
 					if (r.data) {
 						this.disableSubmit = true;
 						this.snackbarMessage = "成功发布新的事件，即将为您跳转";
+						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+							state: true
+						})
 						this.snackbar = true;
 						this.actioned = true;
 						setTimeout(() => {
@@ -179,6 +182,10 @@ export default Vue.extend({
 				this.invalidID = true;
 			}
 		}
+		// Set the commited state to false on page load.
+		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+			state: false
+		});
 	}
 });
 </script>
