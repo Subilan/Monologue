@@ -8,6 +8,7 @@ from Auth import AuthManager
 from User import UserManager
 from Logue import LogueController
 from Data import DataManager
+from Agreement import AgreementController
 
 app = Flask(__name__)
 api = Api(app)
@@ -46,6 +47,7 @@ class LogueAPI(Resource):
 
     def post(self):
         if ("username" in session):
+            self.logue = LogueController()
             json = request.get_json(force = True)
             self.json = json
             funcs = {
@@ -55,23 +57,16 @@ class LogueAPI(Resource):
             }
             func = funcs[json["method"]]
             return func()
-        else:
-            return False
+        return False
 
     def submit(self):
-        json = self.json
-        logue = LogueController()
-        return logue.write(json["title"], json["contents"], json["type"])
+        return self.logue.write(self.json["title"], self.json["contents"], self.json["type"])
 
     def alter(self):
-        json = self.json
-        logue = LogueController()
-        return logue.alter(json["id"], json["title"], json["contents"], json["type"])
+        return self.logue.alter(self.json["id"], self.json["title"], self.json["contents"], self.json["type"])
     
     def delete(self):
-        json = self.json
-        logue = LogueController()
-        return logue.delete(json["id"])
+        return self.logue.delete(self.json["id"])
 
 class AuthAPI(Resource):
     def login(self):
@@ -108,6 +103,46 @@ class AuthAPI(Resource):
         func = funcs[json["method"]]
         return func()
 
+class AgreementAPI(Resource):
+    def get(self):
+        id = request.args.get("id")
+        markdown = request.args.get("markdown")
+        if not id:
+            abort(404)
+        if not markdown or markdown != "true":
+            markdown = False
+        else:
+            markdown = True
+        agr = AgreementController()
+        result = agr.get(id, markdown)
+        if result:
+            return result
+        return False
+    
+    def post(self):
+        if "username" in session:
+            self.agr = AgreementController()
+            json = request.get_json(force = True)
+            self.json = json
+            funcs = {
+                "submit": self.submit,
+                "alter": self.alter,
+                "delete": self.delete
+            }
+            func = funcs[json["method"]]
+            return func()
+        return False
+
+    def submit(self):
+        return self.agr.write(self.json["title"], self.json["contents"], self.json["disagreement"])
+        
+    def alter(self):
+        return self.agr.alter(self.json["id"], self.json["title"], self.json["contents"], self.json["disagreement"])
+
+    def delete(self):
+        return self.agr.delete(self.json["id"])
+
+
 @app.errorhandler(404)
 def notFoundError(err):
     return make_response(
@@ -138,6 +173,7 @@ def unauthorizedError(err):
 api.add_resource(LogueAPI, '/api/logue', endpoint = 'logue')
 api.add_resource(AuthAPI, '/api/auth', endpoint = 'auth')
 api.add_resource(DataAPI, '/api/data', endpoint = 'data')
+api.add_resource(AgreementAPI, "/api/agreement", endpoint = 'agreement')
 
 if __name__ == '__main__':
     app.run(debug = True);
