@@ -118,9 +118,8 @@ export default Vue.extend({
 	},
 	mounted() {
 		this.pcView = this.isPCView();
-
 		window.onbeforeunload = e => {
-			if (this.$store.state.editorCommited === false) {
+			if (this.$store.state.editorCommited === false && this.$route.matched[0].name === "admin-editor") {
 				e = e || window.event;
 				if (e) {
 					e.returnValue = "是否确实要离开此页面？您的修改将不会被保存。";
