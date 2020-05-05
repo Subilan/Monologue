@@ -24,6 +24,11 @@ interface LogueOrigin extends Logue {
 }
 
 interface EditorResult {
-	content: string,
-	title: string
+	content: string;
+	title: string;
+}
+
+interface ServerController {
+    post(url: string, data: object, callback: Function): void
+    get(url: string, callback: Function): void
 }
