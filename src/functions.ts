@@ -136,3 +136,12 @@ export function isNumericStringBetween(str: string, from: number, to: number): b
     }
     return false;
 }
+
+/**
+ * （不严格）根据字符串内容转换为布尔值
+ * 
+ * @param str 要转换的字符串
+ */
+export function stringToBoolean(str: string): boolean {
+    return str === "1" || str.toLowerCase() === "true";
+}
