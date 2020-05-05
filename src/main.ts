@@ -13,7 +13,6 @@ import "./css/lib.less";
 import "./css/mdui.inuse.less";
 import NProgress from 'nprogress';
 import "./css/nprogress.css";
-import "./types";
 import mutations from '@/store/mutations';
 
 NProgress.configure({
