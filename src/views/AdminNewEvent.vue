@@ -153,7 +153,7 @@ export default Vue.extend({
 							});
 						}, 1500);
 					} else {
-						this.snackbarMessage = "由于发生了内部错误，删除失败";
+						this.snackbarMessage = "删除失败，请检查控制台";
 						this.snackbar = true;
 					}
 				}
