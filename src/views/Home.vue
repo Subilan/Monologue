@@ -376,7 +376,8 @@ export default Vue.extend({
 					this.loaded += r.data.length;
 					let data = r.data;
 					let arr: Array<LogueArrayItem> = this.monologue;
-					let dateBefore = "";
+					// @ts-ignore
+					let dateBefore = arr.slice().pop().date;
 					let ix = -1;
 					try {
 						arr.forEach((k, t) => {
@@ -391,7 +392,7 @@ export default Vue.extend({
 								if (e.date.split(" ")[0] === k.date) {
 									k.logue.push(logueItem);
 								} else if (e.date.split(" ")[0] === dateBefore) {
-									arr[ix - 1].logue.push(logueItem);
+									arr[ix !== -1 ? (ix - 1) : (arr.length - 1)].logue.push(logueItem);
 								} else {
 									dateBefore = e.date.split(" ")[0];
 									ix = arr.push({
