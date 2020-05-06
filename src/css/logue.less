@@ -39,15 +39,16 @@
 
 		.status-info {
 			display: flex;
-			align-items: center;
+			align-items: center !important;
 			position: relative;
-			width: 85%;
+			width: 100%;
 
 			.title {
 				line-height: 1.5;
 				cursor: pointer;
 				white-space: normal;
 				word-wrap: break-word;
+				padding-right: 2em;
 			}
 
 			@media screen and (max-width: 1024px) {
@@ -116,7 +117,7 @@
 			&:active,
 			&:hover,
 			&:focus {
-				.logue {
+				.status-info {
 					.functions {
 						.tools {
 							@media screen and (min-width: 1024px) {
@@ -231,12 +232,6 @@
 			}
 		}
 	}
-
-	.status-info {
-		.title {
-			padding-right: 48px;
-		}
-	}
 }
 
 .tools {
@@ -264,7 +259,7 @@
 		&:hover,
 		&:active,
 		&:focus {
-			opacity: 0.5;
+			opacity: 0.5 !important;
 			transition: opacity 0.2s ease;
 		}
 

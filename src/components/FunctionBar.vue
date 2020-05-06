@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="margin-bottom: 10px">
 		<div v-if="pc || singleOnMobile" class="functions">
 			<div class="items">
 				<slot></slot>
@@ -64,7 +64,7 @@ export default Vue.extend({
 	right: 0;
 
 	&.home-scoped {
-		top: 16px !important;
+		top: -4px !important;
 	}
 }
 

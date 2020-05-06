@@ -37,8 +37,6 @@
 							<span class="status" :class="getIconByType(a.type)">
 								<span @click="getLogueDialog(a.id, a.title, a.contents, a.type)" :id="a.id" class="title">{{ a.title }}</span>
 							</span>
-						</div>
-						<div class="logue">
 							<function-bar :auth="auth">
 								<div class="tools" :class="auth ? '' : 'unauthed'">
 									<span v-if="auth" class="edit action-span" @click="$router.push({ name: 'admin-edit-event', params: { id: a.id } })">编辑</span>
@@ -54,6 +52,8 @@
 									<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
 								</div>
 							</function-bar>
+						</div>	
+						<div class="logue">
 							<div class="logue-content" v-html="a.contents"></div>
 							<!-- please recover v-html="limitContentLen(a.contents, 100)" to the div above when the 'View all' function is completed-->
 							<!-- TODO: Add vi-if -->
