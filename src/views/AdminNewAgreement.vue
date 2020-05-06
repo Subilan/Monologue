@@ -13,7 +13,7 @@
 					<md-icon class="mdi mdi-cogs" />
 				</md-button>
 				<md-button @click="configurationDialog = true" class="md-icon-button md-raised">
-					<md-icon class="mdi mdi-card-bulleted"/>
+					<md-icon class="mdi mdi-card-bulleted" />
 				</md-button>
 			</template>
 		</Editor>
@@ -152,10 +152,10 @@ export default Vue.extend({
 					this.editingTitle = data.title;
 					this.editingContent = data.contents;
 					this.allowDisagreement = stringToBoolean(data.disagreement);
-					this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
-						state: false
-					});
 				} else {
+					this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+						state: true
+					});
 					this.$router.push({
 						name: "error-not-found"
 					});
@@ -163,7 +163,10 @@ export default Vue.extend({
 			});
 		}
 		this.id = Number(this.$route.params.id);
-	},
+		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+			state: false
+		});
+	}
 });
 </script>
 

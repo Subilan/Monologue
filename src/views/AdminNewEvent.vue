@@ -170,13 +170,13 @@ export default Vue.extend({
 				this.$server.get("/api/logue?method=id&markdown=false&id=" + this.id, r => {
 					let data = r.data;
 					if (r.data) {
-						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
-							state: false
-						});
 						this.editingTitle = data.title;
 						this.editingContent = data.contents;
 						this.type = data.type;
 					} else {
+						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+							state: true
+						});
 						this.$router.push({
 							name: "error-not-found"
 						});
@@ -184,11 +184,17 @@ export default Vue.extend({
 					this.loading = false;
 				});
 			} else {
+				this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+					state: true
+				});
 				this.$router.push({
 					name: "error-not-found"
 				});
 			}
 		}
+		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+			state: false
+		});
 	}
 });
 </script>
