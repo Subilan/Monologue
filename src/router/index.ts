@@ -52,6 +52,11 @@ const routes = [
 				component: () => import("@/views/AdminNewAgreement.vue")
 			}
 		]
+	},
+	{
+		path: "*",
+		name: "error-not-found",
+		component: () => import("@/views/404.vue")
 	}
 ];
 
