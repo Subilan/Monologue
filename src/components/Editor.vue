@@ -8,12 +8,14 @@
 		</md-empty-state>
 		<LoadingScreen v-if="loading" />
 		<div class="full-height">
-			<div class="hero">
-				<slot name="hero"></slot>
+			<div class="header">
+				<div class="hero">
+					<slot name="hero"></slot>
+				</div>
+				<FunctionBar class="function-bar-float-right">
+					<slot name="toolbar"></slot>
+				</FunctionBar>
 			</div>
-			<FunctionBar class="function-bar-float-right">
-				<slot name="toolbar"></slot>
-			</FunctionBar>
 			<md-field :class="titleInvalid">
 				<md-icon class="mdi mdi-format-title" />
 				<label>标题</label>
@@ -28,7 +30,7 @@
 					<span class="md-error">无效的内容</span>
 				</md-field>
 			</editor-tool-bar>
-			<md-button @click="createSubmitEvent()" class="submit-btn md-primary md-raised">发布</md-button>	
+			<md-button @click="createSubmitEvent()" class="submit-btn md-primary md-raised">发布</md-button>
 		</div>
 	</div>
 </template>
@@ -114,7 +116,7 @@ export default Vue.extend({
 		},
 		editingContent(v) {
 			this.content = v;
-		},
+		}
 	},
 	mounted() {
 		this.pcView = this.isPCView();
@@ -135,16 +137,15 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .editor {
-	height: 100%;
-	position: relative;
+	.full-height;
 
 	.content-field {
-        @media screen and (max-width: 1024px) {
-            height: 100%;
-        }
-        @media screen and (min-width: 1024px) {
-            height: calc(100% - 68px);
-        }
+		@media screen and (max-width: 1024px) {
+			height: 100%;
+		}
+		@media screen and (min-width: 1024px) {
+			height: calc(100% - 68px);
+		}
 		position: relative;
 
 		.content-input {
@@ -154,17 +155,18 @@ export default Vue.extend({
 
 	.submit-btn-container {
 		width: 100%;
-		.submit-btn {
-			display: block;
-			margin: auto;
-		}
 	}
 }
 
-.full-height {
-	@media screen and (max-width: 1024px) {
-		height: 100% !important;
-	}
-	position: relative;
+.submit-btn {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 32px;
+}
+
+.header {
+	display: flex;
+	width: 100%;
 }
 </style>

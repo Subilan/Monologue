@@ -64,7 +64,6 @@ export default Vue.extend({
         margin-left: 16px;
         margin-right: 16px;
     }
-    margin-top: 56px;
     height: 100%;
     position: relative;
 }

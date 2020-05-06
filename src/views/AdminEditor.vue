@@ -59,7 +59,6 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .admin-editor {
-	height: 100%;
-	position: relative;
+	.full-height;
 }
 </style>

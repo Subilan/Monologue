@@ -2,7 +2,7 @@ html,
 body {
 	scroll-behavior: smooth;
 	position: relative;
-	height: calc(100% - 56px) !important;
+	.full-height;
 	width: 100%;
 }
 
@@ -26,11 +26,6 @@ body {
 			height: 100%;
 			margin-top: 56px;
 		}
-	}
-
-	.full-height {
-		height: calc(100% - 56px);
-		position: relative;
 	}
 }
 
@@ -60,21 +55,6 @@ button.md-primary.md-raised {
 		display: block;
 		margin: auto;
 	}
-}
-
-.submit-btn {
-	/* force override */
-	@media screen and (min-width: 1024px) {
-		margin-top: 56px !important;
-		margin-bottom: 56px !important;
-	}
-	@media screen and (max-width: 1024px) {
-		margin-top: 42px !important;
-		margin-bottom: 16px !important;
-	}
-	display: block !important;
-	margin-left: auto !important;
-	margin-right: auto !important;
 }
 
 .hero {
@@ -115,5 +95,23 @@ button.md-primary.md-raised {
 		width: 1px;
 		height: 16px;
 		display: block;
+	}
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0 !important;
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+
+.header {
+	@media screen and (max-width: 1024px) {
+		align-items: flex-start;
+		padding-top: 16px;
+	}
+
+	@media screen and (min-width: 1024px) {
+		padding-top: 32px;
+		align-items: center;
 	}
 }

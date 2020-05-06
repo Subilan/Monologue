@@ -61,7 +61,6 @@ export default Vue.extend({
 <style lang="less" scoped>
 .mobile-menu-btn {
 	position: absolute;
-	top: -16px;
 	right: 0;
 
 	&.home-scoped {
@@ -76,15 +75,6 @@ export default Vue.extend({
 
 .functions {
 	.fontfamily-default;
-
-	@media screen and (max-width: 1024px) {
-		top: -16px;
-	}
-
-	@media screen and (min-width: 1024px) {
-		top: 32px;
-	}
-
 	position: absolute;
 	right: 0;
 	display: flex;
