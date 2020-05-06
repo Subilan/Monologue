@@ -15,8 +15,7 @@ a.date {
 }
 
 *::selection {
-    color: inherit !important;
-    background-color: #eee;
+    .selection;
 }
 
 .md-datepicker-dialog {
@@ -112,4 +111,8 @@ a.date {
 
 .md-menu-content-container .md-list {
     .fontfamily-default;
+}
+
+.md-theme-default :not(input):not(textarea)::selection {
+    .selection;
 }
