@@ -1,11 +1,5 @@
 <template>
 	<div class="editor">
-		<md-empty-state v-if="invalid">
-			<span class="md-empty-state-icon mdi mdi-help-circle-outline" />
-			<span class="md-empty-state-label">无效的页面</span>
-			<span class="md-empty-state-description">目标页面不存在或发生了错误</span>
-			<md-button @click="$router.go(-1)" class="md-primary md-raised">后退</md-button>
-		</md-empty-state>
 		<LoadingScreen v-if="loading" />
 		<div class="full-height">
 			<div class="header">
@@ -71,7 +65,7 @@ Vue.use(MdField)
 	.use(MdCheckbox);
 
 export default Vue.extend({
-	props: ["loading", "invalid", "editingTitle", "editingContent"],
+	props: ["loading", "editingTitle", "editingContent"],
 	data() {
 		return {
 			empty: false,

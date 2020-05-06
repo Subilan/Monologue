@@ -6,13 +6,13 @@
 				<p>{{ isEdit() ? "修改协议的内容。" : "创建协议并收集同意或不同意协议的人员。" }}</p>
 			</template>
 			<template v-slot:toolbar>
-                <md-button v-if="editing" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
+				<md-button v-if="editing" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-delete" />
 				</md-button>
 				<md-button @click="$router.push({ name: 'admin-panel' })" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-cogs" />
 				</md-button>
-                <md-button @click="configurationDialog = true" class="md-icon-button md-raised">
+				<md-button @click="configurationDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-card-bulleted"/>
 				</md-button>
 			</template>
@@ -48,7 +48,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Editor from "@/components/Editor.vue";
-import { stringToBoolean } from '@/functions';
+import { stringToBoolean } from "@/functions";
 
 export default Vue.extend({
 	data() {
@@ -72,7 +72,6 @@ export default Vue.extend({
 			return this.$route.name === "admin-edit-agreement";
 		},
 		validate(title: string, content: string, allowdisagreement: boolean) {
-
 			return title.length > 0 && title.length <= 30 && content.length > 0 && content.length <= 1000 && typeof allowdisagreement === "boolean";
 		},
 		submit(e: EditorResult) {
@@ -90,8 +89,8 @@ export default Vue.extend({
 					method: this.editing ? "alter" : "submit",
 					title: e.title,
 					contents: e.content,
-                    disagreement: this.allowDisagreement,
-                    id: this.editing ? this.id : -1
+					disagreement: this.allowDisagreement,
+					id: this.editing ? this.id : -1
 				},
 				r => {
 					if (r.data) {
@@ -122,9 +121,9 @@ export default Vue.extend({
 				},
 				r => {
 					if (r.data) {
-                        this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
-                            state: true
-                        });
+						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+							state: true
+						});
 						this.snackbarMessage = "成功删除此协议，即将返回首页";
 						this.snackbar = true;
 						setTimeout(() => {
@@ -133,11 +132,11 @@ export default Vue.extend({
 							});
 						}, 1500);
 					} else {
-                        this.snackbarMessage = "删除失败，请检查控制台"
-                    }
+						this.snackbarMessage = "删除失败，请检查控制台";
+					}
 				}
 			);
-        },
+		}
 	},
 	components: {
 		Editor
@@ -147,24 +146,24 @@ export default Vue.extend({
 		if (this.editing) {
 			this.loading = true;
 			this.$server.get("/api/agreement?id=" + this.$route.params.id, r => {
-                this.loading = false;
+				this.loading = false;
 				if (r.data) {
 					let data = r.data;
 					this.editingTitle = data.title;
 					this.editingContent = data.contents;
-                    this.allowDisagreement = stringToBoolean(data.disagreement);
+					this.allowDisagreement = stringToBoolean(data.disagreement);
+					this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+						state: false
+					});
 				} else {
-					this.invalidID = true;
+					this.$router.push({
+						name: "error-not-found"
+					});
 				}
 			});
 		}
 		this.id = Number(this.$route.params.id);
 	},
-	mounted() {
-		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
-			state: false
-        });
-	}
 });
 </script>
 

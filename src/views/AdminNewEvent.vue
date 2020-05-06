@@ -1,6 +1,6 @@
 <template>
 	<div class="admin-event admin-container">
-		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" :invalid="invalidID" @submit="submit($event)">
+		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" @submit="submit($event)">
 			<template v-slot:hero>
 				<h1>{{ editing ? "编辑事件 #" + id : "添加新事件" }}</h1>
 				<p>{{ editing ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
@@ -13,7 +13,7 @@
 					<md-icon class="mdi mdi-cogs" />
 				</md-button>
 				<md-button @click="configurationDialog = true" class="md-icon-button md-raised">
-					<md-icon class="mdi mdi-card-bulleted"/>
+					<md-icon class="mdi mdi-card-bulleted" />
 				</md-button>
 			</template>
 		</Editor>
@@ -74,7 +74,7 @@ export default Vue.extend({
 			configurationDialog: false,
 			actioned: false,
 			loading: false,
-			editing: false,
+			editing: false
 		};
 	},
 	components: {
@@ -120,7 +120,7 @@ export default Vue.extend({
 						this.snackbarMessage = "成功发布新的事件，即将为您跳转";
 						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
 							state: true
-						})
+						});
 						this.snackbar = true;
 						this.actioned = true;
 						setTimeout(() => {
@@ -170,22 +170,25 @@ export default Vue.extend({
 				this.$server.get("/api/logue?method=id&markdown=false&id=" + this.id, r => {
 					let data = r.data;
 					if (r.data) {
+						this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+							state: false
+						});
 						this.editingTitle = data.title;
 						this.editingContent = data.contents;
 						this.type = data.type;
 					} else {
-						this.invalidID = true;
+						this.$router.push({
+							name: "error-not-found"
+						});
 					}
 					this.loading = false;
 				});
 			} else {
-				this.invalidID = true;
+				this.$router.push({
+					name: "error-not-found"
+				});
 			}
 		}
-		// Set the commited state to false on page load.
-		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
-			state: false
-		});
 	}
 });
 </script>

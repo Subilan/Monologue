@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        editorCommited: false  
+        editorCommited: true
     },
     mutations: {
         [mutations.CHANGE_EDITOR_COMMITED_STATE] (state, p) {
