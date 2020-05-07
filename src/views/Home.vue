@@ -1,15 +1,10 @@
 <template>
 	<div class="home" :class="auth ? '' : 'unauthed'">
 		<div class="mono-main">
-			<div v-if="!empty && loadingPage" class="loading">
+			<div v-if="loadingPage" class="loading">
 				<md-progress-spinner md-mode="indeterminate" />
 			</div>
-			<md-empty-state v-if="empty && !loadingPage">
-				<span class="md-empty-state-icon mdi mdi-help-circle-outline" />
-				<span class="md-empty-state-label">空页面</span>
-				<span class="md-empty-state-description">此页面目前没有任何内容</span>
-			</md-empty-state>
-			<div v-if="!empty && !loadingPage">
+			<div v-if="!loadingPage">
 				<md-button :style="{ opacity: backToTopButtonOpacity }" @click="toTop()" class="speeddial desktop md-primary">返回顶部</md-button>
 				<md-speed-dial class="speeddial mobile" :style="{ opacity: backToTopButtonOpacity }">
 					<md-speed-dial-target class="md-primary" @click="toTop()">
@@ -202,7 +197,6 @@ export default Vue.extend({
 			monologue: [],
 			datePickDialog: false,
 			targetDate: "",
-			empty: false,
 			auth: false,
 			limitStart: 10,
 			showLoadNextButton: false,
@@ -540,7 +534,9 @@ export default Vue.extend({
 				this.loaded += r.data.length;
 				(this.monologue as Array<LogueArrayItem>) = this.getArray(r.data);
 			} else {
-				this.empty = true;
+				this.$router.push({
+					name: "error-not-found"
+				})
 			}
 			this.loadingPage = false;
 		});
