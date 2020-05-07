@@ -47,7 +47,7 @@
 									<span @click="copyLogueLink(a.id)" class="id action-span">#{{ a.id }}</span>
 								</div>
 							</function-bar>
-						</div>	
+						</div>
 						<div class="logue">
 							<div class="logue-content" v-html="a.contents"></div>
 							<!-- please recover v-html="limitContentLen(a.contents, 100)" to the div above when the 'View all' function is completed-->
@@ -108,7 +108,17 @@
 								<span class="md-empty-state-description">仅需几步即可了解此网站</span>
 							</md-empty-state>
 						</md-step>
-						<md-step class="firsttime-step" :id="firstTimeSteps[1]" md-label="日期访问" md-description="用日期快速查找">
+						<md-step class="firsttime-step" :id="firstTimeSteps[1]" md-label="介绍" md-description="初步认识用途">
+							<div class="title">
+								<md-icon class="mdi mdi-alert-decagram" />
+								<h1>这是什么</h1>
+							</div>
+							<p>
+								Monologue 是一个用于管理项目体验的 Web
+								App，您可以在这里体验到很多功能。目前您所访问的是首页，在这里我们将以时间线的形式展示内容的更新。这里的内容更新以日期划分，每个新的内容都会被分配一个独立的 ID 作为标识。
+							</p>
+						</md-step>
+						<md-step class="firsttime-step" :id="firstTimeSteps[2]" md-label="日期访问" md-description="用日期快速查找">
 							<div class="title">
 								<md-icon class="mdi mdi-calendar" />
 								<h1>日期访问</h1>
@@ -122,7 +132,7 @@
 								<kbd>Ctrl</kbd> + <kbd>G</kbd> 组合键快速唤出它。
 							</p>
 						</md-step>
-						<md-step class="firsttime-step" :id="firstTimeSteps[2]" md-label="分享事件" md-description="获取某个事件的特定链接">
+						<md-step class="firsttime-step" :id="firstTimeSteps[3]" md-label="分享事件" md-description="获取某个事件的特定链接">
 							<div class="title">
 								<md-icon class="mdi mdi-share-variant" />
 								<h1>分享事件</h1>
@@ -133,7 +143,7 @@
 							</p>
 							<p>点击标识即可复制链接，当他人访问该链接时，第一时间将会展示出此事件。</p>
 						</md-step>
-						<md-step class="firsttime-step" :id="firstTimeSteps[3]" md-label="管理后台" md-description="管理页面">
+						<md-step class="firsttime-step" :id="firstTimeSteps[4]" md-label="管理后台" md-description="管理页面">
 							<div class="title">
 								<md-icon class="mdi mdi-cogs" />
 								<h1>管理后台</h1>
@@ -219,7 +229,7 @@ export default Vue.extend({
 			loadingDialog: false,
 			firstTimeDialog: false,
 			firstTimeActiveStep: "firsttime-first",
-			firstTimeSteps: ["firsttime-first", "firsttime-second", "firsttime-third", "firsttime-fourth"],
+			firstTimeSteps: ["firsttime-first", "firsttime-second", "firsttime-third", "firsttime-fourth", "firsttime-fifth"],
 			pc: false
 		};
 	},
@@ -387,7 +397,7 @@ export default Vue.extend({
 								if (e.date.split(" ")[0] === k.date) {
 									k.logue.push(logueItem);
 								} else if (e.date.split(" ")[0] === dateBefore) {
-									arr[ix !== -1 ? (ix - 1) : (arr.length - 1)].logue.push(logueItem);
+									arr[ix !== -1 ? ix - 1 : arr.length - 1].logue.push(logueItem);
 								} else {
 									dateBefore = e.date.split(" ")[0];
 									ix = arr.push({
@@ -477,15 +487,15 @@ export default Vue.extend({
 		limitContentLen(contentEl, limitLen) {
 			let contentLen = 0;
 			let isBlockquoteClose = true;
-			let displayElement : string[] = [];
+			let displayElement: string[] = [];
 			let isLimit = false;
 
-			contentEl.split('\n').some(item => {
-				let content = item.replace(/<.+?>/g, '');
+			contentEl.split("\n").some(item => {
+				let content = item.replace(/<.+?>/g, "");
 
 				if (content == "") {
 					if (item == "<blockquote>") {
-						isBlockquoteClose = false
+						isBlockquoteClose = false;
 					} else if (item == "</blockquote>") {
 						isBlockquoteClose = true;
 					}
@@ -493,16 +503,16 @@ export default Vue.extend({
 
 				if ((contentLen += content.length) > limitLen) {
 					if (!isBlockquoteClose) {
-						displayElement.pop()
+						displayElement.pop();
 					}
-					isLimit = true
-					return true
+					isLimit = true;
+					return true;
 				} else {
-					displayElement.push(item)
+					displayElement.push(item);
 				}
 			});
 
-			return displayElement.join("\n")
+			return displayElement.join("\n");
 		}
 	},
 	watch: {
@@ -536,7 +546,7 @@ export default Vue.extend({
 			} else {
 				this.$router.push({
 					name: "error-not-found"
-				})
+				});
 			}
 			this.loadingPage = false;
 		});
@@ -733,7 +743,13 @@ export default Vue.extend({
 }
 
 .firsttime-logo {
-	width: 250px;
+	width: 180px !important;
+	box-shadow: none !important;
+
+	&:hover,
+	&:active {
+		transform: scale(1.5);
+	}
 }
 
 .firsttime-step {
