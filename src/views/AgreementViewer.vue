@@ -10,23 +10,11 @@
 <script lang="ts">
 import Vue from "vue";
 // @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
 import MdCheckbox from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 // @ts-ignore
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 
-Vue.use(MdButton)
-	.use(MdDialog)
-	.use(MdIcon)
-	.use(MdCheckbox)
-	.use(MdSnackbar)
+Vue.use(MdCheckbox)
 	.use(MdEmptyState);
 
 export default Vue.extend({

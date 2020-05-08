@@ -34,19 +34,11 @@ import Vue from "vue";
 // @ts-ignore
 import MdField from "vue-material/dist/components/MdField";
 // @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
 import MdMenu from "vue-material/dist/components/MdMenu";
 // @ts-ignore
 import MdList from "vue-material/dist/components/MdList";
 // @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
-// @ts-ignore
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
 // @ts-ignore
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 import LoadingScreen from "@/components/LoadingScreen.vue";
@@ -55,13 +47,9 @@ import EditorToolBar from "@/components/EditorToolBar.vue";
 import { isPCView } from "@/functions";
 
 Vue.use(MdField)
-	.use(MdIcon)
-	.use(MdButton)
 	.use(MdMenu)
 	.use(MdList)
-	.use(MdSnackbar)
 	.use(MdEmptyState)
-	.use(MdDialog)
 	.use(MdCheckbox);
 
 export default Vue.extend({

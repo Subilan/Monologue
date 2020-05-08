@@ -34,20 +34,11 @@
 import Vue from "vue";
 // @ts-ignore
 import MdField from "vue-material/dist/components/MdField";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 import Logo from "../components/Logo.vue";
 // @ts-ignore
 import MdProgress from "vue-material/dist/components/MdProgress";
 
 Vue.use(MdField)
-    .use(MdIcon)
-    .use(MdButton)
-    .use(MdSnackbar)
     .use(MdProgress);
 
 export default Vue.extend({

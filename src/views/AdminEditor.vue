@@ -22,10 +22,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-
-Vue.use(MdDialog);
 
 export default Vue.extend({
 	data() {

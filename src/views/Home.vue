@@ -167,38 +167,26 @@
 <script lang="ts">
 import Vue from "vue";
 // @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-// @ts-ignore
 import MdDatepicker from "vue-material/dist/components/MdDatepicker";
 // @ts-ignore
 import MdContent from "vue-material/dist/components/MdContent";
 // @ts-ignore
 import MdSpeedDial from "vue-material/dist/components/MdSpeedDial";
 // @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
 import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 // @ts-ignore
 import MdProgress from "vue-material/dist/components/MdProgress";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 // @ts-ignore
 import MdSteppers from "vue-material/dist/components/MdSteppers";
 import { copy, isNumericString, isPCView } from "@/functions";
 import { setcookie, getcookie } from "@/cookie";
 import FunctionBar from "@/components/FunctionBar.vue";
 
-Vue.use(MdButton)
-	.use(MdDialog)
-	.use(MdDatepicker)
+Vue.use(MdDatepicker)
 	.use(MdContent)
 	.use(MdSpeedDial)
-	.use(MdIcon)
 	.use(MdEmptyState)
 	.use(MdProgress)
-	.use(MdSnackbar)
 	.use(MdSteppers);
 
 export default Vue.extend({

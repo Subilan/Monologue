@@ -23,16 +23,10 @@ import Vue from "vue";
 import MdMenu from "vue-material/dist/components/MdMenu";
 // @ts-ignore
 import MdList from "vue-material/dist/components/MdList";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
 import { isPCView } from "@/functions";
 
 Vue.use(MdMenu)
-	.use(MdList)
-	.use(MdIcon)
-	.use(MdButton);
+	.use(MdList);
 
 export default Vue.extend({
 	props: ["auth"],

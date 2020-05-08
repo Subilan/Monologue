@@ -23,7 +23,7 @@
 				<p>添加新的事件以展示在首页的时间线内，可以是公告、已解决或者问题。</p>
 				<span class="icon mdi mdi-alert-decagram" />
 			</div>
-			<div class="function">
+			<div @click="goto('admin-new-vote')" class="function">
 				<h1>创建投票</h1>
 				<p>创建投票以快速收集用户观点数据，将数据归档或用作进一步处理。</p>
 				<span class="icon mdi mdi-chart-bar" />
@@ -67,20 +67,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-// @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
-// @ts-ignore
-import MdSnackbar from "vue-material/dist/components/MdSnackbar";
 import FunctionBar from "@/components/FunctionBar.vue";
-
-Vue.use(MdButton)
-	.use(MdIcon)
-	.use(MdDialog)
-	.use(MdSnackbar);
 
 export default Vue.extend({
 	data() {

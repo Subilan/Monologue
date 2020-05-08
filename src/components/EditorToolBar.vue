@@ -99,24 +99,12 @@
 <script lang="ts">
 import Vue from "vue";
 // @ts-ignore
-import MdButton from "vue-material/dist/components/MdButton";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-// @ts-ignore
-import MdTooltip from "vue-material/dist/components/MdTooltip";
-// @ts-ignore
 import MdMenu from "vue-material/dist/components/MdMenu";
-// @ts-ignore
-import MdDialog from "vue-material/dist/components/MdDialog";
 // @ts-ignore
 import MdField from "vue-material/dist/components/MdField";
 import { translateNumber, isNumericStringBetween } from "@/functions";
 
-Vue.use(MdButton)
-	.use(MdIcon)
-	.use(MdTooltip)
-	.use(MdMenu)
-	.use(MdDialog)
+Vue.use(MdMenu)
 	.use(MdField);
 
 type FormatNames = "bold" | "italic" | "underline" | "header1" | "header2" | "header3" | "header4" | "header5" | "header6" | "blockquote" | "strikethrough" | "codeblock";

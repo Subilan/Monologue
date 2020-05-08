@@ -14,6 +14,7 @@ import "./css/mdui.inuse.less";
 import NProgress from 'nprogress';
 import "./css/nprogress.css";
 import mutations from '@/store/mutations';
+import materialBase from '@/material.base';
 
 NProgress.configure({
   showSpinner: false,
@@ -31,6 +32,9 @@ router.afterEach(t => {
 Vue.config.productionTip = false
 Vue.prototype.$server = Server;
 Vue.prototype.$mutations = mutations;
+materialBase.forEach(m => {
+  Vue.use(m);
+})
 
 new Vue({
   router,

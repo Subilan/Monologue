@@ -6,10 +6,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-// @ts-ignore
-import MdIcon from "vue-material/dist/components/MdIcon";
-
-Vue.use(MdIcon);
 
 export default Vue.extend({
 	props: ["color"],
