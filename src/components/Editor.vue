@@ -2,14 +2,12 @@
 	<div class="editor">
 		<LoadingScreen v-if="loading" />
 		<div class="full-height">
-			<div class="header">
-				<div class="hero">
-					<slot name="hero"></slot>
-				</div>
-				<FunctionBar class="function-bar-float-right">
+			<page-header>
+				<slot name="hero" />
+				<template v-slot:functions>
 					<slot name="toolbar"></slot>
-				</FunctionBar>
-			</div>
+				</template>
+			</page-header>
 			<md-field :class="titleInvalid">
 				<md-icon class="mdi mdi-format-title" />
 				<label>标题</label>
@@ -42,7 +40,7 @@ import MdEmptyState from "vue-material/dist/components/MdEmptyState";
 // @ts-ignore
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 import LoadingScreen from "@/components/LoadingScreen.vue";
-import FunctionBar from "@/components/FunctionBar.vue";
+import PageHeader from "@/components/PageHeader.vue";
 import EditorToolBar from "@/components/EditorToolBar.vue";
 import { isPCView } from "@/functions";
 
@@ -66,7 +64,7 @@ export default Vue.extend({
 	},
 	components: {
 		LoadingScreen,
-		FunctionBar,
+		PageHeader,
 		EditorToolBar
 	},
 	methods: {
@@ -145,10 +143,5 @@ export default Vue.extend({
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 32px;
-}
-
-.header {
-	display: flex;
-	width: 100%;
 }
 </style>
