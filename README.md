@@ -35,4 +35,4 @@ Monologue 的产生并不代表着一种新想法，而是为了节省时间做�
 
 ## 协议
 
-Apache-2.0 © SoTap
+Apache-2.0
