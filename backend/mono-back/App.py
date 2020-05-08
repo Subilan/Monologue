@@ -102,7 +102,7 @@ class AuthAPI(Resource):
         }
         func = funcs[json["method"]]
         return func()
-
+"""
 class AgreementAPI(Resource):
     def get(self):
         id = request.args.get("id")
@@ -141,7 +141,7 @@ class AgreementAPI(Resource):
 
     def delete(self):
         return self.agr.delete(self.json["id"])
-
+"""
 
 @app.errorhandler(404)
 def notFoundError(err):
@@ -173,7 +173,7 @@ def unauthorizedError(err):
 api.add_resource(LogueAPI, '/api/logue', endpoint = 'logue')
 api.add_resource(AuthAPI, '/api/auth', endpoint = 'auth')
 api.add_resource(DataAPI, '/api/data', endpoint = 'data')
-api.add_resource(AgreementAPI, "/api/agreement", endpoint = 'agreement')
+#api.add_resource(AgreementAPI, "/api/agreement", endpoint = 'agreement')
 
 if __name__ == '__main__':
     app.run(debug = True);
