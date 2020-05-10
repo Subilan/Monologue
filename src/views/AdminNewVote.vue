@@ -36,7 +36,7 @@
 						<label>投票项</label>
 						<md-input type="text" v-model="voteData[k - 1]" />
 					</md-field>
-                    <md-button v-if="k > 1" @click="deleteVoteItem(k - 1)" class="md-icon-button md-primary">
+					<md-button v-if="k > 1" @click="deleteVoteItem(k - 1)" class="md-icon-button md-primary">
 						<md-icon class="mdi mdi-close" />
 					</md-button>
 				</div>
@@ -66,9 +66,9 @@
 					允许多选
 				</md-checkbox>
 				<md-field v-if="multipleVote && voteItemCount > 2" :class="multipleMaxCountInvalid">
-					<md-icon class="mdi mdi-format-vertical-align-top"/>
+					<md-icon class="mdi mdi-format-vertical-align-top" />
 					<label>最多可选...</label>
-					<md-input v-model="multipleMaxCount" type="number" step="1" min="2" :max="voteItemCount"/>
+					<md-input v-model="multipleMaxCount" type="number" step="1" min="2" :max="voteItemCount" />
 					<span class="md-helper-text">不大于 {{ voteItemCount }} 的整数</span>
 					<span class="md-error">无效的数字</span>
 				</md-field>
@@ -86,7 +86,7 @@ import PageHeader from "@/components/PageHeader.vue";
 // @ts-ignore
 import MdField from "vue-material/dist/components/MdField";
 // @ts-ignore
-import MdCheckbox from 'vue-material/dist/components/MdCheckbox';
+import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 
 Vue.use(MdField).use(MdCheckbox);
 
@@ -108,7 +108,7 @@ export default Vue.extend({
 			voteData: [],
 			multipleVote: false,
 			multipleMaxCountInvalid: "",
-			multipleMaxCount: 2,
+			multipleMaxCount: 2
 		};
 	},
 	components: {
@@ -140,7 +140,7 @@ export default Vue.extend({
 			} else {
 				this.multipleMaxCountInvalid = "md-invalid";
 			}
-		},
+		}
 	},
 	methods: {
 		duplicateVoteItem() {
@@ -149,6 +149,15 @@ export default Vue.extend({
 			} else {
 				return false;
 			}
+		},
+		deleteVoteItem(index) {
+			console.log("before:", this.voteData, this.multipleMaxCount, this.voteItemCount);
+			delete this.voteData[index];
+			if (this.multipleMaxCount === this.voteItemCount) {
+				this.multipleMaxCount -= 1;
+			}
+			this.voteItemCount -= 1;
+			console.log("after:", this.voteData, this.multipleMaxCount, this.voteItemCount);
 		}
 	},
 	mounted() {}
@@ -173,7 +182,7 @@ export default Vue.extend({
 
 		.vote-item-inner {
 			display: flex;
-            align-items: center;
+			align-items: center;
 
 			.number {
 				font-weight: bold;
