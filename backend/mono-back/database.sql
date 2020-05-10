@@ -31,5 +31,6 @@ CREATE TABLE IF NOT EXISTS `Vote` (
     `date` varchar(20) NOT NULL,
     `items` text NOT NULL,
     `data` text,
+    `multiple` varchar(2) NOT NULL DEFAULT '-1',
     PRIMARY KEY (`id`)
 ) CHARSET=utf8mb4;
