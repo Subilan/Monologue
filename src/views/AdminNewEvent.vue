@@ -1,11 +1,11 @@
 <template>
 	<div class="admin-event admin-container">
 		<Editor :editingTitle="editingTitle" :editingContent="editingContent" :loading="loading" @submit="submit($event)">
-			<template v-slot:hero>
+			<template #hero>
 				<h1>{{ editing ? "编辑事件 #" + id : "添加新事件" }}</h1>
 				<p>{{ editing ? "修改该事件的内容和相关属性。" : "在时间线上添加新的事件以供外部参考。" }}</p>
 			</template>
-			<template v-slot:toolbar>
+			<template #toolbar>
 				<md-button v-if="editing" @click="deleteConfirmDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-delete" />
 				</md-button>
