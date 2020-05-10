@@ -153,6 +153,8 @@ export default Vue.extend({
 		deleteVoteItem(index) {
 			console.log("before:", this.voteData, this.multipleMaxCount, this.voteItemCount);
 			delete this.voteData[index];
+			// remove empty and undefined values
+			this.voteData = this.voteData.filter(k => k);
 			if (this.multipleMaxCount === this.voteItemCount) {
 				this.multipleMaxCount -= 1;
 			}
