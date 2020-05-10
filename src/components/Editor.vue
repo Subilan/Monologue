@@ -4,8 +4,13 @@
 		<div class="full-height">
 			<page-header>
 				<slot name="hero" />
-				<template v-slot:functions>
+				<template #functions>
 					<slot name="toolbar"></slot>
+				</template>
+				<template #default-functions>
+					<md-button @click="createSubmitEvent()" class="submit-btn md-icon-button md-primary md-raised">
+						<md-icon class="mdi mdi-send"/>
+					</md-button>
 				</template>
 			</page-header>
 			<md-field :class="titleInvalid">
@@ -22,7 +27,6 @@
 					<span class="md-error">无效的内容</span>
 				</md-field>
 			</editor-tool-bar>
-			<md-button @click="createSubmitEvent()" class="submit-btn md-primary md-raised">发布</md-button>
 		</div>
 	</div>
 </template>
@@ -136,12 +140,5 @@ export default Vue.extend({
 	.submit-btn-container {
 		width: 100%;
 	}
-}
-
-.submit-btn {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 32px;
 }
 </style>
