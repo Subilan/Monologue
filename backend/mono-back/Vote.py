@@ -47,6 +47,6 @@ class VoteController:
             data = cur.fetchone()
             if (data != None):
                 if (markdown):
-                    data["desc"] = parseMarkdown(data["desc"])
+                    data["description"] = parseMarkdown(data["description"])
                 return data
         return False
