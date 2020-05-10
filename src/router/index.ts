@@ -42,14 +42,14 @@ const routes = [
 				component: () => import("@/views/AdminNewEvent.vue")
 			},
 			{
-				path: "agreement",
-				name: "admin-new-agreement",
-				component: () => import("@/views/AdminNewAgreement.vue")
+				path: "vote",
+				name: "admin-new-vote",
+				component: () => import("@/views/AdminNewVote.vue")
 			},
 			{
-				path: "agreement/:id?",
-				name: "admin-edit-agreement",
-				component: () => import("@/views/AdminNewAgreement.vue")
+				path: "vote/:id?",
+				name: "admin-edit-vote",
+				component: () => import("@/views/AdminNewVote.vue")
 			}
 		]
 	},
