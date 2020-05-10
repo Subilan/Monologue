@@ -13,6 +13,12 @@
 				<md-button @click="configurationDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-card-bulleted" />
 				</md-button>
+				<md-button v-if="maxVoteItemCount - voteItemCount >= 2" @click="createMultipleDialog = true" class="md-icon-button md-raised">
+					<md-icon class="mdi mdi-plus-circle-multiple"/>
+				</md-button>
+				<md-button @click="submit()" class="md-icon-button md-primary md-raised">
+					<md-icon class="mdi mdi-send" />
+				</md-button>
 			</template>
 		</page-header>
 		<md-field :class="titleInvalid">
@@ -34,14 +40,19 @@
 				<div class="vote-item-inner">
 					<md-field class="vote-field">
 						<label>投票项</label>
-						<md-input type="text" v-model="voteData[k - 1]" />
+						<md-input @keyup.enter="duplicateVoteItem()" type="text" v-model="voteData[k - 1]" />
 					</md-field>
 					<md-button v-if="k > 1" @click="deleteVoteItem(k - 1)" class="md-icon-button md-primary">
 						<md-icon class="mdi mdi-close" />
 					</md-button>
 				</div>
-				<md-button v-if="k === voteItemCount && k !== maxVoteItemCount" @click="duplicateVoteItem()" class="create-vote-item md-button"><md-icon class="mdi mdi-plus-circle" /> 新增投票项</md-button>
+				<div v-if="k === voteItemCount" class="actions">
+					<md-button v-if="k !== maxVoteItemCount" @click="duplicateVoteItem()">
+						<md-icon class="mdi mdi-plus-circle" /> 新增投票项
+					</md-button>
+				</div>
 			</div>
+			<small> 已添加 {{ voteItemCount }} / {{ maxVoteItemCount }} 个 </small>
 		</div>
 		<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
 		<md-dialog :md-active.sync="deleteConfirmDialog">
@@ -77,6 +88,29 @@
 				<md-button class="md-primary md-raised" @click="configurationDialog = false">OK</md-button>
 			</md-dialog-actions>
 		</md-dialog>
+		<md-dialog :md-active.sync="createMultipleDialog">
+			<md-dialog-title>批量创建</md-dialog-title>
+			<md-dialog-content>
+				<md-field :class="createMultipleCountInvalid">
+					<md-icon class="mdi mdi-plus-circle-multiple" />
+					<label>创建个数</label>
+					<md-input v-model="createMultipleCount" type="number" step="1" min="2" :max="maxVoteItemCount - voteItemCount" />
+					<span class="md-helper-text">不大于 {{ maxVoteItemCount - voteItemCount }} 的整数</span>
+					<span class="md-error">无效的数字</span>
+				</md-field>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary" @click="createMultipleDialog = false">取消</md-button>
+				<md-button
+					class="md-primary md-raised"
+					@click="
+						createMultiple();
+						createMultipleDialog = false;
+					"
+					>创建</md-button
+				>
+			</md-dialog-actions>
+		</md-dialog>
 	</div>
 </template>
 
@@ -87,6 +121,7 @@ import PageHeader from "@/components/PageHeader.vue";
 import MdField from "vue-material/dist/components/MdField";
 // @ts-ignore
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
+import { isNumericString } from "@/functions";
 
 Vue.use(MdField).use(MdCheckbox);
 
@@ -108,7 +143,10 @@ export default Vue.extend({
 			voteData: [],
 			multipleVote: false,
 			multipleMaxCountInvalid: "",
-			multipleMaxCount: 2
+			multipleMaxCount: 2,
+			createMultipleDialog: false,
+			createMultipleCount: 2,
+			createMultipleCountInvalid: ""
 		};
 	},
 	components: {
@@ -135,10 +173,17 @@ export default Vue.extend({
 			}
 		},
 		multipleMaxCount(v) {
-			if (!Number.isNaN(Number(v)) && v >= 2 && v <= this.voteItemCount) {
+			if (isNumericString(v) && v >= 2 && v <= this.voteItemCount) {
 				this.multipleMaxCountInvalid = "";
 			} else {
 				this.multipleMaxCountInvalid = "md-invalid";
+			}
+		},
+		createMultipleCount(v) {
+			if (isNumericString(v) && v >= 2 && v <= this.maxVoteItemCount - this.voteItemCount) {
+				this.createMultipleCountInvalid = "";
+			} else {
+				this.createMultipleCountInvalid = "md-invalid";
 			}
 		}
 	},
@@ -158,6 +203,35 @@ export default Vue.extend({
 			}
 			this.voteItemCount -= 1;
 			console.log("after:", this.voteData, this.multipleMaxCount, this.voteItemCount);
+		},
+		createMultiple() {
+			let count = Number(this.createMultipleCount);
+			let num = Number(this.voteItemCount);
+			// this.voteItemCount += count causes duplicate key error here.
+			// this.voteItemCount will be updated wrongly as a string value but not number value through this.
+			if (count + num <= this.maxVoteItemCount && count > 0) {
+				if (count >= 2) {
+					this.voteItemCount = num + count;
+				} else {
+					this.snackbarMessage = "这似乎并不是批量创建";
+					this.snackbar = true;
+				}
+			} else {
+				this.snackbarMessage = "无法批量创建，数量超过限制";
+				this.snackbar = true;
+			}
+		},
+		submit() {
+			console.log(JSON.stringify(this.voteData));
+			this.$server.post("/api/vote", {
+				method: "create",
+				title: this.title,
+				desc: this.description,
+				items: JSON.stringify(this.voteData),
+				multiple: this.multipleVote ? this.multipleMaxCount : -1
+			}, r => {
+				console.log(r);
+			})
 		}
 	},
 	mounted() {}
@@ -166,17 +240,25 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .vote-editor {
-	.mdui-shadow-2;
+	.outlined;
 	border-radius: 2px;
 	padding: 16px;
 	margin-top: 56px;
+	margin-bottom: 56px;
 
 	.vote-item {
-		.create-vote-item {
+		.actions {
 			width: calc(100% - 16px);
+			position: relative;
+			margin-top: 16px;
+			margin-bottom: 16px;
 
-			.mdi {
-				margin-right: 8px;
+			.md-button {
+				width: 100%;
+
+				.mdi {
+					margin-right: 8px;
+				}
 			}
 		}
 
