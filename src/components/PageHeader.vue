@@ -5,6 +5,7 @@
 		</div>
 		<function-bar class="function-bar-float-right">
 			<slot name="functions" />
+			<slot name="default-functions" />
 		</function-bar>
 	</div>
 </template>
