@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `User` (
     `password` varchar(512) NOT NULL,
     PRIMARY KEY (`id`)
 ) CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `Agreement` (
+/* CREATE TABLE IF NOT EXISTS `Agreement` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
     `title` varchar(50) NOT NULL,
     `contents` text NOT NULL,
@@ -22,5 +22,14 @@ CREATE TABLE IF NOT EXISTS `Agreement` (
     `approvers` TEXT,
     `opponents` TEXT,
     `date` varchar(20) NOT NULL,
+    PRIMARY KEY (`id`)
+) CHARSET=utf8mb4; */
+CREATE TABLE IF NOT EXISTS `Vote` (
+    `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `title` varchar(50) NOT NULL,
+    `desc` varchar(110) NOT NULL,
+    `date` varchar(20) NOT NULL,
+    `items` text NOT NULL,
+    `data` text,
     PRIMARY KEY (`id`)
 ) CHARSET=utf8mb4;
