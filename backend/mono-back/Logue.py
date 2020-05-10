@@ -46,7 +46,7 @@ class LogueController:
         cur = db.cursor(True)
         date = getDateString()
         args = (title, contents, typ, date)
-        sql = ("INSERT INTO Logue (title, contents, type, date) VALUES (%s, %s, %s, %s)");
+        sql = ("INSERT INTO Logue (title, contents, type, date) VALUES (%s, %s, %s, %s)")
         cur.execute(sql, args)
         return db.commit(True)
 
