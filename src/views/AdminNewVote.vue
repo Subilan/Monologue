@@ -46,7 +46,7 @@
 		<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
 		<md-dialog :md-active.sync="deleteConfirmDialog">
 			<md-dialog-title>删除确认</md-dialog-title>
-			<md-dialog-content>是否要确认删除此协议？此操作无法回滚。</md-dialog-content>
+			<md-dialog-content>是否要确认删除此投票？该投票以及其数据将永久丢失。</md-dialog-content>
 			<md-dialog-actions>
 				<md-button
 					@click="
