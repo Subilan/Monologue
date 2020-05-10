@@ -8,7 +8,7 @@ from Auth import AuthManager
 from User import UserManager
 from Logue import LogueController
 from Data import DataManager
-from Agreement import AgreementController
+from Vote import VoteController
 
 app = Flask(__name__)
 api = Api(app)
@@ -53,20 +53,19 @@ class LogueAPI(Resource):
             funcs = {
                 "submit": self.submit,
                 "alter": self.alter,
-                "delete": self.delete,
+                "delete": self.delete
             }
-            func = funcs[json["method"]]
-            return func()
+            return funcs[json["method"]]()
         return False
 
     def submit(self):
-        return self.logue.write(self.json["title"], self.json["contents"], self.json["type"])
+        return self.logue.write(self.json.get("title"), self.json.get("contents"), self.json.get("type"))
 
     def alter(self):
-        return self.logue.alter(self.json["id"], self.json["title"], self.json["contents"], self.json["type"])
-    
+        return self.logue.alter(self.json.get("id"), self.json.get("title"), self.json.get("contents"), self.json.get("type"))
+
     def delete(self):
-        return self.logue.delete(self.json["id"])
+        return self.logue.delete(self.json.get("id"))
 
 class AuthAPI(Resource):
     def login(self):
@@ -100,8 +99,7 @@ class AuthAPI(Resource):
             "logout": self.logout,
             "auth": self.auth
         }
-        func = funcs[json["method"]]
-        return func()
+        return funcs[json["method"]]()
 """
 class AgreementAPI(Resource):
     def get(self):
@@ -134,14 +132,53 @@ class AgreementAPI(Resource):
         return False
 
     def submit(self):
-        return self.agr.write(self.json["title"], self.json["contents"], self.json["disagreement"])
+        return self.agr.write(self.json.get("title"), self.json.get("contents"), self.json.get("disagreement"))
         
     def alter(self):
-        return self.agr.alter(self.json["id"], self.json["title"], self.json["contents"], self.json["disagreement"])
+        return self.agr.alter(self.json.get("id"), self.json.get("title"), self.json.get("contents"), self.json.get("disagreement"))
 
     def delete(self):
-        return self.agr.delete(self.json["id"])
+        return self.agr.delete(self.json.get("id"))
 """
+
+class VoteAPI(Resource):
+    def get(self):
+        id = request.args.get("id")
+        markdown = request.args.get("markdown")
+        if not markdown or markdown != "true":
+            markdown = False
+        else: 
+            markdown = True
+        vote = VoteController()
+        result = vote.get(id, markdown)
+        if result:
+            return result
+        return False
+
+    def post(self):
+        if "username" in session:
+            self.vote = VoteController()
+            self.json = request.get_json(force = True)
+            funcs = {
+                "create": self.create,
+                "alter": self.alter,
+                "delete": self.delete,
+                "update": self.update
+            }
+            return funcs[self.json["method"]]()
+        return False
+
+    def create(self):
+        return self.vote.create(self.json.get("title"), self.json.get("desc"), self.json.get("items"), self.json.get("multiple"))
+
+    def alter(self):
+        return self.vote.alter(self.json.get("title"), self.json.get("desc"), self.json.get("items"), self.json.get("id"), self.json.get("multiple"))
+
+    def delete(self):
+        return self.vote.delete(self.json.get("id"))
+
+    def update(self):
+        return self.vote.update(self.json.get("data"), self.json.get("id"))
 
 @app.errorhandler(404)
 def notFoundError(err):
@@ -174,6 +211,7 @@ api.add_resource(LogueAPI, '/api/logue', endpoint = 'logue')
 api.add_resource(AuthAPI, '/api/auth', endpoint = 'auth')
 api.add_resource(DataAPI, '/api/data', endpoint = 'data')
 #api.add_resource(AgreementAPI, "/api/agreement", endpoint = 'agreement')
+api.add_resource(VoteAPI, "/api/vote", endpoint = 'vote')
 
 if __name__ == '__main__':
     app.run(debug = True);
