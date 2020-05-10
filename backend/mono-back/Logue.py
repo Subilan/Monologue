@@ -37,7 +37,7 @@ class LogueController:
             data = cur.fetchone()
             if (data != None):
                 if (self.markdown):
-                    data["contents"] = markdown.markdown(data["contents"])
+                    data["contents"] = parseMarkdown(data["contents"])
                 return data
         return False
 
