@@ -247,6 +247,7 @@ export default Vue.extend({
 	margin-bottom: 56px;
 
 	.vote-item {
+		animation: fadein .4s;
 		.actions {
 			width: calc(100% - 16px);
 			position: relative;
