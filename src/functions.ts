@@ -153,9 +153,12 @@ export function stringToBoolean(str: string): boolean {
  * @param value 要填入的值
  * @param length 要填入的值所占长度
  */
-export function fillArray<T>(array: Array<T>, value: T, length: number): Array<T> {
+export function fillArray<T>(array: Array<T>, value: T, length: number, overwrite: boolean = false): Array<T> {
     if (length <= 0) {
         return [];
+    }
+    if (overwrite) {
+        array = new Array<T>();
     }
     array.length = length;
     array.fill(value);
