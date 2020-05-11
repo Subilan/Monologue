@@ -217,7 +217,15 @@ export default Vue.extend({
 				this.snackbar = true;
 			}
 		},
+		verify() {
+			return this.titleInvalid === "" && this.descriptionInvalid === "" && this.multipleMaxCountInvalid === "";
+		},
 		submit() {
+			if (!this.verify()) {
+				this.snackbarMessage = "发送失败，请检查您填写的信息和配置";
+				this.snackbar = true;
+				return false;
+			}
 			this.$server.post("/api/vote", {
 				method: this.editing ? "alter" : "create",
 				title: this.title,
