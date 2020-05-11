@@ -6,22 +6,29 @@
 				<span v-html="description" />
 			</page-header>
 			<div class="vote-content-container">
-				<md-radio v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
-					{{ k }}
-				</md-radio>
+				<div class="vote-single" v-if="!multiple">
+					<md-radio v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
+						{{ k }}
+					</md-radio>
+				</div>
+				<div class="vote-multiple" v-if="multiple">
+					<md-checkbox :disabled="multipleDisabled[i]" v-for="(k, i) in items" :key="i" v-model="multipleSelected[i]">
+						{{ k }}
+					</md-checkbox>
+				</div>
 			</div>
-            <md-button @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
-            <md-dialog :md-active.sync="submitDialog">
-                <md-dialog-title>提交确认</md-dialog-title>
-                <md-dialog-content>
-                    是否确认提交投票？此操作不可撤销且<strong>无法修改</strong>。
-                </md-dialog-content>
-                <md-dialog-actions>
-                    <md-button class="md-primary" @click="submitDialog = false">取消</md-button>
-                    <md-button class="md-primary md-raised" @click="submit()">提交</md-button>
-                </md-dialog-actions>
-            </md-dialog>
-        </div>
+			<md-button @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
+			<md-dialog :md-active.sync="submitDialog">
+				<md-dialog-title>提交确认</md-dialog-title>
+				<md-dialog-content>
+					是否确认提交投票？此操作不可撤销且<strong>无法修改</strong>。
+				</md-dialog-content>
+				<md-dialog-actions>
+					<md-button class="md-primary" @click="submitDialog = false">取消</md-button>
+					<md-button class="md-primary md-raised" @click="submit()">提交</md-button>
+				</md-dialog-actions>
+			</md-dialog>
+		</div>
 	</div>
 </template>
 
@@ -32,6 +39,7 @@ import PageHeader from "@/components/PageHeader.vue";
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 // @ts-ignore
 import MdRadio from "vue-material/dist/components/MdRadio";
+import { fillArray, getDuplicatedCount } from '../functions';
 
 Vue.use(MdCheckbox).use(MdRadio);
 
@@ -45,8 +53,10 @@ export default Vue.extend({
 			multipleMaxCount: -1,
 			items: [],
 			data: [],
-            selected: -1,
-            submitDialog: false,
+			selected: -1,
+			multipleSelected: [] as Array<boolean>,
+			multipleDisabled: [] as Array<boolean>,
+ 			submitDialog: false
 		};
 	},
 	components: {
@@ -63,6 +73,18 @@ export default Vue.extend({
 				this.multipleMaxCount = multiple;
 				this.date = data.date.split(" ")[0];
 				this.items = JSON.parse(data.items);
+				if (this.multiple) {
+					// initialize multiple data array
+					this.multipleDisabled = fillArray(this.multipleDisabled, false, this.items.length);
+					this.multipleSelected = fillArray(this.multipleSelected, false, this.items.length);
+					this.$watch("multipleSelected", v => {
+						if (getDuplicatedCount(v).true >= this.multipleMaxCount) {
+							this.multipleDisabled = this.multipleSelected.map(k => !k);
+						} else {
+							this.multipleDisabled = fillArray(this.multipleDisabled, false, this.items.length, true);
+						}
+					})
+				}
 			} else {
 				this.$router.push({
 					name: "error-not-found"
@@ -70,13 +92,21 @@ export default Vue.extend({
 			}
 		});
 	},
-	mounted() {}
+	mounted() {},
+	watch: {
+		multipleSelected(v) {
+			console.log(v);
+		}
+	}
 });
 </script>
 
 <style lang="less" scoped>
 .vote-content-container {
-	display: grid;
+	.vote-single,
+	.vote-multiple {
+		display: grid;
+	}
 
 	> * {
 		font-size: 20px;
@@ -90,11 +120,11 @@ export default Vue.extend({
 	.vote-container {
 		.outlined;
 		width: 100%;
-        padding: 32px;
-        
-        .md-primary.md-raised {
-            margin-top: 32px;
-        }
+		padding: 32px;
+
+		.md-primary.md-raised {
+			margin-top: 32px;
+		}
 	}
 }
 </style>
