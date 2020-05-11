@@ -161,3 +161,16 @@ export function fillArray<T>(array: Array<T>, value: T, length: number): Array<T
     array.fill(value);
     return array;
 }
+
+/**
+ * （不严格）获取一个数组中重复值的数量，并整理成一个对象输出
+ * 
+ * @param array 要观察的数组
+ */
+export function getDuplicatedCount(array: Array<any>): Dictionary<any> {
+    let result: Dictionary<number> = {};
+    array.forEach(x => {
+        result[x] = ( result[x] || 0 ) + 1;
+    });
+    return result;
+}
