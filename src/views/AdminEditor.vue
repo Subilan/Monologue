@@ -49,6 +49,18 @@ export default Vue.extend({
 				name: "admin-panel"
 			})
 		}
+		
+		window.onbeforeunload = e => {
+			if (this.$store.state.editorCommited === false && this.$route.matched[0].name === "admin-editor") {
+				e = e || window.event;
+				if (e) {
+					e.returnValue = "是否确实要离开此页面？您的修改将不会被保存。";
+				}
+				return "是否确实要离开此页面？您的修改将不会被保存。";
+			} else {
+				window.onbeforeunload = null;
+			}
+		};
 	}
 });
 </script>
