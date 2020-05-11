@@ -7,7 +7,7 @@
 ![](https://img.shields.io/badge/back-python-blue?style=flat&logo=python)
 [![](https://img.shields.io/badge/wiki-clickhere-009688?style=flat)](https://book.sotap.org/#/monologue/index)
 
-![main.png](https://i.loli.net/2020/04/11/CAD8nRzkWmxSFKU.png)
+![main-without-sotap.png](https://i.loli.net/2020/05/11/FbmTvcWoQfBGIkl.png)
 
 **Monologue** 是一个用于管理项目体验并对外展示的 Vue 程序，后端使用 Python 开发。Monologue 会合并先前 Oasis 的所有功能，并添加更多与项目管理方面的内容。
 
