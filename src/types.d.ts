@@ -1,9 +1,9 @@
-interface StringMatch {
-	[props: string]: string;
+interface Dictionary<T> {
+	[props: string]: T
 }
 
 interface MatchObject {
-	[props: string]: StringMatch;
+	[props: string]: Dictionary<string>
 }
 
 interface LogueArrayItem {
