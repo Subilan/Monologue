@@ -3,7 +3,7 @@
 		<div class="hero">
 			<slot />
 		</div>
-		<function-bar class="function-bar-float-right">
+		<function-bar v-if="functionbar" class="function-bar-float-right">
 			<slot name="functions" />
 			<slot name="default-functions" />
 		</function-bar>
@@ -15,6 +15,11 @@ import Vue from "vue";
 import FunctionBar from "@/components/FunctionBar.vue";
 
 export default Vue.extend({
+	props: {
+		functionbar: {
+			default: true,
+		}
+	},
 	components: {
 		FunctionBar
 	}
