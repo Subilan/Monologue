@@ -90,7 +90,11 @@ export default Vue.extend({
 	.vote-container {
 		.outlined;
 		width: 100%;
-		padding: 16px;
+        padding: 32px;
+        
+        .md-primary.md-raised {
+            margin-top: 32px;
+        }
 	}
 }
 </style>
