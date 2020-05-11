@@ -145,3 +145,19 @@ export function isNumericStringBetween(str: string, from: number, to: number): b
 export function stringToBoolean(str: string): boolean {
     return str === "1" || str.toLowerCase() === "true";
 }
+
+/**
+ * 批量向数组填入同一个值，此值的类型必须符合原数组
+ * 
+ * @param array 要操作的数组
+ * @param value 要填入的值
+ * @param length 要填入的值所占长度
+ */
+export function fillArray<T>(array: Array<T>, value: T, length: number): Array<T> {
+    if (length <= 0) {
+        return [];
+    }
+    array.length = length;
+    array.fill(value);
+    return array;
+}
