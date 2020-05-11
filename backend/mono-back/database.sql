@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `User` (
 CREATE TABLE IF NOT EXISTS `Vote` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
     `title` varchar(50) NOT NULL,
-    `description` varchar(110) NOT NULL,
+    `description` varchar(110),
     `date` varchar(20) NOT NULL,
     `items` text NOT NULL,
     `data` text,
