@@ -196,19 +196,15 @@ export default Vue.extend({
 			}
 		},
 		deleteVoteItem(index) {
-			console.log("before:", this.voteData, this.multipleMaxCount, this.voteItemCount);
 			this.voteData.splice(index, 1);
 			if (this.multipleMaxCount === this.voteItemCount) {
 				this.multipleMaxCount -= 1;
 			}
 			this.voteItemCount -= 1;
-			console.log("after:", this.voteData, this.multipleMaxCount, this.voteItemCount);
 		},
 		createMultiple() {
 			let count = Number(this.createMultipleCount);
 			let num = Number(this.voteItemCount);
-			// this.voteItemCount += count causes duplicate key error here.
-			// this.voteItemCount will be updated wrongly as a string value but not number value through this.
 			if (count + num <= this.maxVoteItemCount && count > 0) {
 				if (count >= 2) {
 					this.voteItemCount = num + count;
@@ -222,19 +218,56 @@ export default Vue.extend({
 			}
 		},
 		submit() {
-			console.log(JSON.stringify(this.voteData));
 			this.$server.post("/api/vote", {
-				method: "create",
+				method: this.editing ? "alter" : "create",
 				title: this.title,
 				desc: this.description,
 				items: JSON.stringify(this.voteData),
-				multiple: this.multipleVote ? this.multipleMaxCount : -1
+				multiple: this.multipleVote ? this.multipleMaxCount : -1,
+				id: this.editing ? this.$route.params.id : -1,
 			}, r => {
-				console.log(r);
+				if (r.data) {
+					this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+						state: true
+					});
+					this.snackbarMessage = "成功发布投票，即将为您跳转";
+					this.snackbar = true;
+					setTimeout(() => {
+						this.$router.push({
+							name: "admin-panel"
+						})
+					}, 1500);
+				} else {
+					this.snackbarMessage = "发布失败，请检查控制台";
+					this.snackbar = true;
+					console.log(r);
+				}
 			})
 		}
 	},
-	mounted() {}
+	created() {
+		this.editing = this.$route.name === "admin-edit-vote";
+		if (this.editing) {
+			this.$server.get("/api/vote?id=" + this.$route.params.id, r => {
+				if (r.data) {
+					let data = r.data;
+					let voteData = JSON.parse(data.items);
+					let multiple = Number(data.multiple);
+					this.title = data.title;
+					this.description = data.description;
+					this.voteData = voteData;
+					this.voteItemCount = voteData.length;
+					this.multipleVote = multiple !== -1;
+					this.multipleMaxCount = multiple < 2 ? 2 : multiple;
+				}
+			})
+		}
+	},
+	mounted() {
+		this.$store.commit(this.$mutations.CHANGE_EDITOR_COMMITED_STATE, {
+			state: false,
+		})
+	}
 });
 </script>
 
