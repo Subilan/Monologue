@@ -10,6 +10,11 @@ const routes = [
 		component: () => import("@/views/Home.vue")
 	},
 	{
+		path: "/vote/:id?",
+		name: "vote-viewer",
+		component: () => import("@/views/VoteViewer.vue")
+	},
+	{
 		path: "/admin",
 		name: "admin",
 		component: () => import("@/views/Admin.vue"),
