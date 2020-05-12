@@ -82,7 +82,7 @@ export default Vue.extend({
 	},
 	methods: {
 		getIconByType() {
-			let match: StringMatch = {
+			let match: Dictionary<string> = {
 				info: "mdi-information-outline",
 				warning: "mdi-alert-outline",
 				solved: "mdi-check"
