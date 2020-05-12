@@ -158,7 +158,7 @@ export function fillArray<T>(array: Array<T>, value: T, length: number, overwrit
         return [];
     }
     if (overwrite) {
-        array = new Array<T>();
+        array = [];
     }
     array.length = length;
     array.fill(value);
