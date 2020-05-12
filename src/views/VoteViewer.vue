@@ -7,12 +7,12 @@
 			</page-header>
 			<div class="vote-content-container">
 				<div class="vote-single" v-if="!multiple">
-					<md-radio v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
+					<md-radio class="no-selection" v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
 						{{ k }}
 					</md-radio>
 				</div>
 				<div class="vote-multiple" v-if="multiple">
-					<md-checkbox :disabled="multipleDisabled[i]" v-for="(k, i) in items" :key="i" v-model="multipleSelected[i]">
+					<md-checkbox class="no-selection" :disabled="multipleDisabled[i]" v-for="(k, i) in items" :key="i" v-model="multipleSelected[i]">
 						{{ k }}
 					</md-checkbox>
 				</div>
