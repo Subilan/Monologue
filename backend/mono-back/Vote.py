@@ -1,19 +1,26 @@
 from Functions import parseMarkdown, getDateString
 from Database import DBController
+import json
 
 class VoteController:
     def create(self, title, desc, items, multiple):
         db = DBController()
         cur = db.cursor()
         date = getDateString()
-        args = (title, desc, date, items, multiple)
-        sql = ("INSERT INTO Vote (title, description, date, items, multiple) VALUES (%s, %s, %s, %s, %s)")
+        data = json.dumps([0 for i in range(len(json.loads(items)))])
+        args = (title, desc, date, items, multiple, data)
+        sql = ("INSERT INTO Vote (title, description, date, items, multiple, data) VALUES (%s, %s, %s, %s, %s, %s)")
         cur.execute(sql, args)
         return db.commit(True)
 
     def update(self, data, id):
         db = DBController()
-        cur = db.cursor()
+        cur = db.cursor(True)
+        cur.execute("SELECT data FROM Vote WHERE id=%s" % id)
+        result = json.loads(cur.fetchone()["data"])
+        for i in data:
+            result[i] += 1
+        data = json.dumps(result)
         args = (data, id)
         sql = ("UPDATE Vote SET data=%s WHERE id=%s")
         cur.execute(sql, args)
@@ -21,9 +28,21 @@ class VoteController:
 
     def alter(self, title, desc, items, id, multiple):
         db = DBController()
-        cur = db.cursor()
-        args = (title, desc, items, multiple, id)
-        sql = ("UPDATE Vote SET title=%s, description=%s, items=%s, multiple=%s WHERE id=%s")
+        cur = db.cursor(True)
+        cur.execute("SELECT data FROM Vote WHERE id=%s" % id)
+        dataString = cur.fetchone()["data"]
+        dataBefore = json.loads(dataString)
+        dataLength = len(dataBefore)
+        itemLength = len(json.loads(items))
+        if dataLength == itemLength:
+            data = dataString
+        elif dataLength > itemLength:
+            data = json.dumps([0 for i in range(itemLength)])
+        elif dataLength < itemLength:
+            dataBefore.extend([0 for i in range(itemLength - dataLength)])
+            data = json.dumps(dataBefore)
+        args = (title, desc, items, multiple, data, id)
+        sql = ("UPDATE Vote SET title=%s, description=%s, items=%s, multiple=%s, data=%s WHERE id=%s")
         cur.execute(sql, args)
         return db.commit(True)
     
