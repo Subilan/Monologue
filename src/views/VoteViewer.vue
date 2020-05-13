@@ -17,6 +17,7 @@
 					</md-checkbox>
 				</div>
 			</div>
+			<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
 			<md-button @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
 			<md-dialog :md-active.sync="submitDialog">
 				<md-dialog-title>提交确认</md-dialog-title>
@@ -25,8 +26,13 @@
 				</md-dialog-content>
 				<md-dialog-actions>
 					<md-button class="md-primary" @click="submitDialog = false">取消</md-button>
-					<md-button class="md-primary md-raised" @click="submit()">提交</md-button>
+					<md-button class="md-primary md-raised" @click="submit(); submitDialog = false">提交</md-button>
 				</md-dialog-actions>
+			</md-dialog>
+			<md-dialog :md-active.sync="loadingDialog">
+				<md-dialog-content>
+					<loading-screen/>
+				</md-dialog-content>
 			</md-dialog>
 		</div>
 	</div>
@@ -39,7 +45,8 @@ import PageHeader from "@/components/PageHeader.vue";
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 // @ts-ignore
 import MdRadio from "vue-material/dist/components/MdRadio";
-import { fillArray, getDuplicatedCount } from '../functions';
+import { fillArray, getDuplicatedCount } from "../functions";
+import LoadingScreen from '@/components/LoadingScreen.vue';
 
 Vue.use(MdCheckbox).use(MdRadio);
 
@@ -56,11 +63,16 @@ export default Vue.extend({
 			selected: -1,
 			multipleSelected: [] as Array<boolean>,
 			multipleDisabled: [] as Array<boolean>,
- 			submitDialog: false
+			submitDialog: false,
+			snackbar: false,
+			snackbarMessage: "",
+			disableSubmit: false,
+			loadingDialog: false,
 		};
 	},
 	components: {
-		PageHeader
+		PageHeader,
+		LoadingScreen
 	},
 	created() {
 		this.$server.get("/api/vote?id=" + this.$route.params.id + "&markdown=true", r => {
@@ -83,7 +95,7 @@ export default Vue.extend({
 						} else {
 							this.multipleDisabled = fillArray(this.multipleDisabled, false, this.items.length, true);
 						}
-					})
+					});
 				}
 			} else {
 				this.$router.push({
@@ -92,12 +104,63 @@ export default Vue.extend({
 			}
 		});
 	},
-	mounted() {},
-	watch: {
-		multipleSelected(v) {
-			console.log(v);
+	methods: {
+		submit() {
+			if (this.disableSubmit) {
+				return false;
+			}
+			if (!this.verify()) {
+				this.snackbarMessage = "您必须选择至少一项才可提交";
+				this.snackbar = true;
+				return false;
+			}
+			this.loadingDialog = true;
+			this.$server.post(
+				"/api/vote",
+				{
+					method: "update",
+					id: this.$route.params.id,
+					multiple: this.multiple,
+					data: this.getData()
+				},
+				r => {
+					this.loadingDialog = false;
+					if (r.data) {
+						this.snackbarMessage = "成功提交投票信息，即将为您跳转";
+						this.disableSubmit = true;
+						this.snackbar = true;
+						setTimeout(() => {
+							this.$router.push({
+								name: "home"
+							});
+						}, 1500);
+					} else {
+						this.snackbarMessage = "投票失败，内部错误";
+						this.snackbar = true;
+					}
+				}
+			);
+		},
+		getData() {
+			let arr: Array<number> = [];
+			if (this.multiple) {
+				let copy = this.multipleSelected;
+				copy.forEach((k, i) => {
+					if (k) {
+						arr.push(i);
+					}
+				});
+			} else {
+				arr.push(this.selected);
+			}
+			return arr;
+		},
+		verify() {
+			let data = this.getData();
+			return !data.includes(-1) && data.length > 0;
 		}
-	}
+	},
+	mounted() {}
 });
 </script>
 
@@ -106,6 +169,10 @@ export default Vue.extend({
 	.vote-single,
 	.vote-multiple {
 		display: grid;
+
+		> * {
+			z-index: 1;
+		}
 	}
 
 	> * {
