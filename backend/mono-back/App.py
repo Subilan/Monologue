@@ -214,4 +214,4 @@ api.add_resource(DataAPI, '/api/data', endpoint = 'data')
 api.add_resource(VoteAPI, "/api/vote", endpoint = 'vote')
 
 if __name__ == '__main__':
-    app.run(debug = True);
+    app.run(debug = True)
