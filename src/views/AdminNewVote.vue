@@ -111,6 +111,16 @@
 				>
 			</md-dialog-actions>
 		</md-dialog>
+		<md-dialog :md-active.sync="overwriteWarningDialog">
+			<md-dialog-title>警告</md-dialog-title>
+			<md-dialog-content>
+				<p>检测到您删减了原有投票的项目，如果提交更改，将导致投票数据被清空，且无法回滚。是否确定？</p>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary" @click="allowOverwrite = true; submit(); overwriteWarningDialog = false">继续</md-button>
+				<md-button class="md-primary md-raised" @click="overwriteWarningDialog = false">取消</md-button> 
+			</md-dialog-actions>
+		</md-dialog>
 	</div>
 </template>
 
@@ -121,7 +131,7 @@ import PageHeader from "@/components/PageHeader.vue";
 import MdField from "vue-material/dist/components/MdField";
 // @ts-ignore
 import MdCheckbox from "vue-material/dist/components/MdCheckbox";
-import { isNumericString } from "@/functions";
+import { isNumericString, fillArray } from "@/functions";
 
 Vue.use(MdField).use(MdCheckbox);
 
@@ -141,12 +151,15 @@ export default Vue.extend({
 			incrementDisabled: false,
 			maxVoteItemCount: 20,
 			voteData: [],
+			voteDataBackup: [],
 			multipleVote: false,
 			multipleMaxCountInvalid: "",
 			multipleMaxCount: 2,
 			createMultipleDialog: false,
 			createMultipleCount: 2,
-			createMultipleCountInvalid: ""
+			createMultipleCountInvalid: "",
+			overwriteWarningDialog: false,
+			allowOverwrite: false,
 		};
 	},
 	components: {
@@ -226,6 +239,10 @@ export default Vue.extend({
 				this.snackbar = true;
 				return false;
 			}
+			if (this.voteDataBackup.length > this.voteData.length && !this.allowOverwrite) {
+				this.overwriteWarningDialog = true;
+				return false;
+			}
 			this.$server.post("/api/vote", {
 				method: this.editing ? "alter" : "create",
 				title: this.title,
@@ -264,6 +281,7 @@ export default Vue.extend({
 					this.title = data.title;
 					this.description = data.description;
 					this.voteData = voteData;
+					this.voteDataBackup = this.voteData.slice();
 					this.voteItemCount = voteData.length;
 					this.multipleVote = multiple !== -1;
 					this.multipleMaxCount = multiple < 2 ? 2 : multiple;
