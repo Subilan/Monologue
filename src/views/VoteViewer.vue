@@ -7,18 +7,18 @@
 			</page-header>
 			<div class="vote-content-container">
 				<div class="vote-single" v-if="!multiple">
-					<md-radio class="no-selection" v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
+					<md-radio class="no-selection" :disabled="duplicatedVote" v-for="(k, i) in items" :key="i" v-model="selected" :value="i">
 						{{ k }}
 					</md-radio>
 				</div>
 				<div class="vote-multiple" v-if="multiple">
-					<md-checkbox class="no-selection" :disabled="multipleDisabled[i]" v-for="(k, i) in items" :key="i" v-model="multipleSelected[i]">
+					<md-checkbox class="no-selection" :disabled="multipleDisabled[i] || duplicatedVote" v-for="(k, i) in items" :key="i" v-model="multipleSelected[i]">
 						{{ k }}
 					</md-checkbox>
 				</div>
 			</div>
 			<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
-			<md-button @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
+			<md-button v-if="!duplicatedVote" @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
 			<md-dialog :md-active.sync="submitDialog">
 				<md-dialog-title>提交确认</md-dialog-title>
 				<md-dialog-content>
@@ -26,12 +26,19 @@
 				</md-dialog-content>
 				<md-dialog-actions>
 					<md-button class="md-primary" @click="submitDialog = false">取消</md-button>
-					<md-button class="md-primary md-raised" @click="submit(); submitDialog = false">提交</md-button>
+					<md-button
+						class="md-primary md-raised"
+						@click="
+							submit();
+							submitDialog = false;
+						"
+						>提交</md-button
+					>
 				</md-dialog-actions>
 			</md-dialog>
 			<md-dialog :md-active.sync="loadingDialog">
 				<md-dialog-content>
-					<loading-screen/>
+					<loading-screen />
 				</md-dialog-content>
 			</md-dialog>
 		</div>
@@ -46,7 +53,7 @@ import MdCheckbox from "vue-material/dist/components/MdCheckbox";
 // @ts-ignore
 import MdRadio from "vue-material/dist/components/MdRadio";
 import { fillArray, getDuplicatedCount } from "../functions";
-import LoadingScreen from '@/components/LoadingScreen.vue';
+import LoadingScreen from "@/components/LoadingScreen.vue";
 
 Vue.use(MdCheckbox).use(MdRadio);
 
@@ -68,6 +75,7 @@ export default Vue.extend({
 			snackbarMessage: "",
 			disableSubmit: false,
 			loadingDialog: false,
+			duplicatedVote: false,
 		};
 	},
 	components: {
@@ -75,6 +83,33 @@ export default Vue.extend({
 		LoadingScreen
 	},
 	created() {
+		if (!Number.isInteger(Number(this.$route.params.id))) {
+			this.$router.push({
+				name: "error-not-found"
+			});
+		}
+		this.$server.post(
+			"/api/vote",
+			{
+				method: "duplicated",
+				id: this.$route.params.id
+			},
+			r => {
+				console.log(r);
+				if (r.data) {
+					let data = r.data;
+					let selection = data.selection;
+					this.duplicatedVote = true;
+					if (selection.length === 1) {
+						this.selected = Number(selection);
+					} else {
+						
+					}
+				} else {
+					this.duplicatedVote = false;
+				}
+			}
+		);
 		this.$server.get("/api/vote?id=" + this.$route.params.id + "&markdown=true", r => {
 			if (r.data) {
 				let data = r.data;
@@ -97,10 +132,6 @@ export default Vue.extend({
 						}
 					});
 				}
-			} else {
-				this.$router.push({
-					name: "error-not-found"
-				});
 			}
 		});
 	},
@@ -111,6 +142,11 @@ export default Vue.extend({
 			}
 			if (!this.verify()) {
 				this.snackbarMessage = "您必须选择至少一项才可提交";
+				this.snackbar = true;
+				return false;
+			}
+			if (this.duplicatedVote) {
+				this.snackbarMessage = "不能重复提交投票";
 				this.snackbar = true;
 				return false;
 			}
