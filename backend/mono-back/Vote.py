@@ -1,4 +1,4 @@
-from Functions import parseMarkdown, getDateString
+from Functions import parseMarkdown, getDateString, getIP
 from Database import DBController
 import json
 
@@ -20,9 +20,12 @@ class VoteController:
         result = json.loads(cur.fetchone()["data"])
         for i in data:
             result[i] += 1
-        data = json.dumps(result)
-        args = (data, id)
+        newData = json.dumps(result)
+        args = (newData, id)
         sql = ("UPDATE Vote SET data=%s WHERE id=%s")
+        cur.execute(sql, args)
+        args = (id, getIP(), getDateString(), data)
+        sql = ("INSERT INTO VoteActions (id, ip, actiontime, selection) VALUES (%s, %s, %s, %s)")
         cur.execute(sql, args)
         return db.commit(True)
 
@@ -67,5 +70,18 @@ class VoteController:
             if (data != None):
                 if (markdown):
                     data["description"] = parseMarkdown(data["description"])
+                return data
+        return False
+
+    def duplicated(self, id):
+        db = DBController()
+        cur = db.cursor(True)
+        sql = ("SELECT * FROM VoteActions WHERE id=%s" % id)
+        cur.execute(sql)
+        if (db.commit(True)):
+            data = cur.fetchone()
+            compareIP = data["ip"]
+            ip = getIP()
+            if compareIP == ip:
                 return data
         return False
