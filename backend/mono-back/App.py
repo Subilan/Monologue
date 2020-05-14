@@ -163,7 +163,8 @@ class VoteAPI(Resource):
                 "create": self.create,
                 "alter": self.alter,
                 "delete": self.delete,
-                "update": self.update
+                "update": self.update,
+                "duplicated": self.duplicated,
             }
             return funcs[self.json["method"]]()
         return False
@@ -179,6 +180,9 @@ class VoteAPI(Resource):
 
     def update(self):
         return self.vote.update(self.json.get("data"), self.json.get("id"))
+    
+    def duplicated(self):
+        return self.vote.duplicated(self.json.get("id"))
 
 @app.errorhandler(404)
 def notFoundError(err):
