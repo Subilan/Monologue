@@ -79,9 +79,12 @@ class VoteController:
         sql = ("SELECT * FROM VoteActions WHERE id=%s" % id)
         cur.execute(sql)
         if (db.commit(True)):
-            data = cur.fetchone()
-            compareIP = data["ip"]
+            data = cur.fetchall()
             ip = getIP()
-            if compareIP == ip:
-                return data
+            compareResult = False
+            for k in data:
+                compareIP = k["ip"]
+                compareResult = compareIP == ip
+                if compareResult:
+                    return k
         return False
