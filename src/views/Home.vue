@@ -628,7 +628,7 @@ export default Vue.extend({
 	position: fixed;
 	z-index: 10;
 	transition: opacity 0.5s ease;
-	bottom: 32px;
+	bottom: 96px;
 	right: 32px;
 
 	@media screen and (max-width: 1024px) {
