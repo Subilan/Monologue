@@ -18,7 +18,7 @@
 				</div>
 			</div>
 			<md-snackbar :md-active.sync="snackbar" md-position="center" :md-duration="1500" md-persistent>{{ snackbarMessage }}</md-snackbar>
-			<md-button v-if="!duplicatedVote" @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
+			<md-button :disabled="duplicatedVote" @click="submitDialog = true" class="center md-primary md-raised">提交</md-button>
 			<md-dialog :md-active.sync="submitDialog">
 				<md-dialog-title>提交确认</md-dialog-title>
 				<md-dialog-content>
