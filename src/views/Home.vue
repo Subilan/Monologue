@@ -628,19 +628,20 @@ export default Vue.extend({
 	position: fixed;
 	z-index: 10;
 	transition: opacity 0.5s ease;
-	bottom: 96px;
 	right: 32px;
 
 	@media screen and (max-width: 1024px) {
 		&.desktop {
 			display: none;
 		}
+		bottom: 96px;
 	}
 
 	@media screen and (min-width: 1024px) {
 		&.mobile {
 			display: none;
 		}
+		bottom: 32px;
 	}
 }
 
