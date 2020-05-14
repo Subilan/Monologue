@@ -30,7 +30,13 @@ CREATE TABLE IF NOT EXISTS `Vote` (
     `description` varchar(110),
     `date` varchar(20) NOT NULL,
     `items` text NOT NULL,
-    `data` text,
+    `data` text NOT NULL,
     `multiple` varchar(2) NOT NULL DEFAULT '-1',
     PRIMARY KEY (`id`)
+) CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `VoteActions` (
+    `id` int unsigned NOT NULL,
+    `ip` varchar(30) NOT NULL,
+    `actiontime` varchar(20) NOT NULL,
+    `selection` varchar(100) NOT NULL
 ) CHARSET=utf8mb4;
