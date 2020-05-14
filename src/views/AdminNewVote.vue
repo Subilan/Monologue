@@ -244,7 +244,7 @@ export default Vue.extend({
 			}
 		},
 		verify() {
-			return this.titleInvalid === "" && this.descriptionInvalid === "" && this.multipleMaxCountInvalid === "";
+			return this.title.length > 0 && this.title.length <= 30 && this.description.length <= 100 && this.multipleMaxCount >= 2 && this.multipleMaxCount <= this.voteItemCount;
 		},
 		submit() {
 			if (!this.verify()) {
