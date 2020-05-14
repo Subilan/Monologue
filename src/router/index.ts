@@ -50,11 +50,6 @@ const routes = [
 				path: "vote",
 				name: "admin-new-vote",
 				component: () => import("@/views/AdminNewVote.vue")
-			},
-			{
-				path: "vote/:id?",
-				name: "admin-edit-vote",
-				component: () => import("@/views/AdminNewVote.vue")
 			}
 		]
 	},

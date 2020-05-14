@@ -16,7 +16,7 @@
 				<md-button v-if="maxVoteItemCount - voteItemCount >= 2" @click="createMultipleDialog = true" class="md-icon-button md-raised">
 					<md-icon class="mdi mdi-plus-circle-multiple"/>
 				</md-button>
-				<md-button @click="submit()" class="md-icon-button md-primary md-raised">
+				<md-button @click="unoverwritableWarningDialog = true" class="md-icon-button md-primary md-raised">
 					<md-icon class="mdi mdi-send" />
 				</md-button>
 			</template>
@@ -111,6 +111,7 @@
 				>
 			</md-dialog-actions>
 		</md-dialog>
+		<!--
 		<md-dialog :md-active.sync="overwriteWarningDialog">
 			<md-dialog-title>警告</md-dialog-title>
 			<md-dialog-content>
@@ -119,6 +120,17 @@
 			<md-dialog-actions>
 				<md-button class="md-primary" @click="allowOverwrite = true; submit(); overwriteWarningDialog = false">继续</md-button>
 				<md-button class="md-primary md-raised" @click="overwriteWarningDialog = false">取消</md-button> 
+			</md-dialog-actions>
+		</md-dialog>
+		-->
+		<md-dialog :md-active.sync="unoverwritableWarningDialog">
+			<md-dialog-title>提示</md-dialog-title>
+			<md-dialog-content>
+				<p>为了投票的公正性，一经发布无法修改。是否继续？</p>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-primary" @click="unoverwritableWarningDialog = false">取消</md-button> 
+				<md-button class="md-primary md-raised" @click="submit(); unoverwritableWarningDialog = false">继续</md-button>
 			</md-dialog-actions>
 		</md-dialog>
 	</div>
@@ -160,6 +172,7 @@ export default Vue.extend({
 			createMultipleCountInvalid: "",
 			overwriteWarningDialog: false,
 			allowOverwrite: false,
+			unoverwritableWarningDialog: false,
 		};
 	},
 	components: {
@@ -239,10 +252,11 @@ export default Vue.extend({
 				this.snackbar = true;
 				return false;
 			}
+			/*
 			if (this.voteDataBackup.length > this.voteData.length && !this.allowOverwrite) {
 				this.overwriteWarningDialog = true;
 				return false;
-			}
+			}*/
 			this.$server.post("/api/vote", {
 				method: this.editing ? "alter" : "create",
 				title: this.title,
