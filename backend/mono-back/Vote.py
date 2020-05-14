@@ -24,7 +24,7 @@ class VoteController:
         args = (newData, id)
         sql = ("UPDATE Vote SET data=%s WHERE id=%s")
         cur.execute(sql, args)
-        args = (id, getIP(), getDateString(), data)
+        args = (id, getIP(), getDateString(), json.dumps(data))
         sql = ("INSERT INTO VoteActions (id, ip, actiontime, selection) VALUES (%s, %s, %s, %s)")
         cur.execute(sql, args)
         return db.commit(True)
