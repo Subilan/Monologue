@@ -75,7 +75,7 @@ export default Vue.extend({
 			snackbarMessage: "",
 			disableSubmit: false,
 			loadingDialog: false,
-			duplicatedVote: false,
+			duplicatedVote: true,
 		};
 	},
 	components: {
@@ -83,6 +83,7 @@ export default Vue.extend({
 		LoadingScreen
 	},
 	created() {
+		this.loadingDialog = true;
 		if (!Number.isInteger(Number(this.$route.params.id))) {
 			this.$router.push({
 				name: "error-not-found"
@@ -95,15 +96,16 @@ export default Vue.extend({
 				id: this.$route.params.id
 			},
 			r => {
-				console.log(r);
 				if (r.data) {
 					let data = r.data;
-					let selection = data.selection;
+					let selection: Array<number> = JSON.parse(data.selection);
 					this.duplicatedVote = true;
 					if (selection.length === 1) {
-						this.selected = Number(selection);
+						this.selected = selection[0];
 					} else {
-						
+						selection.forEach(k => {
+							this.$set(this.multipleSelected, k, true)
+						})
 					}
 				} else {
 					this.duplicatedVote = false;
@@ -111,6 +113,7 @@ export default Vue.extend({
 			}
 		);
 		this.$server.get("/api/vote?id=" + this.$route.params.id + "&markdown=true", r => {
+			this.loadingDialog = false;
 			if (r.data) {
 				let data = r.data;
 				let multiple = Number(data.multiple);
