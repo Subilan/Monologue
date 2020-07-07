@@ -25,3 +25,5 @@ __pycache__
 
 deploy.sh
 config.yml
+
+*.log
