@@ -577,9 +577,9 @@ export default Vue.extend({
 	},
 	mounted() {
 		this.handleIDAccess();
-		if (getcookie("ft") === undefined) {
+		/* if (getcookie("ft") === undefined) {
 			this.firstTimeDialog = true;
-		}
+		} */
 		this.pc = isPCView();
 	}
 });
