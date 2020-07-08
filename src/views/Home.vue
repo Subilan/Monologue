@@ -49,8 +49,11 @@
 							</function-bar>
 						</div>
 						<div class="logue">
+							<!--
 							<div class="logue-content" v-html="limitContentLen(a.contents, contentLimitLen)"></div>
 							<md-button class="md-primary md-raised" v-if="ShowViewAllbyContentLen(a.contents, contentLimitLen)" @click="getLogueDialog(a.id, a.title, a.contents, a.type)">查看全部</md-button>
+							-->
+							<div class="logue-content" v-html="a.contents"/>
 						</div>
 					</div>
 				</div>
