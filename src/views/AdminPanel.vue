@@ -12,9 +12,6 @@
 				<md-button @click="logoutConfirmDialog = true" class="md-raised md-icon-button">
 					<md-icon class="mdi mdi-logout" />
 				</md-button>
-				<md-button class="md-raised md-icon-button">
-					<md-icon class="mdi mdi-help-circle" />
-				</md-button>
 			</FunctionBar>
 		</div>
 		<h1>功能</h1>
@@ -94,6 +91,11 @@
 				<h1>GitHub 仓库</h1>
 				<p>查看我们托管在 GitHub 上的仓库，可以提出问题或者发起 PR，我们欢迎您的到来！</p>
 				<span class="icon mdi mdi-github" />
+			</div>
+			<div class="function">
+				<h1>新手指南</h1>
+				<p>刚刚上手 Monologue 吗？阅读这份新手指南<em>也许</em>能够帮你走出歧途！</p>
+				<span class="icon mdi mdi-help-circle"/>
 			</div>
 		</div>
 		<md-dialog :md-active.sync="logoutConfirmDialog">
