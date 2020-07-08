@@ -177,3 +177,7 @@ export function getDuplicatedCount(array: Array<any>): Dictionary<any> {
     });
     return result;
 }
+
+export function locate(url: string) {
+    window.location.href = url;
+}
