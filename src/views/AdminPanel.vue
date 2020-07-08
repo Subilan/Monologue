@@ -45,20 +45,17 @@
 			</div>
 		</div>
 		<md-dialog :md-active.sync="logoutConfirmDialog">
-			<md-dialog-title>是否确定？</md-dialog-title>
+			<md-dialog-title>{{ logoutCompleted ? "登出成功" : logoutFailed ? "登出失败" : logoutConfirmed ? "正在登出..." : "登出确认" }}</md-dialog-title>
 			<md-dialog-content>
-				<p>您即将登出，届时需要重新登录才可继续管理 Monologue。是否继续？</p>
+				{{ logoutCompleted ? "您已成功登出，即将跳转至首页。" : logoutFailed ? "由于内部问题，此时无法登出。" : logoutConfirmed ? "" : "是否确实要登出？您可以稍后重新登录。" }}
+				<div class="text-align-center" v-if="logoutConfirmed && !logoutFailed && !logoutCompleted">
+					<md-progress-spinner style="display: inline-flex" md-mode="indeterminate" />
+				</div>
 			</md-dialog-content>
 			<md-dialog-actions>
-				<md-button class="md-primary" @click="logoutConfirmDialog = false">取消</md-button>
-				<md-button
-					class="md-primary md-raised"
-					@click="
-						logout();
-						logoutConfirmDialog = false;
-					"
-					>登出</md-button
-				>
+				<md-button v-if="!logoutConfirmed" class="md-primary" @click="logoutConfirmDialog = false">取消</md-button>
+				<md-button v-if="!logoutConfirmed" class="md-primary md-raised" @click="logout()">确定</md-button>
+				<md-button v-if="logoutConfirmed && (logoutFailed || logoutCompleted)" class="md-primary" @click="logoutConfirmDialog = false">好</md-button>
 			</md-dialog-actions>
 		</md-dialog>
 		<md-snackbar md-position="center" :md-duration="1500" :md-active.sync="snackbar">{{ snackbarMessage }}</md-snackbar>
@@ -75,7 +72,10 @@ export default Vue.extend({
 			auth: false,
 			snackbar: false,
 			snackbarMessage: "",
-			logoutConfirmDialog: false
+			logoutConfirmDialog: false,
+			logoutConfirmed: false,
+			logoutCompleted: false,
+			logoutFailed: false,
 		};
 	},
 	components: {
@@ -100,6 +100,7 @@ export default Vue.extend({
 	},
 	methods: {
 		logout() {
+			this.logoutConfirmed = true;
 			this.$server.post(
 				"/api/auth",
 				{
@@ -107,15 +108,14 @@ export default Vue.extend({
 				},
 				r => {
 					if (r.data) {
-						this.snackbarMessage = "您已登出，即将为您跳转到首页";
-						this.snackbar = true;
+						this.logoutCompleted = true;
 						setTimeout(() => {
 							this.$router.push({
 								name: "home"
-							});
+							})
 						}, 1500);
 					} else {
-						console.error("程序异常，无法登出。");
+						this.logoutFailed = true;
 					}
 				}
 			);
@@ -208,8 +208,8 @@ export default Vue.extend({
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	align-items: center;
+	width: 100%;
 }
 </style>

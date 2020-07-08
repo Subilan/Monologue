@@ -16,8 +16,7 @@
                     <span class="md-helper-text">您的密码。</span>
                 </md-field>
                 <md-button @click="submit()" class="login-btn md-primary md-raised">
-                    <span v-if="!loginLoading">登录</span>
-                    <md-progress-spinner v-if="loginLoading" md-mode="indeterminate" />
+                    登录
                 </md-button>
                 <md-snackbar
                     md-position="center"
@@ -25,6 +24,9 @@
                     :md-active.sync="snackbar"
                     md-persistent
                 >{{ snackbarMessage }}</md-snackbar>
+                <md-dialog :md-active="loginLoading">
+                    <md-dialog-title>请稍候...</md-dialog-title>
+                </md-dialog>
             </div>
         </div>
     </div>
