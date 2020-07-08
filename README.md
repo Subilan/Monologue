@@ -2,7 +2,7 @@
 
 # 💬 Monologue
 
-![](https://img.shields.io/badge/coverage-40%25-green?style=flat)
+![](https://img.shields.io/badge/coverage-45%25-green?style=flat)
 ![](https://img.shields.io/badge/front-Vue.js-brightgreen?style=flat&logo=vue.js)
 ![](https://img.shields.io/badge/back-python-blue?style=flat&logo=python)
 [![](https://img.shields.io/badge/wiki-clickhere-009688?style=flat)](https://book.sotap.org/#/monologue/index)
