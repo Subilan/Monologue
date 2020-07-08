@@ -283,6 +283,8 @@ h1 {
 
 .admin-container {
 	margin-bottom: 56px;
+	min-height: 100%;
+	height: unset;
 }
 
 </style>
