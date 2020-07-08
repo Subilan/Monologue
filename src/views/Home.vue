@@ -1,9 +1,9 @@
 <template>
 	<div class="home" :class="auth ? '' : 'unauthed'">
+		<md-button @click="$router.push({name: 'admin-panel'})" v-if="auth" class="md-icon-button admin-navigation">
+			<md-icon class="mdi mdi-cog"/>
+		</md-button>
 		<div class="mono-main">
-			<md-button @click="$router.push({name: 'admin-panel'})" v-if="auth" class="md-icon-button admin-navigation">
-				<md-icon class="mdi mdi-cog"/>
-			</md-button>
 			<div v-if="loadingPage" class="loading">
 				<md-progress-spinner md-mode="indeterminate" />
 			</div>
@@ -746,8 +746,12 @@ export default Vue.extend({
 
 .admin-navigation {
 	position: fixed;
-	right: 16px;
 	top: 16px;
+	right: 16px;
+
+	@media screen and (max-width: 1024px) {
+		display: none;
+	}
 }
 
 .loading-dialog-content {
