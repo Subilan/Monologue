@@ -172,7 +172,7 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .admin-agreement {
-	min-height: 100%;
+	height: 100%;
 	position: relative;
 	padding: 16px;
 	padding-bottom: 0;

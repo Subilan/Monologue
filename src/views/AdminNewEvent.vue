@@ -201,7 +201,7 @@ export default Vue.extend({
 
 <style lang="less">
 .admin-container {
-	min-height: 100%;
+	height: 100%;
 	position: relative;
 }
 </style>
