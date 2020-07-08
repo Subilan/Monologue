@@ -106,7 +106,7 @@ export default Vue.extend({
 .admin-auth,
 .auth-container {
     align-items: center;
-    height: 100%;
+    min-height: 100%;
 }
 
 .auth-container {
