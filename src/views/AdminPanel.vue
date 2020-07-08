@@ -17,13 +17,14 @@
 				</md-button>
 			</FunctionBar>
 		</div>
+		<h1>功能</h1>
 		<div class="function-group">
-			<div @click="goto('admin-new-event')" class="function">
+			<div @click="goto('admin-new-event')" class="function" active>
 				<h1>添加新事件</h1>
 				<p>添加新的事件以展示在首页的时间线内，可以是公告、已解决或者问题。</p>
 				<span class="icon mdi mdi-alert-decagram" />
 			</div>
-			<div @click="goto('admin-new-vote')" class="function">
+			<div @click="goto('admin-new-vote')" class="function" active>
 				<h1>创建投票</h1>
 				<p>创建投票以快速收集用户观点数据，将数据归档或用作进一步处理。</p>
 				<span class="icon mdi mdi-chart-bar" />
@@ -34,14 +35,65 @@
 				<span class="icon mdi mdi-forum" />
 			</div>
 			<div class="function">
+				<h1>创建问卷</h1>
+				<p>设计不同类型的不同题目，以流程化的方式收取所需数据。</p>
+				<span class="icon mdi mdi-file-document-edit" />
+			</div>
+			<div class="function">
 				<h1>设置</h1>
 				<p>编辑用户信息，配置和管理 Monologue 本体的行为和数据处理方式。</p>
-				<span class="icon mdi mdi-cogs" />
+				<span class="icon mdi mdi-cog" />
 			</div>
 			<div class="function">
 				<h1>关于 Monologue</h1>
 				<p>查看 Monologue 的版本信息、更新日志和更多相关的技术层面内容。</p>
 				<span class="icon mdi mdi-information-variant" />
+			</div>
+		</div>
+		<h1>管理</h1>
+		<div class="function-group">
+			<div class="function">
+				<h1>发布管理</h1>
+				<p>管理已经发布的事件、投票等项目，对它们进行批量编辑或删除。</p>
+				<span class="icon mdi mdi-pencil" />
+			</div>
+			<div class="function">
+				<h1>统计</h1>
+				<p>统计访问整个网站或某一页面的用户信息。</p>
+				<span class="icon mdi mdi-cursor-default" />
+			</div>
+			<div class="function">
+				<h1>投票结果</h1>
+				<p>查看并分析现有投票的结果，并生成第三方格式的表格供下载。</p>
+				<span class="icon mdi mdi-chart-donut" />
+			</div>
+			<div class="function">
+				<h1>留言阅读</h1>
+				<p>阅读留言区收集到的留言内容，对其进行归档或删除管理。</p>
+				<span class="icon mdi mdi-comment-eye" />
+			</div>
+			<div class="function">
+				<h1>问卷反馈</h1>
+				<p>查看、评价、归纳问卷的填写和填写者信息，对其进行归档或删除管理。</p>
+				<span class="icon mdi mdi-file-check" />
+			</div>
+		</div>
+		<h1>文档</h1>
+		<div class="function-group">
+			<div class="function">
+				<h1>Mono API</h1>
+				<p>Monologue 提供的公开 API，使第三方可轻松获得相关数据。</p>
+				<span class="icon mdi mdi-web-box" />
+			</div>
+			<div @click="locate('https://book.sotap.org/#/monologue/index')" class="function" active>
+				<h1>开发文档与函数库</h1>
+				<p>查看我们在 SoTap Book 上所编写的开发文档，了解 Monologue 的开发过程。</p>
+				<span class="icon mdi mdi-file-code" />
+			</div>
+			<div @click="locate('https://github.com/sotapmc/Monologue')" class="function" active>
+				<h1>GitHub 仓库</h1>
+				<p>查看我们托管在 GitHub 上的仓库，可以提出问题或者发起 PR，我们欢迎您的到来！</p>
+				<span class="icon mdi mdi-github" />
 			</div>
 		</div>
 		<md-dialog :md-active.sync="logoutConfirmDialog">
@@ -65,6 +117,7 @@
 <script lang="ts">
 import Vue from "vue";
 import FunctionBar from "@/components/FunctionBar.vue";
+import { locate } from '../functions';
 
 export default Vue.extend({
 	data() {
@@ -75,7 +128,7 @@ export default Vue.extend({
 			logoutConfirmDialog: false,
 			logoutConfirmed: false,
 			logoutCompleted: false,
-			logoutFailed: false,
+			logoutFailed: false
 		};
 	},
 	components: {
@@ -112,7 +165,7 @@ export default Vue.extend({
 						setTimeout(() => {
 							this.$router.push({
 								name: "home"
-							})
+							});
 						}, 1500);
 					} else {
 						this.logoutFailed = true;
@@ -124,7 +177,8 @@ export default Vue.extend({
 			this.$router.push({
 				name
 			});
-		}
+		},
+		locate
 	}
 });
 </script>
@@ -145,6 +199,14 @@ export default Vue.extend({
 		}
 	}
 	display: grid;
+
+	.function {
+		opacity: .6;
+	}
+
+	.function[active] {
+		opacity: 1;
+	}
 
 	.function {
 		@media screen and (min-width: 1024px) {
@@ -178,7 +240,6 @@ export default Vue.extend({
 		padding: 16px;
 		border-radius: 2px;
 		position: relative;
-		opacity: 1;
 		transition: linear opacity 0.2s;
 		cursor: pointer;
 		line-height: 1.8;
@@ -212,4 +273,14 @@ export default Vue.extend({
 	align-items: center;
 	width: 100%;
 }
+
+h1 {
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+
+.admin-container {
+	margin-bottom: 56px;
+}
+
 </style>
