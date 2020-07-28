@@ -1,5 +1,8 @@
 <template>
 	<div class="home" :class="auth ? '' : 'unauthed'">
+		<md-button @click="$router.push({name: 'admin-panel'})" v-if="auth" class="md-icon-button admin-navigation">
+			<md-icon class="mdi mdi-cog"/>
+		</md-button>
 		<div class="mono-main">
 			<div v-if="loadingPage" class="loading">
 				<md-progress-spinner md-mode="indeterminate" />
@@ -49,10 +52,11 @@
 							</function-bar>
 						</div>
 						<div class="logue">
-							<div class="logue-content" v-html="a.contents"></div>
-							<!-- please recover v-html="limitContentLen(a.contents, 100)" to the div above when the 'View all' function is completed-->
-							<!-- TODO: Add vi-if -->
-							<!-- <md-button class="md-primary md-raised" @click="getLogueDialog(a.id, a.title, a.contents, a.type)">查看全部</md-button> -->
+							<!--
+							<div class="logue-content" v-html="limitContentLen(a.contents, contentLimitLen)"></div>
+							<md-button class="md-primary md-raised" v-if="ShowViewAllbyContentLen(a.contents, contentLimitLen)" @click="getLogueDialog(a.id, a.title, a.contents, a.type)">查看全部</md-button>
+							-->
+							<div class="logue-content" v-html="a.contents"/>
 						</div>
 					</div>
 				</div>
@@ -197,6 +201,7 @@ export default Vue.extend({
 			targetDate: "",
 			auth: false,
 			limitStart: 10,
+			contentLimitLen: 80,
 			showLoadNextButton: false,
 			showLoading: false,
 			total: 0,
@@ -472,6 +477,21 @@ export default Vue.extend({
 				return;
 			}
 		},
+		ShowViewAllbyContentLen(contentEl, limitLen) {
+			let contentLen = 0;
+			let isLimit = false;
+
+			contentEl.split("\n").some(item => {
+				let content = item.replace(/<.+?>/g, "");
+
+				if ((contentLen += content.length) > limitLen) {
+					isLimit = true;
+					return true;
+				}
+			});
+
+			return isLimit;
+		},
 		limitContentLen(contentEl, limitLen) {
 			let contentLen = 0;
 			let isBlockquoteClose = true;
@@ -563,9 +583,9 @@ export default Vue.extend({
 	},
 	mounted() {
 		this.handleIDAccess();
-		if (getcookie("ft") === undefined) {
+		/* if (getcookie("ft") === undefined) {
 			this.firstTimeDialog = true;
-		}
+		} */
 		this.pc = isPCView();
 	}
 });
@@ -721,6 +741,16 @@ export default Vue.extend({
 				font-size: 30px;
 			}
 		}
+	}
+}
+
+.admin-navigation {
+	position: fixed;
+	top: 16px;
+	right: 16px;
+
+	@media screen and (max-width: 1024px) {
+		display: none;
 	}
 }
 

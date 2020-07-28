@@ -135,6 +135,10 @@ export default Vue.extend({
 						}
 					});
 				}
+			} else {
+				this.$router.push({
+					name: "error-not-found"
+				})
 			}
 		});
 	},

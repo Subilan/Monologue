@@ -31,3 +31,5 @@ backend/mono-back/python.bat
 
 deploy.sh
 config.yml
+
+*.log

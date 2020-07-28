@@ -7,8 +7,8 @@
 		</div>
 
 		<md-menu :class="is('home') ? 'home-scoped' : ''" v-if="!pc && !singleOnMobile" md-direction="bottom-start" class="mobile-menu-btn">
-			<md-button md-menu-trigger class="md-raised md-icon-button">
-				<md-icon class="mdi mdi-plus-circle" />
+			<md-button md-menu-trigger class="md-icon-button">
+				<md-icon class="mdi mdi-plus-circle-outline" />
 			</md-button>
 			<md-menu-content class="mobile-menu">
 				<slot></slot>
