@@ -20,8 +20,14 @@ yarn-error.log*
 *.sln
 *.sw?
 
+# Python env
 pyvenv.cfg
 __pycache__
+
+backend/mono-back/Lib/
+backend/mono-back/Scripts/
+backend/mono-back/pip.bat
+backend/mono-back/python.bat
 
 deploy.sh
 config.yml
