@@ -10,7 +10,7 @@
     "@mdi/font": "^5.0.45",
     "@types/js-cookie": "^2.2.6",
     "@types/qs": "^6.9.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "js-cookie": "^2.2.1",
     "mdui": "^0.4.3",
